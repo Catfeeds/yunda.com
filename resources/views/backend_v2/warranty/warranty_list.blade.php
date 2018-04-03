@@ -20,8 +20,6 @@
 		<div class="row">
 			<div class="select-wrapper radius">
 				<form role="form" class="form-inline radius" >
-					{{--<form role="form" class="form-inline radius" action="/backend/order" method="post" id="form">--}}
-					{{--{{ csrf_field() }}--}}
 					<div class="form-group">
 						<div class="select-item">
 							<label for="name">保单状态:</label>
@@ -40,7 +38,6 @@
 						<label><span class="btn-select @if(isset($_GET['date'])&&$_GET['date']=='7') active @endif">最近7天<input hidden type="radio" name="date" value="3" onclick="selDay(7)" /></span></label>
 						<label><span class="btn-select @if(isset($_GET['date'])&&$_GET['date']=='30') active @endif">最近30天<input hidden type="radio" name="date" value="4" onclick="selDay(30)" /></span></label>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
 						<li class="date-picker" style="display: inline-block;">
 							<div class="input-group date form_date form_date_start">
 								<input id="date_start" class="form-control" type="text" value="@if(isset($_GET['date_start'])&&!empty($_GET['date_start'])) {{$_GET['date_start']}}@elseif(!empty($start)){{$start}}@endif" placeholder="@if(isset($_GET['date_start'])&&!empty($_GET['date_start'])) {{$_GET['date_start']}} @elseif(!empty($start)){{$start}}@else年/月/日@endif">
@@ -64,60 +61,49 @@
 			<div class="ui-table table-single-line">
 				<div class="ui-table-header radius">
 					<span class="col-md-2">保单号</span>
-					<span class="col-md-1">保单产生时间</span>
-					<span class="col-md-1">保单产品</span>
 					<span class="col-md-1">保单状态</span>
+					<span class="col-md-2">保单产品</span>
 					<span class="col-md-1">客户姓名</span>
+					<span class="col-md-1">身份证号</span>
 					<span class="col-md-1">联系方式</span>
 					<span class="col-md-1">保费</span>
 					<span class="col-md-1">佣金</span>
-					<span class="col-md-1">代理人</span>
-					<span class="col-md-1">保单来源</span>
+					<span class="col-md-1">保单更新时间</span>
 					<span class="col-md-1 col-one">操作</span>
 				</div>
 				<div class="ui-table-body">
 					<ul>
-						@foreach($list as $value)
-							@if(isset($value['warranty'])&&!empty($value['warranty'])
-                            &&isset($value['warranty_rule_product'])&&!empty($value['warranty_rule_product'])
-                            &&isset($value['warranty_rule_order'])&&!empty($value['warranty_rule_order']))
+						@if(isset($list)&&!empty($list))
+							@foreach($list as $value)
 								<li class="ui-table-tr">
-									<div class="col-md-2">{{$value['warranty']['warranty_code']}}</div>
-									<div class="col-md-1">{{$value['warranty']['created_at']}}</div>
-									<div class="col-md-1">{{$value['warranty_rule_product']['product_name']}}</div>
-									<div class="col-md-1 color-default">
-										@if($value->status == 1)
-											保障中
-										@elseif($value->status == 2)
-											失效
-										@elseif($value->status == 3)
-											退保
-										@elseif($value->status == 0)
-											待生效
+									<div class="col-md-2">{{$value['warranty_code']}}</div>
+									<div class="col-md-1">
+										@if(isset($warranty_status) &&!empty($warranty_status))
+											@foreach($warranty_status as $key=>$v)
+												@if($value['warranty_status'] == $key)
+													{{$v}}
+												@endif
+											@endforeach
 										@endif
 									</div>
-									<div class="col-md-1">
-										{{$value['policy']['name']}}
-									</div>
-									<div class="col-md-1">
-										{{$value['policy']['phone']}}
-									</div>
-									<div class="col-md-1">
-										{{ceil($value['warranty_rule_order']['premium']/100)}}
-									</div>
-									<div class="col-md-1">
-										{{ceil($value['warranty_rule_order']['premium']/100*$value['warranty_product']['base_ratio']/100)}}
-									</div>
+									<div class="col-md-2">英大非机动车驾驶员意外险</div>
+									<div class="col-md-1">王石磊</div>
+									<div class="col-md-1">410881199406056514</div>
+									<div class="col-md-1">15701681524</div>
+									<div class="col-md-1">2</div>
+									<div class="col-md-1">1</div>
+									<div class="col-md-1">{{$value['updated_at']}}</div>
 									<div class="col-md-1 text-right">
-										<a class="btn btn-primary" href="{{url('backend/warranty/info?id='.$value['warranty']['id'])}}">查看详情</a>
+										<a class="btn btn-primary" href="{{url('backend/warranty/info/'.$value['warranty_uuid'])}}">查看详情</a>
 									</div>
 								</li>
-							@endif
-						@endforeach
+							@endforeach
+						@endif
 					</ul>
 				</div>
 			</div>
 		</div>
+		{{--分页--}}
 		<div class="row text-center">
 			@if(isset($_GET['status_id'])&&!isset($_GET['type']))
 				{{ $list->appends(['status_id' => $_GET['status_id']])->links() }}

@@ -13,13 +13,6 @@
 	</div>
 @stop
 @section('main')
-	{{--$agent_res = [];//代理人--}}
-	{{--$ditch_res = [];//渠道--}}
-	{{--$product_res = [];//产品--}}
-	{{--$cust_policy_res = CustWarrantyPolicy::where('warranty_uuid',$warranty_uuid)->get();--}}
-	{{--$policy_res = [];//投保人--}}
-	{{--$insured_res = [];//被保人--}}
-	{{--$beneficiary_res = [];//受益人--}}
 		<div class="main-wrapper policy">
 			<div class="row">
 				<ol class="breadcrumb col-lg-12">
@@ -31,21 +24,22 @@
 				<div class="col-md-5">
 					<div class="policy-content">
 						<div class="policy-wrapper scroll-pane">
-							@if(!empty($product_res)&&!empty($warranty_res))
 								<div class="policy-info">
-									<h3 class="title">{{$product_res['product_name']}}</h3>
-									<p>保单号：{{$warranty['warranty_code']}}</p>
+									<h3 class="title">{{$product_res['product_name']??"英大非机动车驾驶员意外险"}}</h3>
+									<p>保单号：{{$warranty_res['warranty_code']}}</p>
 								</div>
-							@endif
 							<div class="policy-list">
+
+									<div><span class="name">公司名称</span><i>:</i>英大泰和</div>
+									<div><span class="name">保险险种</span><i>:</i>意外险</div>
 								@if(isset($company_res)&&!empty($company_res))
-								<div><span class="name">公司名称</span><i>:</i>{{$company_res['name']}}</div>
-								<div><span class="name">保险险种</span><i>:</i>{{$company_res['category']['name']}}</div>
-								<div><span class="name vtop">条款</span><i class="vtop">:</i>
-									@foreach($company_res['clauses'] as $v)
-										<li><a href="{{env('TY_API_PRODUCT_SERVICE_URL').'/'.$v['file_url']}}">{{$v['name']}}</a></li>
-									@endforeach
-								</div>
+								{{--<div>--}}
+									{{--<span class="name vtop">条款</span><i class="vtop">:</i>--}}
+								{{----}}
+									{{--@foreach($company_res['clauses'] as $v)--}}
+										{{--<li><a href="{{env('TY_API_PRODUCT_SERVICE_URL').'/'.$v['file_url']}}">{{$v['name']}}</a></li>--}}
+									{{--@endforeach--}}
+								{{--</div>--}}
 
 								<div><span class="name vtop">责任保额</span><i class="vtop">:</i>
 									@php
@@ -65,7 +59,7 @@
 										@endforeach
 									</ul>
 								</div>
-
+								@endif
 								{{--<div><span class="name">特别约定</span><i>:</i>保障期内在发生任何风险都不进行赔偿。</div>--}}
 								<div><span class="name">受益人</span><i>:</i>{{isset($beneficiary_res['name']) ? $beneficiary_res['name'] : "法定受益人" }}</div>
 								<div><span class="name">保 费</span><i>:</i>{{ceil($warranty_res['premium']/100)}}元</div>
@@ -73,7 +67,7 @@
 								<div><span class="name">缴费期限</span><i>:</i>{{isset($warranty_res->by_stages_way) ? $warranty_res->by_stages_way : "0年" }}</div>
 								<div><span class="name">佣金</span><i>:</i>{{isset($warranty_res->brokerage) ? ceil($warranty_res->brokerage/100)."元" : "--"  }}</div>
 								<div><span class="name">渠道</span><i>:</i>{{isset($ditch_res->name) ? "$ditch_res->name" : "" }}</div>
-								<div><span class="name">渠道佣金</span><i>:</i>{{ceil($warranty_res['premium']/100*$product_res['base_ratio']/100)}}元</div>
+								<div><span class="name">渠道佣金</span><i>:</i>1元</div>
 								<div><span class="name">代理人</span><i>:</i>{{isset($agent_res->real_name) ? "$agent_res->real_name" : "--"}}
 									{{--<a href="#" style="margin-left: 20px;">更换代理人</a>--}}
 								</div>
@@ -92,9 +86,10 @@
 										@elseif($warranty_res->status == 7)
 											取消支付
 										@endif
-									</span></div>
+									</span>
+								</div>
 							</div>
-							@endif
+
 						</div>
 
 					</div>

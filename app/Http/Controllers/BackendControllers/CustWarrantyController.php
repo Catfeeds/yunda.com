@@ -8,16 +8,39 @@
  */
 namespace App\Http\Controllers\BackendControllers;
 
+use App\Http\Controllers\BackendControllers;
+
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use League\Flysystem\Exception;
 use Illuminate\Http\Request;
+use Ixudra\Curl\Facades\Curl;
+use Excel;
+use Log;
 
+use App\Models\Agent;
+use App\Models\Clause;
+use App\Models\CodeType;
+use App\Models\Company;
+use App\Models\Ditch;
+use App\Models\DitchAgent;
+use App\Models\Product;
 use App\Models\Person;
 use App\Models\CustWarranty;
 use App\Models\CustWarrantyPolicy;
 
 use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
+
+use App\Services\ReadExcel;
+use App\Services\UploadImage;
+
+
+
+
+
 
 class CustWarrantyController extends BaseController{
 
@@ -50,12 +73,12 @@ class CustWarrantyController extends BaseController{
     public function WarrantyList()
     {
         $warranty_status = config('status_setup.warranty');//保单状态
-        $status_id = isset($_GET['status_id'])?$_GET['status_id']:'0';//不传保单状态,默认查询所有
+        $status_id = isset($_GET['status_id'])?$_GET['status_id']:'-1';//不传保单状态,默认查询所有
         $date = isset($_GET['date'])?$_GET['date']:'0';//不传，默认查询今天
         $date_start = isset($_GET['date_start'])?$_GET['date_start']:'';
         $date_end = isset($_GET['date_end'])?$_GET['date_end']:'';
         $page = isset($_GET['page'])?$_GET['page']:'1';//分页默认为1
-        if($status_id == '0' || $status_id == ""&&empty($date)&&empty($date_start)&&empty($date_end)){
+        if($status_id == '-1' || $status_id == ""&&empty($date)&&empty($date_start)&&empty($date_end)){
             $warranty_res = CustWarranty::orderBy('created_at','desc')
                 ->paginate(config('list_num.backend.agent'));
         }else{
@@ -69,6 +92,10 @@ class CustWarrantyController extends BaseController{
                         ->paginate(config('list_num.backend.agent'));
                     break;
                 case '1':
+                    $warranty_res = CustWarranty::orderBy('created_at','desc')
+                        ->paginate(config('list_num.backend.agent'));
+                    break;
+                case '-1':
                     $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*2).'00:00:00')))
                         ->where('created_at','<',date('Ymd',strtotime(date('Y-m-d',time()).'00:00:00')))
                         ->orderBy('created_at','desc')
@@ -122,24 +149,5 @@ class CustWarrantyController extends BaseController{
         $insured_res = [];//被保人
         $beneficiary_res = [];//受益人
         return view('backend_v2.warranty.warranty_info',compact('warranty_res','agent_res','ditch_res','product_res','insured_res','policy_res','beneficiary_res','company_res'));
-    }
-
-    /**
-     * 投保人信息
-     * @access public
-     *
-     */
-    public function warrantyPolicy($union_order_code)
-    {
-
-    }
-
-    /**
-     * 被保人信息
-     * @access public
-     */
-    public function warrantyRecognizee($union_order_code)
-    {
-
     }
 }
