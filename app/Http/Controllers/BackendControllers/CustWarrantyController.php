@@ -50,18 +50,51 @@ class CustWarrantyController extends BaseController{
     public function WarrantyList()
     {
         $warranty_status = config('status_setup.warranty');//保单状态
-        $status_id = isset($_GET['status'])?$_GET['status']:'0';//不传保单状态,默认查询所有
+        $status_id = isset($_GET['status_id'])?$_GET['status_id']:'0';//不传保单状态,默认查询所有
         $date = isset($_GET['date'])?$_GET['date']:'0';//不传，默认查询今天
         $date_start = isset($_GET['date_start'])?$_GET['date_start']:'';
         $date_end = isset($_GET['date_end'])?$_GET['date_end']:'';
-        $from = isset($_GET['from'])?$_GET['from']:'0';//不传保单来源，默认查询所有
         $page = isset($_GET['page'])?$_GET['page']:'1';//分页默认为1
         if($status_id == '0' || $status_id == ""&&empty($date)&&empty($date_start)&&empty($date_end)){
             $warranty_res = CustWarranty::orderBy('created_at','desc')
                 ->paginate(config('list_num.backend.agent'));
+        }else{
+            $warranty_res = CustWarranty::where('warranty_status',$status_id)->orderBy('created_at','desc')
+                ->paginate(config('list_num.backend.agent'));
         }
-
-        return view('backend_v2.warranty.warranty_list',compact('warranty_status'));
+        if(!empty($date)){
+            switch ($date){
+                case '0':
+                    $warranty_res = CustWarranty::orderBy('created_at','desc')
+                        ->paginate(config('list_num.backend.agent'));
+                    break;
+                case '1':
+                    $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*2).'00:00:00')))
+                        ->where('created_at','<',date('Ymd',strtotime(date('Y-m-d',time()).'00:00:00')))
+                        ->orderBy('created_at','desc')
+                        ->paginate(config('list_num.backend.agent'));
+                    break;
+                case '7':
+                    $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*7).'00:00:00')))
+                        ->orderBy('created_at','desc')
+                        ->paginate(config('list_num.backend.agent'));
+                    break;
+                case '30':
+                    $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*30).'00:00:00')))
+                        ->orderBy('created_at','desc')
+                        ->paginate(config('list_num.backend.agent'));
+                    break;
+            }
+            if(!empty($date_start)&&!empty($date_end)){
+                $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime($date_start.'00:00:00')))
+                    ->where('created_at','<',date('Ymd',strtotime($date_end.'23:59:59')))
+                    ->orderBy('created_at','desc')
+                    ->paginate(config('list_num.backend.agent'));
+            }
+        }
+        $list = $warranty_res;
+        $count = $warranty_res->total();
+        return view('backend_v2.warranty.warranty_list',compact('warranty_status','list','count','status_id','date','date_start','date_end'));
 
     }
 
@@ -72,9 +105,23 @@ class CustWarrantyController extends BaseController{
      * @return view
      *
      */
-    public function warrantyInfo($union_order_code)
+    public function warrantyInfo($warranty_uuid)
     {
-        return view('backend_v2.warranty.warranty_info');
+        $warranty_res = CustWarranty::where('warranty_uuid',$warranty_uuid)
+            ->first();
+        $agent_id = $warranty_res['agent_id'];
+        $ditch_id = $warranty_res['ditch_id'];
+        $product_id= $warranty_res['product_id'];
+        $company_id= '';
+        $agent_res = [];//代理人
+        $ditch_res = [];//渠道
+        $product_res = [];//产品
+        $company_res = [];//保险公司
+        $cust_policy_res = CustWarrantyPolicy::where('warranty_uuid',$warranty_uuid)->get();
+        $policy_res = [];//投保人
+        $insured_res = [];//被保人
+        $beneficiary_res = [];//受益人
+        return view('backend_v2.warranty.warranty_info',compact('warranty_res','agent_res','ditch_res','product_res','insured_res','policy_res','beneficiary_res','company_res'));
     }
 
     /**

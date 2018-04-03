@@ -357,7 +357,7 @@ Route::group(['prefix' => '/backend', 'namespace'=>'BackendControllers'],functio
             });
             Route::group(['prefix'=>'/warranty'],function(){
                 Route::any('/list','CustWarrantyController@WarrantyList'); //保单列表
-                Route::any('/info/{union_order_code}','CustWarrantyController@warrantyInfo'); //保单详情
+                Route::any('/info/{warranty_uuid}','CustWarrantyController@warrantyInfo'); //保单详情
 
             });
             // 理赔管理

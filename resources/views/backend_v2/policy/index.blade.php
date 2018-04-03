@@ -262,11 +262,7 @@
         changeTab('.btn-select');
         $("#search_status").change(function(){
             var id = $("#search_status").val();
-//            if(pag){
-//                window.location.href="/backend/policy?page="+pag+"&status_id="+id;
-//            }else{
                 window.location.href="/backend/policy?status_id="+id;
-//            }
         });
     })
     function selDay(id) {
