@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>购买结果</title>
+		<title>开通免密支付</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/mui.min.css">
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/iconfont.css">

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>保障详情</title>
+		<title>设置列表</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/mui.min.css">
 		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/iconfont.css">
