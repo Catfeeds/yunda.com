@@ -20,6 +20,8 @@ class ClaimController
 
     protected $log_helper;
 
+    protected $person_code;
+
     /**
      * 初始化
      * @access public
@@ -29,6 +31,9 @@ class ClaimController
         $this->request = $request;
         $this->log_helper = new LogHelper();
         $this->sign_help = new RsaSignHelp();
+        $access_token = $this->request->header('access-token');
+        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
+        $this->person_code = $access_token_data['person_code'];
     }
 
     /**

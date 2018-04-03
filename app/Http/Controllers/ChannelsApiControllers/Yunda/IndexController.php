@@ -21,7 +21,7 @@ class IndexController
 
     protected $request;
 
-    protected $log_helper;
+    protected $person_code;
 
     /**
      * 初始化
@@ -32,6 +32,9 @@ class IndexController
         $this->request = $request;
         $this->log_helper = new LogHelper();
         $this->sign_help = new RsaSignHelp();
+        $access_token = $this->request->header('access-token');
+        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
+        $this->person_code = $access_token_data['person_code'];
     }
 
     /**
@@ -41,9 +44,7 @@ class IndexController
      *
      */
     public function InsInfo(){
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $person_code = $access_token_data['person_code'];
+        $person_code = $this->person_code;
         $person_code = '410881199406056514';
         $user_seting = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('cust_id','authorize_status','authorize_start')
@@ -64,9 +65,7 @@ class IndexController
      *
      */
     public function insureCenter(){
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $person_code = $access_token_data['person_code'];
+        $person_code = $this->person_code;
         $person_code = '410881199406056514';
         if($person_code){
             //TODO 匹配出没有签约的
@@ -175,6 +174,8 @@ class IndexController
      *
      */
     public function insClause(){
+        $person_code = $this->person_code;
+        $person_code = '410881199406056514';
         return view('channels.yunda.insure_clause');
     }
 
@@ -185,6 +186,8 @@ class IndexController
      *
      */
     public function insNotice(){
+        $person_code = $this->person_code;
+        $person_code = '410881199406056514';
         return view('channels.yunda.ins_notice');
     }
 
@@ -214,9 +217,7 @@ class IndexController
      *
      */
     public function insError($error_type){
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $person_code = $access_token_data['person_code'];
+        $person_code = $this->person_code;
         $person_code = '410881199406056514';
         switch ($error_type){
             case 'empty'://投保参数不完善

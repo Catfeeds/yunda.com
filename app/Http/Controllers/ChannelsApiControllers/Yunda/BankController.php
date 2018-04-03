@@ -22,6 +22,8 @@ class BankController
 
     protected $log_helper;
 
+    protected $person_code;
+
     /**
      * 初始化
      * @access public
@@ -31,6 +33,9 @@ class BankController
         $this->request = $request;
         $this->log_helper = new LogHelper();
         $this->sign_help = new RsaSignHelp();
+        $access_token = $this->request->header('access-token');
+        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
+        $this->person_code = $access_token_data['person_code'];
     }
 
     /**
@@ -40,11 +45,7 @@ class BankController
      *
      */
     public function bankIndex(){
-        $input = $this->request->all();
-        $params = $this->doRequestParams($input);
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $person_code = $access_token_data['person_code'];
+        $person_code = $this->person_code;
         $person_code = '410881199406056514';
         $user_res = Person::where('id_code',$person_code)->select('id','name','id_type','id_code','phone','address')->first();
         $cust_id = $user_res['id'];
@@ -62,6 +63,8 @@ class BankController
      *
      */
     public function bankBind(){
+        $person_code = $this->person_code;
+        $person_code = '410881199406056514';
         return view('channels.yunda.bank_bind');
     }
 
@@ -183,9 +186,7 @@ class BankController
      *
      */
     public function bankAuthorize(){
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $person_code = $access_token_data['person_code'];
+        $person_code = $this->person_code;
         $person_code = '410881199406056514';
         $user_res = Person::where('id_code',$person_code)->select('id')->first();
         $cust_id = $user_res['id'];
@@ -201,9 +202,7 @@ class BankController
      */
     public function bankAuthorizeInfo(){
         $input = $this->request->all();
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $person_code = $access_token_data['person_code'];
+        $person_code = $this->person_code;
         $person_code = '410881199406056514';
         $user_res = Person::where('id_code',$person_code)->select('id')->first();
         $cust_id = $user_res['id'];
@@ -250,21 +249,5 @@ class BankController
             ]);
         }
         return json_encode(['status'=>'200','msg'=>'开通免密支付成功']);
-    }
-
-    /**
-     * 联合登录参数处理
-     * @access public
-     * @return view
-     *
-     */
-    public function doRequestParams($params){
-        $biz_content = $params['biz_content']??"";
-        $biz_content = base64_decode(str_replace(" ","+",$biz_content));
-        $biz_content = json_decode($biz_content,true);
-        if(!is_array($biz_content)&&is_object($biz_content)){
-            $biz_content =  $this->object2array($biz_content);
-        }
-        return $biz_content;
     }
 }
