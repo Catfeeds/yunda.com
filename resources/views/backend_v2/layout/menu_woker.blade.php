@@ -1,6 +1,7 @@
 <?php
 $agent_active = preg_match("/\/backend\/agent\//",Request::getPathinfo()) ? "class=active" : '';
 $policy = preg_match("/\/backend\/policy/",Request::getPathinfo()) ? "class=active" : '';
+$warranty= preg_match("/\/backend\/warranty/",Request::getPathinfo()) ? "class=active" : '';
 $finance = preg_match("/\/backend\/finance/",Request::getPathinfo()) ? "class=active" : '';
 $order = preg_match("/\/backend\/order/",Request::getPathinfo()) ? "class=active" : '';
 $work_order = preg_match("/\/backend\/work_order/",Request::getPathinfo()) ? "class=active" : '';
@@ -16,7 +17,7 @@ $channel_douwan =  preg_match("/\/channels\/douwan\//",Request::getPathinfo()) ?
 $channel_yunda =  preg_match("/\/channels\/yunda\//",Request::getPathinfo()) ? "class=active" : '';
 $msg = preg_match("/\/backend\/sms\//",Request::getPathinfo()) ? "class=active" : '';
 $setting = preg_match("/\/backend\/setting/",Request::getPathinfo()) ? "class=active" : '';
-$nothing_active = !($setting || $work_order || $msg||$finance || $agent_active || $claim || $preserve || $label_active|| $brokerage_active ||$channel || $product_active ||$task_active || $customer_active || $order || $policy || $channel_douwan || $channel_yunda) ? "class=active" : '';
+$nothing_active = !($setting || $work_order || $msg||$finance || $agent_active || $claim || $preserve || $label_active|| $brokerage_active ||$channel || $product_active ||$task_active || $customer_active || $order || $warranty || $policy || $channel_douwan || $channel_yunda) ? "class=active" : '';
 ?>
 <div class="menu-wrapper">
     <ul>
@@ -31,8 +32,9 @@ $nothing_active = !($setting || $work_order || $msg||$finance || $agent_active |
         <li {{$brokerage_active}}><a href="{{url('/backend/set_brokerage/list')}}"><i class="iconfont icon-yongjin"></i>佣金管理</a></li>
         <li {{$customer_active}}><a href="{{ route('backend.customer.individual.index') }}"><i class="iconfont icon-kehu"></i>客户管理</a></li>
         <li {{$label_active}}><a href="{{url('/backend/label/user_label')}}"><i class="iconfont icon-biaoqian"></i>标签管理</a></li>
-        <li {{$order}}><a href="{{url('/backend/order')}}"><i class="iconfont icon-dingdan-copy"></i>订单管理</a></li>
-        <li {{$policy}}><a href="{{url('/backend/policy')}}"><i class="iconfont icon-comiis_dunpai"></i>保单管理</a></li>
+        {{--<li {{$order}}><a href="{{url('/backend/order')}}"><i class="iconfont icon-dingdan-copy"></i>订单管理</a></li>--}}
+        {{--<li {{$policy}}><a href="{{url('/backend/policy')}}"><i class="iconfont icon-comiis_dunpai"></i>保单管理</a></li>--}}
+        <li {{$warranty}}><a href="{{url('/backend/warranty/list')}}"><i class="iconfont icon-comiis_dunpai"></i>保单管理</a></li>
         {{--<li {{$claim}}><a href="{{url('/backend/claim')}}"><i class="iconfont icon-peikuanzongkong"></i>理赔管理</a></li>--}}
         {{--<li {{$preserve}}><a href="{{url('/backend/preserve')}}"><i class="iconfont icon-baoquanguanli"></i>保全管理</a></li>--}}
         <li {{$finance}}><a href="{{url('/backend/finance')}}"><i class="iconfont icon-icon-oc-money"></i>财务中心</a></li>

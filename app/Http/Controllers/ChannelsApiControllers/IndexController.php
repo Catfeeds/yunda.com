@@ -280,7 +280,10 @@ class IndexController extends BaseController{
                     }
                     //todo  联合登录有两种情况；未开免密；保险生效中
                     //用用户身份证信息查询授权状态
-                    $authorize_status = true;//todo 查询免密授权状态
+                $user_setup_res = ChannelInsureSeting::where('cust_cod',$channel_user_code)
+                    ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time')
+                    ->first();
+                    $authorize_status = $user_setup_res['auto_insure_status'];//todo 查询免密授权状态
                     if(!$authorize_status){//未授权(首次购买)
                         return json_encode(['status'=>'200','msg'=>'投保失败,请前往授权页面，开通授权','url'=>'http://'.$_SERVER['HTTP_HOST'].self::INSURE_ERROR_URL.'/no_authorize'],JSON_UNESCAPED_UNICODE);
                     }
@@ -288,6 +291,19 @@ class IndexController extends BaseController{
                     if(!$insure_status){//需要购买新保单
                         $current_insurance_status = true;//当前投保状态，今天有没有进行投保操作
                         if($current_insurance_status){//没有进行过投保操作
+                            $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
+                            $biz_content['price'] = '2';
+                            switch ($biz_content['insured_days']){
+                                case '1':
+                                    $biz_content['price'] = $user_setup_res['auto_insure_price'];
+                                    break;
+                                case '3':
+                                    $biz_content['price'] = $user_setup_res['auto_insure_price'];
+                                    break;
+                                case '10':
+                                    $biz_content['price'] = $user_setup_res['auto_insure_price'];
+                                    break;
+                            }
                             dispatch(new YunDaPay($biz_content));//TODO 投保操作（异步队列）
                             return json_encode(['status'=>'200','msg'=>'投保中'],JSON_UNESCAPED_UNICODE);
                         }

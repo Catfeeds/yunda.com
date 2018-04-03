@@ -111,7 +111,7 @@ class IndexController
             return $this->insResult($person_code,$ins_status,$ins_msg,$target_url,$warranty_res);
         }
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$person_code)
-            ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_time')
+            ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time')
             ->first();
         if(!$user_setup_res||$user_setup_res['authorize_bank']){
             $ins_status = '500';//投保状态：成功200/失败500/投保中100
@@ -146,6 +146,20 @@ class IndexController
         $biz_content['channel_provinces'] = $user_res['address'];
         $biz_content['channel_city'] = $user_res['address'];
         $biz_content['channel_county'] = $user_res['address'];
+
+        $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
+        $biz_content['price'] = '2';
+        switch ($biz_content['insured_days']){
+            case '1':
+                $biz_content['price'] = $user_setup_res['auto_insure_price'];
+                break;
+            case '3':
+                $biz_content['price'] = $user_setup_res['auto_insure_price'];
+                break;
+            case '10':
+                $biz_content['price'] = $user_setup_res['auto_insure_price'];
+                break;
+        }
         dispatch(new YunDaPay($biz_content));//TODO 投保操作（异步队列）
         $ins_status = '100';//投保状态：成功200/失败500/投保中100
         $ins_msg = '投保中，请稍等~';//备注信息

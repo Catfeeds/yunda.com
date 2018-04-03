@@ -85,6 +85,7 @@ class SetingController
         $input = $this->request->all();
         $auto_insure_status = $input['auto_insure_status'];
         $auto_insure_type = $input['auto_insure_type'];
+        $auto_insure_price = config('insure_price.yunda')[$auto_insure_type];
         $cust_res['id_code'] = $input['person_code'];
         $repeat_res = ChannelInsureSeting::where('cust_cod',$input['person_code'])
             ->select('id')
@@ -99,6 +100,7 @@ class SetingController
                 'authorize_start'=>'',
                 'auto_insure_status'=>$auto_insure_status,
                 'auto_insure_type'=>$auto_insure_type,
+                'auto_insure_price'=>$auto_insure_price,
                 'auto_insure_time'=>time(),
             ]);
             return json_encode(['status'=>'200','msg'=>'自动投保设置成功']);
@@ -107,6 +109,7 @@ class SetingController
         ChannelInsureSeting::where(  'cust_id',$user_res['id'])->update([
             'auto_insure_status'=>$auto_insure_status,
             'auto_insure_type'=>$auto_insure_type,
+            'auto_insure_price'=>$auto_insure_price,
             'auto_insure_time'=>time(),
         ]);
         return json_encode(['status'=>'200','msg'=>'自动投保设置成功']);

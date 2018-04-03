@@ -355,7 +355,11 @@ Route::group(['prefix' => '/backend', 'namespace'=>'BackendControllers'],functio
                 Route::any('check_import_status','PolicyController@checkImportStatus'); //线下保单
                 Route::any('update_offline','PolicyController@updateOffline'); //更新上传的文件数据
             });
+            Route::group(['prefix'=>'/warranty'],function(){
+                Route::any('/list','CustWarrantyController@WarrantyList'); //保单列表
+                Route::any('/info/{union_order_code}','CustWarrantyController@warrantyInfo'); //保单详情
 
+            });
             // 理赔管理
             Route::group(['prefix'=>'/claim'],function(){
                 Route::get('/','ClaimManagementController@index'); //个人保单
