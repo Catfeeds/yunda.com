@@ -128,7 +128,7 @@ class CustWarrantyController extends BaseController{
     /**
      * 保单详情
      * @access public
-     * @params $union_order_code  联合订单号
+     * @params $warranty_uuid  保单唯一标识
      * @return view
      *
      */
