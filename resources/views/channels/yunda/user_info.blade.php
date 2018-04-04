@@ -32,7 +32,7 @@
 					<ul class="list-wrapper">
 							<li class="list-item"><span class="name">姓名:</span><span>{{$user_res['name']}}</span></li>
 							<li class="list-item"><span class="name">手机号:</span><span>{{$user_res['phone']}}</span></li>
-							<li class="list-item"><span class="name">身份证号:</span><span>{{$user_res['id_code']}}</span></li>
+							<li class="list-item"><span class="name">身份证号:</span><span>{{$user_res['papers_code']}}</span></li>
 					</ul>
 				</div>
 			</div>

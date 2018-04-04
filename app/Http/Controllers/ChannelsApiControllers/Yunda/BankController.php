@@ -47,7 +47,7 @@ class BankController
     public function bankIndex(){
         $person_code = $this->person_code;
         $person_code = '410881199406056514';
-        $user_res = Person::where('id_code',$person_code)->select('id','name','id_type','id_code','phone','address')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
         $bank_res = Bank::where('cust_id',$cust_id)
             ->where('bank_del','0')
@@ -188,7 +188,7 @@ class BankController
     public function bankAuthorize(){
         $person_code = $this->person_code;
         $person_code = '410881199406056514';
-        $user_res = Person::where('id_code',$person_code)->select('id')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $cust_id = $user_res['id'];
         //签约页面上会显示签约人的相关信息
         return view('channels.yunda.bank_authorize',compact('cust_id','person_code'));
@@ -204,7 +204,7 @@ class BankController
         $input = $this->request->all();
         $person_code = $this->person_code;
         $person_code = '410881199406056514';
-        $user_res = Person::where('id_code',$person_code)->select('id')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $cust_id = $user_res['id'];
         $insured_name = $input['insured_name']??"王石磊";
         $insured_code = $input['insured_code']??"410881199406053515";
@@ -230,7 +230,7 @@ class BankController
     public function doBankAuthorize(){
         $input = $this->request->all();
         $person_code = $input['person_code'];
-        $user_res = Person::where('id_code',$person_code)->select('id','name','id_type','id_code','phone','address')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
         $repeat_res = ChannelInsureSeting::where('cust_id',$cust_id)
             ->select('id')->first();

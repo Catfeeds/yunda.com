@@ -46,7 +46,7 @@ class WarrantyController
     public function warrantyList(){
         $person_code = $this->person_code;
         $person_code = '410881199406056514';
-        $user_res = Person::where('id_code',$person_code)->select('id')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $warranty_ok_res = CustWarranty::where('user_id',$user_res['id'])
             ->where('warranty_status','7')//保障中
             ->select('id')
@@ -76,8 +76,8 @@ class WarrantyController
     public function warrantyDetail($warranty_id){
         $person_code = $this->person_code;
         $person_code = '410881199406056514';
-        $user_res = Person::where('id_code',$person_code)
-            ->select('id','id_code','id_type','name','phone')
+        $user_res = Person::where('papers_code',$person_code)
+            ->select('id','papers_code','papers_type','name','phone')
             ->first();
         $warranty_res = CustWarranty::where('id',$warranty_id)
             ->select('id','warranty_code','warranty_uuid','start_time','end_time','warranty_status')

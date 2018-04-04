@@ -94,13 +94,13 @@ class ClaimController
 
         $person_code = $this->person_code;
         $person_code = '340323199305094715';
-        $user_res = Person::where('id_code',$person_code)->select('id')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
 
         $claim_yunda = new ClaimYunda();
         $claim_yunda->user_id = $user_res['id'];    //所属用户id
         $claim_yunda->warranty_id = $data['warranty_id']; //保单号
         $claim_yunda->name = $data['name'];
-        $claim_yunda->id_code = $data['id_code'];
+        $claim_yunda->papers_code = $data['papers_code'];
         $claim_yunda->address = $data['address'];
         $claim_yunda->type = $data['type'];
         $claim_yunda->accident = $data['accident'];
@@ -157,7 +157,7 @@ class ClaimController
             $claim_yunda_info->proof = $data['proof'];
             $claim_yunda_info->invoice = $data['invoice'];
             $claim_yunda_info->expenses = $data['expenses'];
-            $claim_yunda_info->id_code_img = $data['id_code_img'];
+            $claim_yunda_info->papers_code_img = $data['papers_code_img'];
             $claim_yunda_info->account_info = $data['account_info'];
             $claim_yunda_info->accident_proof = $data['accident_proof'];
             $claim_yunda_info->proof_loss = $data['proof_loss'];
@@ -236,7 +236,7 @@ class ClaimController
         $person_code = $this->person_code;
         $person_code = '340323199305094715';
 
-        $users = Person::where('id_code',$person_code)->first();
+        $users = Person::where('papers_code',$person_code)->first();
 
         $where = [1,2,3];
 
@@ -271,7 +271,7 @@ class ClaimController
         $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
         $person_code = $access_token_data['person_code'];
         $person_code = '410881199406056514';
-        $user_res = Person::where('id_code',$person_code)->select('id','name','id_type','id_code','phone','address')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
         return view('channels.yunda.claim_index',compact('person_code','cust_id'));
     }

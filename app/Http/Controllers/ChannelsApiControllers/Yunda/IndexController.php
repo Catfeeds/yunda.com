@@ -98,11 +98,11 @@ class IndexController
      *
      */
     public function doInsured($person_code){
-        $user_res = Person::where('id_code',$person_code)
-            ->select('id','name','id_type','id_code','phone','email','address','address_detail')
+        $user_res = Person::where('papers_code',$person_code)
+            ->select('id','name','papers_type','papers_code','phone','email','address','address_detail')
             ->first();
         //姓名，身份证信息，手机号判空
-        if(!$user_res['name']||!$user_res['id_code']||!$user_res['phone']){
+        if(!$user_res['name']||!$user_res['papers_code']||!$user_res['phone']){
             $ins_status = '500';//投保状态：成功200/失败500/投保中100
             $ins_msg = '用户信息不完善，请完善用户信息';//备注信息
             $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'user_info';//跳转URL
@@ -132,7 +132,7 @@ class IndexController
         $biz_content['channel_back_url'] = '';
 
         $biz_content['channel_user_name'] = $user_res['name'];
-        $biz_content['channel_user_code'] = $user_res['id_code'];
+        $biz_content['channel_user_code'] = $user_res['papers_code'];
         $biz_content['channel_user_phone'] = $user_res['phone'];
         $biz_content['channel_user_email'] = $user_res['email'];
         $biz_content['channel_user_address'] = $user_res['address_detail'];
@@ -202,7 +202,7 @@ class IndexController
      *
      */
     public function insResult($person_code,$ins_status,$ins_msg,$target_url,$warranty_res){
-        $user_res = Person::where('id_code',$person_code)->select('name','id_type','id_code','phone','address')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('name','papers_type','papers_code','phone','address')->first();
         return view('channels.yunda.insure_result',compact('person_code','ins_status','ins_msg','target_url','warranty_res','user_res'));
     }
 
@@ -242,7 +242,7 @@ class IndexController
         }
         $ins_status = '500';
         $warranty_res = [];
-        $user_res = Person::where('id_code',$person_code)->select('name','id_type','id_code','phone','address')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('name','papers_type','papers_code','phone','address')->first();
         return view('channels.yunda.insure_result',compact('person_code','ins_status','ins_msg','target_url','warranty_res','user_res'));
     }
 

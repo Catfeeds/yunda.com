@@ -36,7 +36,7 @@
 						</div>
 						<ul class="list">
 							<li>被保人姓名<span class="fr">{{$user_res['name']}}</span></li>
-							<li>被保人证件号<span class="fr">{{$user_res['id_code']}}</span></li>
+							<li>被保人证件号<span class="fr">{{$user_res['papers_code']}}</span></li>
 							<li>保障期限<span class="fr">1天</span></li>
 							<li>保费<span class="fr">2元</span></li>
 						</ul>

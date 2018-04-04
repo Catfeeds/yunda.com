@@ -71,8 +71,8 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="id_code_img" name="id_code_img" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
-						<input hidden id="id_code_imgVal" name="id_code_img" type="text"></input>
+					<input hidden id="papers_code_img" name="papers_code_img" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="papers_code_imgVal" name="papers_code_img" type="text"></input>
 				</div>
 				<div class="formW formW1">
 					<p class="text">划款户名、帐号、开户行信息</p>

@@ -87,15 +87,15 @@ class SetingController
         $auto_insure_status = $input['auto_insure_status'];
         $auto_insure_type = $input['auto_insure_type'];
         $auto_insure_price = config('insure_price.yunda')[$auto_insure_type];
-        $cust_res['id_code'] = $input['person_code'];
+        $cust_res['papers_code'] = $input['person_code'];
         $repeat_res = ChannelInsureSeting::where('cust_cod',$input['person_code'])
             ->select('id')
             ->first();
-        $user_res = Person::where('id_code',$input['person_code'])->select('id')->first();
+        $user_res = Person::where('papers_code',$input['person_code'])->select('id')->first();
         if(empty($repeat_res)){
             ChannelInsureSeting::insert([
                 'cust_id'=>$user_res['id'],
-                'cust_code'=>$cust_res['id_code'],
+                'cust_code'=>$cust_res['papers_code'],
                 'cust_type'=>'user',
                 'authorize_status'=>'',
                 'authorize_start'=>'',
@@ -125,7 +125,7 @@ class SetingController
     public function userInfo(){
         $person_code = $this->person_code;
         $person_code = '410881199406056514';
-        $user_res = Person::where('id_code',$person_code)->select('name','phone','id_code')->first();
+        $user_res = Person::where('papers_code',$person_code)->select('name','phone','papers_code')->first();
         return view('channels.yunda.user_info',compact('user_res'));
     }
 

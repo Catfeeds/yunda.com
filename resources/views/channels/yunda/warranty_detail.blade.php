@@ -105,15 +105,15 @@
 									</div>
 									<div class="line">
 										<span>证件号码</span>
-										<span>{{$user_res['id_code']}}</span>
+										<span>{{$user_res['papers_code']}}</span>
 									</div>
 									<div class="line">
 										<span>出生日期</span>
-										<span>{{strlen($user_res['id_code'])==15 ? ('19' . substr($user_res['id_code'], 6, 6)) : substr($user_res['id_code'], 6, 8)}}</span>
+										<span>{{strlen($user_res['papers_code'])==15 ? ('19' . substr($user_res['papers_code'], 6, 6)) : substr($user_res['papers_code'], 6, 8)}}</span>
 									</div>
 									<div class="line">
 										<span>性别</span>
-										<span>{{substr($user_res['id_code'], (strlen($user_res['id_code'])==15 ? -2 : -1), 1) % 2 ? '女' : '男'}}</span>
+										<span>{{substr($user_res['papers_code'], (strlen($user_res['papers_code'])==15 ? -2 : -1), 1) % 2 ? '女' : '男'}}</span>
 									</div>
 									<div class="line">
 										<span>手机号码</span>
@@ -134,7 +134,7 @@
 									</div>
 									<div class="line">
 										<span>证件号码</span>
-										<span>{{$user_res['id_code']}}</span>
+										<span>{{$user_res['papers_code']}}</span>
 									</div>
 									<div class="line">
 										<span>与被保人关系</span>

@@ -30,7 +30,7 @@
 				<ul class="info">
 					<li><span class="name">姓名</span><span>{{$result->name}}</span></li>
 					<li><span class="name">证件类型</span><span>身份证</span></li>
-					<li><span class="name">证件号</span><span>{{$result->id_code}}</span></li>
+					<li><span class="name">证件号</span><span>{{$result->papers_code}}</span></li>
 					<li><span class="name">联系人</span><span>{{$result->contact_name}}</span></li>
 					<li><span class="name">手机号</span><span>{{$result->phone}}</span></li>
 					<li><span class="name">开户行</span><span>工商银行</span></li>
@@ -72,7 +72,7 @@
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->id_code_img}}">
+							<img src="{{env('APP_URL')}}{{$result->papers_code_img}}">
 						</div>
 						<p>伤者身份证复印件</p>
 					</li>

@@ -44,7 +44,7 @@
 							<ul class="form-wrapper">
 								<li style="font-weight: bold;">出险人员</li>
 								<li>姓名<input type="text" name="name" value="" placeholder="请输入"/></li>
-								<li>证件号码<input type="text" name="id_code" value="" placeholder="请输入"/></li>
+								<li>证件号码<input type="text" name="papers_code" value="" placeholder="请输入"/></li>
 								<li>当前住址<input type="text" name="address" value="" placeholder="请输入"/></li>
 							</ul>
 							<button id="next" disabled class="btn btn-next">下一步</button>
