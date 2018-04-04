@@ -39,7 +39,9 @@ class TaskController extends Controller
         $years = $this->getYears($task);
 
         // 全部渠道
-        $ditches = Ditch::with(['agents.user'])->get();
+        $ditches = Ditch::with(['agents'=>function($query){
+            $query->with('user')->where('work_status',1);
+        }])->get();
         if (!empty($ditches)) {
             $ditches = $ditches->toArray();
         }
@@ -77,7 +79,7 @@ class TaskController extends Controller
 
         $data = compact(
             'shouldDoneData', 'haveDoneData', 'haveDoneSumData', 'currentTaskTotalMoney', 'taskTotalMoney', 'taskRecords',
-            'ditches', 'agents', 'selected_ditch', 'selected_agent', 'years', 'year'
+            'ditches', 'agents', 'selected_ditch', 'selected_agent', 'years', 'year','ditch_id','agent_id'
         );
         return view('backend_v2.task.index', $data);
     }

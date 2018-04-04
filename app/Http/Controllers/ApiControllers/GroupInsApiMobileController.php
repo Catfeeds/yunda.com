@@ -107,7 +107,11 @@ class GroupInsApiMobileController extends BaseController{
     //投保被保人部分
     public function insureMobileCompanyInfo($identification)
     {
-        $input = $this->_request->all();
+        if(isset($_GET['info']) && $_GET['info'] == 1){
+            $input = json_decode(Redis::get('twoStepinfo'.$identification),true);
+        }else{
+            $input = $this->_request->all();
+        }
         //判断是否有预存的信息
         $prepare = OrderPrepareParameter::where('identification', $identification)->first();
         if(!$prepare)
@@ -127,6 +131,11 @@ class GroupInsApiMobileController extends BaseController{
         //存入投保人信息
         if(isset($input['insurance_attributes']['ty_toubaoren'])){
             unset($input['_token']);
+            if(!isset($_GET['info']) || $_GET['info'] != 1){
+                //添加第二部备用数据
+                Redis::set('twoStepinfo'.$identification,json_encode($input));
+                Redis::expire('twoStepinfo'.$identification,3600);
+            }
             unset($input['ins']);
             Redis::set('oneStepdata'.$identification,json_encode($input));
             Redis::expire('oneStepdata'.$identification,3600);
@@ -196,6 +205,7 @@ class GroupInsApiMobileController extends BaseController{
         DB::beginTransaction();
         try{
             $res = GroupInsCust::where('id',$id)->delete();
+            DB::commit();
         }catch (Exception $e){
             DB::rollBack();
             return "<script>alert('信息录入失败，请确认信息是否正确');history.back();</script>";
@@ -211,6 +221,7 @@ class GroupInsApiMobileController extends BaseController{
     public function addBeibaorenInfoSubmit(Request $request)
     {
         $input = $request->all();
+//        dd($input);
         $old_data = GroupInsCust::where([
             ['ty_beibaoren_id_number',$input['insurance_attributes']['ty_beibaoren']['ty_beibaoren_id_number']],
             ['union_order_code',$input['identification']]
@@ -233,8 +244,9 @@ class GroupInsApiMobileController extends BaseController{
                 return "<script>alert('信息录入失败，请确认信息是否正确');history.back();</script>";
             }
         }
+
         if(isset($input['manager']) && $input['manager'] == 1){
-            return "<script>history.back();</script>";
+            return redirect('/ins/mobile_group_ins/insure_mobile_company_info/'.$input['identification'].'?info=1');
         }else{
             return redirect('/ins/add_beibaoren_success');
         }
@@ -306,6 +318,13 @@ class GroupInsApiMobileController extends BaseController{
             $input = json_decode(Redis::get('prepare_order'.$_COOKIE['identification']),true);
         }
         $insurance_attributes = json_decode($input['insurance_attributes'],true);
+        if( isset(Auth::user()->phone) && Auth::user()->phone != $insurance_attributes['ty_toubaoren']['ty_toubaoren_phone']){
+            setcookie('login_type','',0);
+            setcookie('user_id','',0);
+            setcookie('user_name','',0);
+            Auth::logout();
+            return "<script>alert('当前登陆账户的信息与投保人的数据不一致');location.href='/ins/mobile_group_ins/insure/'+".$input['identification']."</script>";
+        }
         $start_time = $insurance_attributes['ty_base']['ty_start_date']??'';
         $num = count($insurance_attributes['ty_beibaoren']);
         $prepare = OrderPrepareParameter::where('identification', $input['identification'])->first();

@@ -9,10 +9,12 @@
                     <i class="iconfont icon-yduidunpaishixin"></i><span>为了保障您的权益，请填写真实有效的信息。您填写的内容仅供投保使用，对于您的信息我们会严格保密。</span>
                 </div>
                 <div class="notification-left-content">
-                    <h1 class="notification-left-title">投保告知</h1>
+                    <h1 class="notification-left-title">{{ $product_res['moduleName'] }}</h1>
                     <div class="notification-left-list">
                         <div class="notice-list list1">
-                            {{$product_claes}}
+
+
+                            {{$product_res['healthyQuestions']}}
                         </div>
                         {{--<ul>--}}
                             {{--<li>1、投保前请您仔细阅读：<a href="/ins/insure_clause/{{$identification}}" target="_blank">产品条款</a>--}}
@@ -32,7 +34,7 @@
         <script>
             var identification = "{{$identification}}";
             $('.btn').click(function(){
-                @if($res != 3)
+                @if($res == 2)
                     window.location.href = '/ins/insure/'+identification;
                 @else
 //                      window.location.href = '/ins/insure/'+identification;
@@ -52,17 +54,28 @@
             // 投保须知-健康告知格式转换
             function changeInfo(cont){
                 var html = '<ul>';
-                cont = cont.replace(/\d+[\、|\.]/g,"///").split('///');
+                cont = cont.replace(/\d\./g,"//").split('//');
                 var arr = [];
-                $.each(cont,function(index){
-                    if(index !== 0){
-                        html += '<li><span>'+ (index) + '.</span>' +cont[index] +'</li>';
+                for (var i=0,l=cont.length;i<l;i++) {
+                    if(!cont[i].trim()){continue;}
+                    arr = cont[i].replace(/\d、/g,"//").split('//');
+                    for(var j=0,len=arr.length;j<len;j++){
+                        if(len == 1){
+                            html += '<li><span>'+ (i) + '.</span>' +arr[j] +'</li>';
+                        }else{
+                            if(!arr[j].trim()){continue;}
+                            if(j==1){
+                                html += '<li><span>'+ (i) + '.</span>' + (j) + '、' +arr[j] +'</li>';
+                            }else{
+                                html += '<li class="level2"><span>'+ (j) + '、</span>' +arr[j] +'</li>';
+                            }
+                        }
                     }
-                });
+                }
                 html += '</ul>';
                 return html;
             }
-//            console.log($('.list1').text());
+
             $(".list1").html(changeInfo($('.list1').text()));
     </script>
 @stop

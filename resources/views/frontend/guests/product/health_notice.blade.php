@@ -17,9 +17,9 @@
                                 @if(
                                 $value['condition']=='age'
                                 &&
-                                $params[$value['condition']]<=explode('-',$value['condition_value'])[1]
+                                intval($params[$value['condition']]) <= intval(explode('-',$value['condition_value'])[1])
                                 &&
-                                $params[$value['condition']]>=explode('-',$value['condition_value'])[0]
+                                intval($params[$value['condition']]) >= intval(explode('-',$value['condition_value'])[0])
                                 )
                                     <tr data-id="{{$value['id']}}">
                                         <td class="text">{{$value['order']}}.{{$value['content']}}</td>

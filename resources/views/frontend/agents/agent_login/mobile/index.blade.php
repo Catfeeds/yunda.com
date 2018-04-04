@@ -14,6 +14,7 @@
     <div class="content content-login">
         <form id="login_form" action="/agent_do_login" method="post">
             <input type="hidden" name="_token" value="{{csrf_token()}}">
+            <input type="hidden" name="redirect" value="{{$redirect}}"/>
         <ul>
             <li>
                 <input class="tel" type="text" placeholder="手机号码" name="phone">

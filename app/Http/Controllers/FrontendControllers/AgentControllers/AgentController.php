@@ -855,6 +855,9 @@ class  AgentController extends BaseController{
             //添加到users表
             $user_res = User::where('phone',$data->user['phone'])
                 ->update(['email'=>$input['email']]);
+            //更改agent认证状态(部分地方未使用新的认证状态 条件判断)
+            Agent::where('id',$_COOKIE['agent_id'])
+                ->update(['certification_status'=>1]);
             //添加到认证表
             $authentication = new AuthenticationPerson();
             $authentication->user_id = $data->user['id'];

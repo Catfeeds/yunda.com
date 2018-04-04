@@ -136,7 +136,7 @@
             <div class="guarantee-wrapper clearfix">
                 <table class="table-left" cellspacing="5" cellpadding="5">
                     <tr>
-                        <td>保障权益</td>
+                        <td>保险名称</td>
                         <td>{{$data->product['product_name']}}</td>
                     </tr>
                     <tr>
@@ -163,20 +163,20 @@
                     </tr>
                     <tr>
                         <td>保费</td>
-                        <td>{{$data->warranty_rule->warranty['premium']/100}}元/人/年</td>
+                        <td>{{$data->warranty_rule->warranty['premium']/100}}元</td>
                     </tr>
                 </table>
                 <table class="table-right">
                     <tr>
                         <td width="120px">保障权益</td>
                         <td>
-                            <ul class="order-rights">
+                            <ul class="">
                                 @if(isset($data->order_parameter))
                                     @foreach($data->order_parameter as $it => $item)
                                         @php $items = json_decode($item['parameter'],true); @endphp
                                         @php $protect_item = json_decode($items['protect_item'],true); @endphp
                                         @foreach($protect_item as $key => $val)
-                                            <li>{{$val['name']}} {{$val['defaultValue']}}</li>
+                                            <li>{{$val['name']}} {{$val['defaultValue']}}</li><br>
                                         @endforeach
                                     @endforeach
                                 @else
@@ -195,7 +195,7 @@
                     @endif
             </div>
             <div>
-                <div class="fr"><button class="btn btn-add">添加</button><button class="btn red">删除</button></div>
+                {{--<div class="fr"><button class="btn btn-add">添加</button><button class="btn red">删除</button></div>--}}
                 <div class="search">
                     <i class="iconfont icon-sousuo"></i>
                     <input type="text" placeholder="请输入要搜索的姓名"/>
@@ -206,7 +206,7 @@
                 <thead>
                 <tr>
                     <th width="60px"><input id="allSelect" type="checkbox" />全选</th>
-                    {{--<th width="60px">工号</th>--}}
+                    <th width="60px">编号</th>
                     <th width="40px">被保人</th>
                     <th width="200px">身份证</th>
                     <th width="120px">手机号</th>
@@ -217,11 +217,14 @@
                 @foreach($data->warranty_recognizee as $v)
                 <tr>
                     <td><input type="checkbox" /></td>
-                    {{--<td>01</td>--}}
+                    <td>{{$v['id']}}</td>
                     <td>{{$v['name']}}</td>
                     <td>{{$v['code']}}</td>
                     <td>{{$v['phone']}}</td>
-                    <td><button class="btn btn-edite">修改</button><button class="btn red">删除</button></td>
+                    <td>
+                        {{--<button class="btn btn-edite">修改</button>--}}
+                        <button value="{{$v['id']}}" class="btn-del red">删除</button>
+                    </td>
                 </tr>
                     @endforeach
                 </tbody>
@@ -234,15 +237,16 @@
     </div>
     <script src="{{config('view_url.company_url').'js/lib/paging.js'}}"></script>
     <script type="text/javascript">
-//        $('#pageToolbar').Paging({
-//            pagesize: 10,
-//            count: 85,
-//            prevTpl: "<",
-//            nextTpl: ">",
-//            toolbar: true,
-//            callback: function(page, size, count) {
-//                console.log('当前第 ' + page + '页,每页 ' + size + '条,总页数：' + count + '页')
-//            }
-//        });
+        $('.btn-del').click(function(){
+            var id = $(this).val();
+            $.ajax({
+                url:'/staff/passStaff/'+id,
+                type:'get',
+                data:{data:'done'},
+                success:function(res){
+                    Mask.alert(res.msg);
+                }
+            })
+        })
     </script>
     @stop

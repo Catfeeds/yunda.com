@@ -39,6 +39,7 @@
 							<input type="hidden" name="agent_id" value="{{ isset($_GET['agent_id']) ? $_GET['agent_id'] : 0}}" >
 							<input type="hidden" name="plan_id" value="{{ isset($_GET['plan_id']) ? $_GET['plan_id'] : 0}}" >
 							<input type="hidden" name="ty_product_id" value="{{$ty_product_id}}">
+							<input type="hidden" name="health_verify" value="{{ $health_verify }}" >
 							<div id="hidden"></div>
 								<div id="option">
 									@php

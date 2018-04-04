@@ -12,8 +12,8 @@
 		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
 		<style>
 			.btn-next{display: block;margin: .4rem auto;width: 90%;color: #744c22;background: #f6d85f;}
-			.icon-check{float: right;margin-top: .24rem;width: .5rem;height: .5rem;background: url(imges/no_checked.png) no-repeat;background-size: 100% 100%;}
-			.icon-check.active{background: url(imges/checked_on.png) no-repeat;background-size: 100% 100%;}
+			.icon-check{float: right;margin-top: .24rem;width: .5rem;height: .5rem;background: url({{config('view_url.channel_views')}}imges/no_checked.png) no-repeat;background-size: 100% 100%;}
+			.icon-check.active{background: url({{config('view_url.channel_views')}}imges/checked_on.png) no-repeat;background-size: 100% 100%;}
 		</style>
 	</head>
 
@@ -33,23 +33,26 @@
 		</header>
 		<div>
 			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<div>
-						<ul class="process-wrapper">
-							<li class="active"><div class="icon"></div><div>出险人员</div></li>
-							<li class="active"><div class="icon"></div><div>出险类型</div></li>
-							<li><div class="icon"></div><div>出险信息</div></li>
-							<li><div class="icon"></div><div>联系方式</div></li>
-						</ul>
-						<ul class="form-wrapper">
-							<li style="font-weight: bold;">出险类型</li>
-							<li><label>普通案件保险金申请<i class="icon-check"></i><input hidden type="checkbox" value=""/></label></li>
-							<li><label>残疾保险金申请<i class="icon-check"></i><input hidden type="checkbox"  value=""/></label></li>
-							<li><label>身故保险金申请<i class="icon-check"></i><input hidden type="checkbox"  value=""/></label></li>
-						</ul>
-						<button id="next" disabled class="btn btn-next">下一步</button>
+				<form action="{{config('view_url.channel_yunda_target_url')}}claim_reason" method="post" id="claim_reason">
+					<input type="hidden" name="input" value="{{json_encode($input)}}">
+					<div class="mui-scroll">
+						<div>
+							<ul class="process-wrapper">
+								<li class="active"><div class="icon"></div><div>出险人员</div></li>
+								<li class="active"><div class="icon"></div><div>出险类型</div></li>
+								<li><div class="icon"></div><div>出险信息</div></li>
+								<li><div class="icon"></div><div>联系方式</div></li>
+							</ul>
+							<ul class="form-wrapper">
+								<li style="font-weight: bold;">出险类型</li>
+								<li><label>普通案件保险金申请<i class="icon-check"></i><input hidden name="type[]" type="checkbox" value="1"/></label></li>
+								<li><label>残疾保险金申请<i class="icon-check"></i><input hidden name="type[]" type="checkbox"  value="2"/></label></li>
+								<li><label>身故保险金申请<i class="icon-check"></i><input hidden name="type[]" type="checkbox"  value="3"/></label></li>
+							</ul>
+							<button id="next" disabled class="btn btn-next">下一步</button>
+						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 		<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>

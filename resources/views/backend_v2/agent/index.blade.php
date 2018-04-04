@@ -112,7 +112,14 @@
             </div>
             </form>
         </div>
-        <div class="row" style="text-align: center">{{ $agents->links() }}</div>
+        <div class="row" style="text-align: center">
+            {{ $agents->appends([
+            'work_status' => isset($request['work_status'])&& !is_null($request['work_status'])?$request['work_status']:NULL,
+            'pending_status'=>isset($request['pending_status'])&& !is_null($request['pending_status'])?$request['pending_status']:NULL,
+            'ditch_id'=>isset($request['ditch_id'])&& !is_null($request['ditch_id'])?$request['ditch_id']:NULL,
+            'certification_status'=>isset($request['certification_status'])&& !is_null($request['certification_status'])?$request['certification_status']:NULL,
+            ])->links() }}
+        </div>
     </div>
 
     <form class="form-horizontal" action="{{url('/backend/agent/add_agent_post')}}" method="post" id="add-agent-form">

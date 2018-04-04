@@ -48,7 +48,6 @@ class SlipController extends BaseController
         $users = $this->data($type,$status);
         $option_type = 'guarantee';
         $count = count($users);
-
         if($this->is_mobile() && $this->is_person(Auth::user()->id) == 1){
             //移动个人
             return view('frontend.guests.mobile.personal.guarantee',compact('option_type','type','users','order_parameter','count'));
@@ -65,6 +64,15 @@ class SlipController extends BaseController
         }
     }
 
+    //报单详情
+    public function detail($id)
+    {
+        $data = Order::where('id',$id)
+            ->with('warranty_recognizee','product')
+            ->first();
+//        dd($data);
+        return view('frontend.guests.company.guarantee.detail',compact('data'));
+    }
 
     //    封装
     public function data($type, $status)

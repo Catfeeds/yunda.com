@@ -26,55 +26,137 @@
 				<span>提交材料</span>
 			</div>
 		</header>
-    <div class="main">
-    	<div class="info-wrapper">
+	<form action="{{config('view_url.channel_yunda_target_url')}}claim_send_email" method="post" id="claim_send_email" enctype="multipart/form-data">
+		<input name="claim_id" type="hidden" value="{{$result->claim_id}}">
+		<div class="main">
+		<div class="info-wrapper">
 				<div class="top">
-					<h1 class="title">英大非机动车驾驶员意外险</h1>
+					<h1 class="title">{{$result->product_name}}</h1>
 					<img class="logo" src="{{config('view_url.channel_views')}}imges/logo.png" alt="">
 				</div>
 				<ul class="list">
-					<li>被保人<span class="fr">王大力</span></li>
-					<li>保障期限<span class="fr">1天</span></li>
-					<li>保单号<span class="fr">41785452123654</span></li>
-					<li>保费<span class="fr">2元</span></li>
+					<li>被保人<span class="fr">{{$result->name}}</span></li>
+					<li>保障期限<span class="fr">{{$result->start_time}}  -  {{$result->end_time}}</span></li>
+					<li>保单号<span class="fr">{{$result->warranty_code}}</span></li>
+					<li>保费<span class="fr">{{$result->premium / 100}}</span></li>
 				</ul>
-			</div>
+		</div>
     	<div class="main-content">
-		    <div class="formW formW1">
-		    	<p class="text">上传有效的资料(1)</p>
-		    </div>
-		    <div class="formW formW2">
-		    	<img id="btn-front" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-		    	<input id="front" hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
-					<input id="frontVal" hidden type="text"></input>
-		    </div>
-		    <div class="formW formW1">
-		    	<p class="text">上传有效的资料(2)</p>
-		    </div>
-		    <div class="formW formW2">
-		    	<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-		    	<input id="contrary" hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
-					<input id="contraryVal" hidden type="text"></input>
-		    </div>
-		    <div class="formW formW1">
-		    	<p class="text">上传有效的资料(3)</p>
-		    </div>
-		    <div class="formW formW2">
-		    	<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-		    	<input  hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
-					<input hidden type="text"></input>
-		    </div>
-		    <div class="formW formW1">
-		    	<p class="text">上传有效的资料(4)</p>
-		    </div>
-		    <div class="formW formW2">
-		    	<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-		    	<input hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
-					<input hidden type="text"></input>
-		    </div>
+				<div class="formW formW1">
+					<p class="text">诊断证明</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-front" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input id="front" name="proof" hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input id="frontVal" name="proof" hidden type="text"></input>
+				</div>
+				<div class="formW formW1">
+					<p class="text">医疗发票</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input id="invoice" name="invoice" hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input id="invoiceVal" name="invoice" hidden type="text"></input>
+				</div>
+				<div class="formW formW1">
+					<p class="text">费用清单</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input id="expenses" name="expenses" hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input id="expensesVal" name="expenses" hidden type="text"></input>
+				</div>
+				<div class="formW formW1">
+					<p class="text">伤者身份证复印件</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input hidden id="id_code_img" name="id_code_img" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="id_code_imgVal" name="id_code_img" type="text"></input>
+				</div>
+				<div class="formW formW1">
+					<p class="text">划款户名、帐号、开户行信息</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input hidden id="account_info" name="account_info" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="account_infoVal" name="account_info" type="text"></input>
+				</div>
+				<div class="formW formW1">
+					<p class="text">交通事故责任认定书</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input hidden id="accident_proof" name="accident_proof" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="accident_proofVal" name="accident_proof" type="text"></input>
+				</div>
+				<div class="formW formW1">
+					<p class="text">财产损失证明材料</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input hidden id="proof_loss" name="proof_loss" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="proof_lossVal" name="proof_loss" type="text"></input>
+				</div>
+
+				<div class="formW formW1">
+					<p class="text">伤者相片-全身照</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input hidden id="bruise_whole" name="bruise_whole" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_wholeVal" name="bruise_whole" type="text"></input>
+				</div>
+				<div class="formW formW1">
+					<p class="text">伤者相片-面部照</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input hidden id="bruise_face" name="bruise_face" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_faceVal" name="bruise_face" type="text"></input>
+				</div>
+				<div class="formW formW1">
+					<p class="text">伤者相片-伤处照</p>
+				</div>
+				<div class="formW formW2">
+					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+					<input hidden id="bruise_wound" name="bruise_wound" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_woundVal" name="bruise_wound" type="text"></input>
+				</div>
+
+				@if(strpos('-'.$result->claim_type,'2'))
+					<div class="formW formW1">
+						<p class="text">伤残证明</p>
+					</div>
+					<div class="formW formW2">
+						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+						<input hidden id="maim_proof" name="maim_proof" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="maim_proofVal" name="maim_proof" type="text"></input>
+					</div>
+				@endif
+
+				@if(strpos('-'.$result->claim_type,'3'))
+					<div class="formW formW1">
+						<p class="text">死亡证明</p>
+					</div>
+					<div class="formW formW2">
+						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+						<input hidden id="die_proof" name="die_proof" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="die_proofVal" name="die_proof" type="text"></input>
+					</div>
+					<div class="formW formW1">
+						<p class="text">受益人</p>
+					</div>
+					<div class="formW formW2">
+						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
+						<input hidden id="beneficiary" name="beneficiary" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="beneficiaryVal" name="beneficiary" type="text"></input>
+					</div>
+				@endif
     	</div>
    	</div>
     <button id="next" class="btn-next" disabled>确认修改</button>
+	</form>
 </div>
 <script type="text/javascript" src="{{config('view_url.channel_views')}}js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript">

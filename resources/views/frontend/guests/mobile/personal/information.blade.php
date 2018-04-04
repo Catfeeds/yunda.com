@@ -36,7 +36,7 @@
         <h1 class="mui-title">个人信息</h1>
     </header>
     <div class="mui-content">
-        <form action="/mpersonal/info_submit" method="post" >
+        <form id="form_data" action="/mpersonal/info_submit" method="post" >
             {{ csrf_field() }}
         <div class="mui-scroll-wrapper">
             <div class="mui-scroll">
@@ -93,10 +93,11 @@
                 </div>
             </div>
         </div>
+        </form>
         <div class="buttonbox">
             <button class="btn btn-next">确定</button>
         </div>
-        </form>
+
     </div>
 </div>
 
@@ -140,6 +141,7 @@
                 console.log('校验不通过');
             }else{
                 console.log('提交数据');
+                $('#form_data').submit();
             }
         }else{
             if(!checkEmpty($('#name')) || !checkEmpty($('#certificateType')) || !checkEmpty($('#idCard')) ||
@@ -147,6 +149,8 @@
                 console.log('校验不通过');
             }else{
                 console.log('提交数据');
+                $('#form_data').submit();
+
             }
         }
     });

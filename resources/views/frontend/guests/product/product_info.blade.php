@@ -50,6 +50,7 @@
                                 <input type="hidden" name="ditch_id" value="{{ isset($_GET['ditch_id']) ? $_GET['ditch_id'] : 0}}" >
                                 <input type="hidden" name="agent_id" value="{{ isset($_GET['agent_id']) ? $_GET['agent_id'] : 0}}" >
                                 <input type="hidden" name="plan_id" value="{{ isset($_GET['plan_id']) ? $_GET['plan_id'] : 0}}" >
+                                <input type="hidden" name="health_verify" value="{{ $health_verify }}" >
                                 <div id="option">
                                     @php
                                         echo $option_html;

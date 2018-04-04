@@ -18,6 +18,9 @@
             $s_arr[$v['ty_key']] = $v['value'];
         }
     }
+
+    //多个时间初始化
+    $sel_date = [];
 //        dd($restrict_genes);
 ?>
         {{--
@@ -59,9 +62,30 @@
                     </div>
                 </div>
             @else
+
                 <div class="introduce-parameter-row clearfix" @if(!$v['display']) style="display: none;" @endif>
                     <span class="introduce-parameter-title">{{$v['name']}}</span>
-                    @if(in_array($v['type'], [2,3, 4, 6]))
+                    {{--惠泽地区渲染暂停使用--}}
+                    {{--@if(in_array($v['type'], [400]))--}}
+                        {{--<div class="introduce-parameter-content">--}}
+                            {{--<span class="area_box">--}}
+                                {{--<span class="type_is_area"></span>--}}
+                                {{--<input class="area" style="display: none;"/>--}}
+                                {{--<select name="province" class="province">--}}
+                                    {{--@foreach($v['subRestrictGenes'][0]['values'] as $vk => $vv)--}}
+                                        {{--<option {{$vv['value'] == $v['subRestrictGenes'][0]['defaultValue'] ? 'selected="selected"' : ''}} value="{{$vv['value']}}" data-id="{{$vk}}">{{$vv['name']}}</option>--}}
+                                    {{--@endforeach--}}
+
+                                {{--</select>--}}
+                                {{--<select name="city" class="city">--}}
+                                    {{--@foreach($v['values'] as $vk => $vv)--}}
+                                        {{--<option {{$vv['ty_value'] == $v['defaultValue'] ? 'selected="selected"' : ''}} value="{{$vv['ty_value']}}" data-id="{{$vk}}">{{$vv['name']}}</option>--}}
+                                    {{--@endforeach--}}
+                                {{--</select>--}}
+                            {{--</span>--}}
+                        {{--</div>--}}
+                    {{--@elseif(in_array($v['type'], [2,3,4,6]))--}}
+                    @if(in_array($v['type'], [2,3,4,6]))
                         <div class="introduce-parameter-content">
                             <ul class="fl clearfix">
                                 @foreach($v['values'] as $vk => $vv)
@@ -112,7 +136,11 @@
                             {{--@endif--}}
                         </div>
                     @elseif (in_array($v['type'], [1]))
-                        @php $value = $s_arr[$v['ty_key']] ? $s_arr[$v['ty_key']] : date('Y-m-d',time()) @endphp
+                        @php
+                            $value = $s_arr[$v['ty_key']] ? $s_arr[$v['ty_key']] : date('Y-m-d',time());
+                            $sel_date[] = $ty_key;
+                        @endphp
+
                         <div class="introduce-parameter-content">
                             <ul class="fl clearfix">
                                 <li id="bithday_value">
@@ -120,9 +148,9 @@
                                 </li>
                             </ul>
                         </div>
-                        <select class="datetime sel_year" rel="{{date('Y', strtotime($value))}}"></select>
-                        <select class="datetime sel_month" rel="{{date('m',strtotime($value))}}"></select>
-                        <select class="datetime sel_day" rel="{{date('d',strtotime($value))}}"></select>
+                        <select class="datetime sel_year sel_year_{{$ty_key}}"  rel="{{date('Y', strtotime($value))}}"></select>
+                        <select class="datetime sel_month sel_month_{{$ty_key}}"  rel="{{date('m',strtotime($value))}}"></select>
+                        <select class="datetime sel_day sel_day_{{$ty_key}}"  rel="{{date('d',strtotime($value))}}"></select>
                     @endif
                 </div>
 
@@ -161,11 +189,17 @@
 <script src="{{config('view_url.view_url').'js/lib/birth.js'}}"></script>
 <script>
 $(function () {
+    //多个时间循环初始化
+    @foreach($sel_date as $vo)
     $.ms_DatePicker({
-        YearSelector: ".sel_year",
-        MonthSelector: ".sel_month",
-        DaySelector: ".sel_day"
+        YearSelector: ".sel_year_{{$vo}}",
+        MonthSelector: ".sel_month_{{$vo}}",
+        DaySelector: ".sel_day_{{$vo}}"
     });
+    @endforeach
+
+    var sel_day = $('.sel_day.intro');
+    console.log(sel_day);
     var price  = $('#price1').text();
     $('#price2').text(price);
 });
@@ -200,15 +234,16 @@ $(function () {
                         $("#quote-button").trigger('click');
                     });
                     $('.datetime').on('change',function(){
-                        var year = $('.sel_year').find("option:selected").val();
-                        var month = $('.sel_month').find("option:selected").val();
-                        var day = $('.sel_day').find("option:selected").val();
+                        var $this = $(this).parent();
+                        var year = $this.children('.sel_year').find("option:selected").val();
+                        var month = $this.children('.sel_month').find("option:selected").val();
+                        var day = $this.children('.sel_day').find("option:selected").val();
                         // 补0
                         month < 10 && (month = '0' + month);
                         day < 10 && (day = '0' + day);
                         // 拼接
                         var date_str = year+'-'+month+'-'+day;
-                        var $birthday = $('#bithday');
+                        var $birthday = $this.children('.introduce-parameter-content').children().children().children();
                         // 原来的data-value
                         var data_value = $birthday.attr('data-value');
                         that.oldVal = data_value;   //变更选项的旧值
@@ -249,7 +284,7 @@ $(function () {
                 };
                 app.requestApi = function () {
                     var protect_item = $("#protect_item").val();
-//                    console.log(this.newVal);
+    //                    console.log(this.newVal);
 //                    console.log(this.oldVal);
 //                    console.log(this.oldOption);
                     Mask.loding('正在算费');

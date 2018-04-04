@@ -32,21 +32,25 @@
 		<div>
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
-					<div>
-						<ul class="process-wrapper">
-							<li class="active"><div class="icon"></div><div>出险人员</div></li>
-							<li><div class="icon"></div><div>出险类型</div></li>
-							<li><div class="icon"></div><div>出险信息</div></li>
-							<li><div class="icon"></div><div>联系方式</div></li>
-						</ul>
-						<ul class="form-wrapper">
-							<li style="font-weight: bold;">出险人员</li>
-							<li>姓名<input type="text" value="" placeholder="请输入"/></li>
-							<li>证件号码<input type="text"  value="" placeholder="请输入"/></li>
-							<li>当前住址<input type="text"  value="" placeholder="请输入"/></li>
-						</ul>
-						<button id="next" disabled class="btn btn-next">下一步</button>
-					</div>
+					<form action="{{config('view_url.channel_yunda_target_url')}}claim_type" method="post" id="claim_type">
+						<input type="hidden" name="warranty_id" value="{{ $warranty_id }}">
+						<div>
+							<ul class="process-wrapper">
+								<li class="active"><div class="icon"></div><div>出险人员</div></li>
+								<li><div class="icon"></div><div>出险类型</div></li>
+								<li><div class="icon"></div><div>出险信息</div></li>
+								<li><div class="icon"></div><div>联系方式</div></li>
+							</ul>
+							<ul class="form-wrapper">
+								<li style="font-weight: bold;">出险人员</li>
+								<li>姓名<input type="text" name="name" value="" placeholder="请输入"/></li>
+								<li>证件号码<input type="text" name="id_code" value="" placeholder="请输入"/></li>
+								<li>当前住址<input type="text" name="address" value="" placeholder="请输入"/></li>
+							</ul>
+							<button id="next" disabled class="btn btn-next">下一步</button>
+						</div>
+					</form>
+
 				</div>
 			</div>
 		</div>

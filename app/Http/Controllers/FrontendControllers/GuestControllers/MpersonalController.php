@@ -93,15 +93,17 @@ class MpersonalController extends BaseController{
         $id = $this->getId();
         $User = User::find($id);
         $change_array = array(
-            'name'=>$input['name'],
-            'real_name'=>$input['name'],
-            'code'=>$input['id_code'],
+            'name'=>$input['name']??' ',
+            'real_name'=>$input['name']??' ',
+            'code'=>$input['id_code']??' ',
+            'address'=>$input['address']??' '.$input['addressDetails']??' ',
         );
         $result = $this->edit($User,$change_array);
+//        dd($result);
         if($result){
-            return "<script>alert('修改完成');location.href =".url('/mpersonal/manage').";</script>";
+            return "<script>alert('修改完成');history.back();</script>";
         }else{
-            return "<script>alert('修改失败');location.href =".url('/mpersonal/manage').";</script>";
+            return "<script>alert('修改失败');history.back();</script>";
         }
     }
 

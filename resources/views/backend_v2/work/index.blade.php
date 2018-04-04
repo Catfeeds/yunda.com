@@ -132,7 +132,7 @@
 			</div>
 
 			<div class="row text-center">
-				{{ $data->links() }}
+				{{ $data->appends(['status' => $status])->links() }}
 {{--				{{ $list->appends(['id' => $status_id])->links() }}--}}
 			</div>
 		</div>

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Agent;
 use Closure;
 use Illuminate\Support\Facades\Auth;
+use URL;
 
 class IsAgent
 {
@@ -22,7 +23,7 @@ class IsAgent
         {
             return $next($request);
         }else{
-            return redirect('/agent_login');
+            return redirect('/agent_login?redirect='.URL::full());
         }
     }
 }

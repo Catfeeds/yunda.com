@@ -86,9 +86,18 @@ Route::group(['prefix' => 'channels', 'namespace'=>'ChannelsApiControllers'],fun
         Route::any('user_info', 'SetingController@userInfo');//用户信息
         //理赔流程
         Route::any('claim_index', 'ClaimController@claimIndex');//理赔主页面
-
-
-
+        //申请理赔
+        Route::any('claim_contact', 'ClaimController@claimContact');//申请理赔
+        Route::any('claim_email', 'ClaimController@claimEmail');
+        Route::any('claim_info', 'ClaimController@claimInfo');
+        Route::any('claim_material_upload', 'ClaimController@claimMaterialUpload');
+        Route::any('claim_progress', 'ClaimController@claimProgress');
+        Route::any('claim_reason', 'ClaimController@claimReason');
+        Route::any('claim_result', 'ClaimController@claimResult');
+        Route::any('claim_type', 'ClaimController@claimType');
+        Route::any('claim_user', 'ClaimController@claimUser');
+        Route::any('claim_send_email', 'ClaimController@claimSendEmail');
+        Route::any('claim_audit', 'ClaimController@claimAudit');
     });
 });
 

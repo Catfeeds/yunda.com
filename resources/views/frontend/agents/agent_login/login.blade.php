@@ -23,6 +23,7 @@
         <div class="title"><i class="iconfont icon-xiugaitouxiang"></i>代理人登录</div>
         <form action="/agent_do_login" method="post">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="redirect" value="{{$redirect}}"/>
             <div>
             <ul class="form-wrapper">
                 <li><input id="tel" type="tel" placeholder="手机号" maxlength="11" name="phone"/></li>

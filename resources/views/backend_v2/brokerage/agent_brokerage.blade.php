@@ -131,7 +131,11 @@
         </div>
 
         <div class="row text-center">
-            {{ $res->links() }}
+            {{ $res->appends([
+            'ty_product_id' => isset($input['ty_product_id'])?$input['ty_product_id']:NULL,
+            'ditch_id'=>isset($input['ditch_id'])?$input['ditch_id']:NULL,
+            'agent_id'=>isset($input['agent_id'])?$input['agent_id']:NULL,
+            ])->links() }}
         </div>
     </div>
     @foreach($res as $k => $v)

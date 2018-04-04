@@ -6,13 +6,12 @@
         </div>
         <div class="table-wrapper">
             <div class="table-head clearfix">
-                <span class="col1" style="width:280px;">产品名称</span>
-                <span class="col2">保障权益</span>
-                <span class="col3">保费</span>
-                <span class="col4">被保人</span>
-                <span class="col5">保障时间</span>
-                <span class="col6">订单状态</span>
-                {{--<span class="col7">操作</span>--}}
+                <span class="col1">产品名称</span>
+                <span class="col2">权益</span>
+                <span class="col4">保费</span>
+                <span class="col5">参保人</span>
+                <span class="col6">保障期限</span>
+                <span class="col7">操作</span>
             </div>
             <ul class="table-body">
                 @foreach($users as $value)
@@ -64,16 +63,8 @@
                                 <div>至</div>
                                 <div>{{isset($value['end_time'])?strtok($value['end_time'],' ') : date("Y-m-d",strtotime("+1 year",strtotime($value['start_time'])))}}</div>
                             </div>
-                            <div class="col6 red">
-                                @if(strtotime($value['start_time']) > time())
-                                    待生效
-                                @elseif(strtotime($value['start_time']) <= time())
-                                    保障中
-                                @elseif($value->status=='2')
-                                    已失效
-                                @elseif($value->status=='3')
-                                    已退保
-                                @endif
+                            <div class="col6 ">
+                                <a href="/guarantee/company_guarantee_detail/{{$value['id']}}">查看详情</a>
                             </div>
 
                         </div>

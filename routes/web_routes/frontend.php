@@ -26,6 +26,7 @@ Route::group(['prefix'=>'ins','namespace'=>'\ApiControllers'], function(){
     Route::any('add_beibaoren_info/{identification}','GroupInsApiMobileController@addBeibaorenInfo');//移动端团险投保页(添加被保人信息)
     Route::post('add_beibaoren_info_submit','GroupInsApiMobileController@addBeibaorenInfoSubmit');//移动端团险投保页(添加被保人信息数据提交)
     Route::get('add_beibaoren_success','GroupInsApiMobileController@addBeibaorenSuccess');//移动端团险投保页(添加被保人信息成功)
+    Route::post('sub_health_notice', 'InsApiController@subHealthNotice');//提交健康告知
 
 
    //TODO  wangsl2018-01.11修改（匿名下单）
@@ -262,9 +263,6 @@ Route::group(['prefix' => '/', 'namespace'=>'FrontendControllers'],function () {
             Route::get('offlineSuccess',function (){
                 return view('frontend.agents.agent_sale_offline.offline_success');
             });//线下单预览
-            //移动端线下单录入
-            Route::get('offlineMobile','AgentSaleOfflineController@addOfflineMobile');//线下单页面
-            Route::get('offlineCustList','AgentSaleOfflineController@offlineCustList');//线下单客户列表
 
             Route::get('agent_need','AgentSaleController@agentNeed');//代理人需求
             Route::post('agent_need_submit','AgentSaleController@agentNeedSubmit');//代理人需求提交
@@ -434,14 +432,16 @@ Route::group(['prefix' => '/', 'namespace'=>'FrontendControllers'],function () {
             Route::any('change_submit','OrderController@changeSubmit');//变更展示
             Route::any('submit_change','OrderController@submitChange');//变更提交
             Route::get('pay_again/{code}','OrderController@payAgain');//未支付的订单去支付（9.12）
-            Route::get('company_guarantee/{type}','OrderController@companyGuarantee');//pc端公司保单
-            Route::get('company_guarantee_detail/{id}','OrderController@companyGuaranteeDetail');//pc端公司保单详情
+
         });
         //保单管理
         Route::group(['prefix'=>'guarantee'],function(){
             Route::get('index/{type}','SlipController@index');//保单显示页面
+            Route::get('detail/{id}','SlipController@detail');//保单详情
             Route::get('change/{order_id}','SlipController@change');//保单显示页面
             Route::get('guarantee_detail/{id}','SlipController@guaranteeDetail');//移动端个人保单详情
+//            Route::get('company_guarantee/{type}','OrderController@companyGuarantee');//pc端公司保单
+            Route::get('company_guarantee_detail/{id}','OrderController@companyGuaranteeDetail');//pc端公司保单详情
 
         });
         //保全业务

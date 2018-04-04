@@ -470,7 +470,10 @@ class OrderController extends BaseController
     {
         $option_type = 'guarantee';
         $data = Order::where('id',$id)
-            ->with('agent.user','order_parameter','product','warranty_rule.warranty','warranty_recognizee')
+            ->with('agent.user','order_parameter','product','warranty_rule.warranty')
+            ->whereHas('warranty_recognizee',function($q){
+                $q->where('status','<>',4);
+            })
             ->first();
         $data->product['json'] = json_decode($data->product['json'],true);
         $data->product['clauses'] = json_decode($data->product['clauses'],true);

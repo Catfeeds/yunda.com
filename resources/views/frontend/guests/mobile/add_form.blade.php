@@ -405,7 +405,7 @@
                     delimiter = ',';
                 }
                 data = data.replace(/\\/g, "\\\\");
-				console.log(data);
+//				console.log(data);
                 return JSON.parse(data);
             }
             var cityPicker = new mui.PopPicker({layer: 3});
@@ -433,7 +433,7 @@ $('.pickerfive').on('tap',function(){
                         _this.find('.inputhidden').val(items[0].value+delimiter+items[1].value);
 					}
 
-                    console.log(_this.find('.inputhidden').val())
+//                    console.log(_this.find('.inputhidden').val())
                 });
             });
 		</script>

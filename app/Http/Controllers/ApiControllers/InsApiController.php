@@ -73,13 +73,17 @@ class InsApiController
             ->withData($data)
             ->withTimeout(120)
             ->post();
+//        dd($response);
 //        print_r($response->content);exit;
         if($response->status != 200){
             LogHelper::logError($biz_content, $response->content, 'ty', 'ins_api_info');
             return $this->error_notice->error('获取产品详情失败');
-//            return "<script>alert('获取产品详情失败');location.href='/';</script>";
         }
         $return_data = json_decode($response->content, true);
+//        dump($return_data);die;
+        //健康告知是否验证
+        $health_verify = $return_data['switch']['health_verify'] ?? 0;
+
         $ins = $this->insApiInfo($return_data);
         $restrict_genes = $return_data['option']['restrict_genes'];     //算费因子
        $selected_options = $return_data['option']['selected_options']; //默认算费选中项
@@ -105,6 +109,7 @@ class InsApiController
                 $protects[$key]['text'] = $value['defaultValue'];
             }
         }
+
         $item_html = $protect_items ? $this->itemHtml($protect_items) : '';
         $object = Product::where('ty_product_id', $id)->first();
         $json = $object->json;
@@ -112,6 +117,7 @@ class InsApiController
         if(!is_null($object['cover'])){
             $json['cover']= $object['cover'];
         }
+
         //计划书已读
         if(isset($input['agent_id']) && isset($input['ditch_id']) && isset($input['plan_id']))
             PlanLists::where(['id'=> $input['plan_id'], 'status'=> 1])->update(['status'=> 2, 'read_time'=> date("Y-m-d H:i:s")]);
@@ -129,6 +135,7 @@ class InsApiController
                 ->with('item_html',$item_html)
                 ->with('ins_type',$ins_type)
                 ->with('ty_product_id',$id)
+                ->with('health_verify',$health_verify)
                 ->with('ins',$ins);
         }
         //        dd($id);
@@ -142,6 +149,7 @@ class InsApiController
             ->with('item_html',$item_html)
             ->with('ins_type',$ins_type)
             ->with('ty_product_id',$id)
+            ->with('health_verify',$health_verify)
             ->with('ins',$ins);
     }
     /**
@@ -151,7 +159,6 @@ class InsApiController
     public function quote()
     {
         $biz_content = $this->_request->all();
-//        dump($biz_content);
 //        $is_mobile = $this->is_mobile();
         //天眼接口参数封装
         $data = $this->_signHelp->tySign($biz_content);
@@ -161,7 +168,6 @@ class InsApiController
             ->withData($data)
             ->withTimeout(60)
             ->post();
-//        print_r($response->content);exit;
 //        dd(json_decode($response->content));exit;
         if($response->status !== 200)
             return response($response->content, $response->status);
@@ -180,9 +186,7 @@ class InsApiController
 
         //如果返回值中存在 保障内容有变化
         $old_protect_item = isset($this->_request->old_protect_item) ? json_decode($this->_request->get('old_protect_item'), true) : array();
-        
-        
-        
+
         if(isset($data['protect_items']) && $data['protect_items']){
             //保障项目不是走接口返回的，不存在protectItemId，且数据为此次算费的所有保障内容
             if(!isset($data[0]['protectItemId'])){
@@ -213,15 +217,22 @@ class InsApiController
         //        print_r($this->_request->all());
         $input = $this->_request->all();
         $ty_product_id = $input['ty_product_id'];
-        if($ty_product_id == 29){
+        if($ty_product_id == 29 || $ty_product_id == 49){
             return "<script>alert('报备产品，不可投保');history.back();</script>";
         }
         $product_type = Product::where('ty_product_id',$ty_product_id)->pluck('insure_type')[0];
+
+        //原有处理逻辑 团险时验证健康告知
         $res = $this->getProductType($ty_product_id);
+        $input['health_verify'] =  $input['health_verify'] ?? '';
+        if($input['health_verify']){
+            $res = 3;
+        }
         $agent_id = $input['agent_id'];
         $ditch_id = $input['ditch_id'];
         $plan_id = $input['plan_id'];
         $api_info =ApiInfo::where('private_p_code', $input['private_p_code'])->first();
+
         $product_res = Product::where('ty_product_id',$ty_product_id)->first();//投保须知
         $product_claes = json_decode($product_res['json'],true)['content'];
         //        $json = json_decode($api_info->json, true);
@@ -246,12 +257,14 @@ class InsApiController
 //            $is_mobile = $this->is_mobile();
             if($this->is_phone){
                 return view('frontend.guests.mobile.cover_notes')
+                    ->with('res',$res)
                     ->with('product_type',$product_type)
                     ->with('product_res',$product_claes)
                     ->with('ty_product_id',$ty_product_id)
                     ->with('identification',$identification);
             }
             $data = $this->productRight($identification);
+
             return view('frontend.guests.product.cover_notes')
                 ->with('res',$res)
                 ->with('parameter',$data['parameter'])
@@ -264,7 +277,65 @@ class InsApiController
     }
     //健康须知
     public function healthNotice($identification){
+
+
         $data = $this->productRight($identification);
+
+        //获取第三方健康告知  暂时只有惠泽一部分产品使用
+        if($data['parameter']['health_verify']){
+            $parameter = $this->_signHelp->tySign($data['parameter']);
+
+//            print_r(json_encode($data['parameter']));die;
+            //请求健康告知
+            $response = Curl::to(env('TY_API_SERVICE_URL') . '/ins_curl/get_health_statement')
+                ->returnResponseObject()
+                ->withData($parameter)
+                ->withTimeout(60)
+                ->post();
+//            dump(json_decode($response->content,true));
+            if($response->status !== 200)
+                return response($response->content, $response->status);
+
+            $content = json_decode($response->content, true);
+
+            $product_res = $content['healthyModules'][0];
+
+
+            $selected = json_decode($data['parameter']['selected'],true);
+
+            $ty_keys = [];
+            foreach($selected['genes'] as $value){
+                if(isset($value['ty_key'])) $ty_keys[$value['ty_key']] = $value['value'];
+            }
+
+            $params = [];
+            $params['age'] =$this->countAge($ty_keys['ty_age']);//年龄
+            $params['price'] = $data['parameter']['price'];//保费
+            $params['sex'] = $ty_keys['sex']??"";//性别
+            $params['pay_way'] = $ty_keys['ty_pay_way']??"";//缴别
+            $params['period_value'] = $ty_keys['ty_duration_period_value']??"";//保障
+
+            if($this->is_phone){
+                return view('frontend.guests.mobile.health_notice_api')
+                    ->with('parameter',$data['parameter'])
+                    ->with('params',$params)
+                    ->with('healthId',$content['healthId'])
+                    ->with('transNo',$content['transNo'])
+                    ->with('partnerId',$content['partnerId'])
+                    ->with('product_res',$product_res)
+                    ->with('identification',$identification);
+            }else{
+                return view('frontend.guests.product.health_notice_api')
+                    ->with('parameter',$data['parameter'])
+                    ->with('params',$params)
+                    ->with('healthId',$content['healthId'])
+                    ->with('transNo',$content['transNo'])
+                    ->with('partnerId',$content['partnerId'])
+                    ->with('product_res',$product_res)
+                    ->with('identification',$identification);
+            }
+        }
+
         $health_res = json_decode($data['product_res']['json'],true)['insurance_health']??[];
        if(empty($health_res)&&count($health_res)==0){
             return redirect('/ins/insure/'.$identification);
@@ -274,8 +345,19 @@ class InsApiController
         foreach($selected as $value){
             $ty_keys[$value['ty_key']] = $value['value'];
         }
+
         $params = [];
+
+
+        $ty_keys['ty_birthday'] = $ty_keys['ty_birthday'] ?? '';
+        if($ty_keys['ty_birthday']){
+            $ty_keys['ty_age'] = $this->countAge($ty_keys['ty_birthday']);
+        }
+
+        if($ty_keys['ty_birthday'] || $ty_keys['ty_age']) $params['age'] = $ty_keys['ty_age'] ?? '';//年龄
+
         $params['age'] = $this->countAge($ty_keys['ty_birthday']??"")??$ty_keys['ty_age'];//年龄
+
         $params['price'] = $data['parameter']['price'];//保费
         $params['sex'] = $ty_keys['ty_sex']??"";//性别
         $params['pay_way'] = $ty_keys['ty_pay_way']??"";//缴别
@@ -294,6 +376,91 @@ class InsApiController
             ->with('params',$params)
             ->with('identification',$identification);
     }
+
+    /**
+     * 提交健康告知   暂时只有惠泽使用
+     */
+    public function subHealthNotice(){
+        $input = $this->_request->all();
+
+        //格式化封装回答
+        $qaAnswer = $input['qaAnswer'];
+        $questionArr = $input['question'];
+        $healthyQaModules['healthyQaQuestions'] = [];
+        $healthyQaModules['moduleId'] = $input['moduleId'];
+        $questionKey = array_keys($input['question']);
+
+        foreach ($input['answer'] as $key=>$val){
+            //封装答案
+            $answer_data = [];
+            foreach ($val as $kk=>$vv){
+                $answer = [];
+                $answer['answerId'] = $kk;
+                $answer['answerValue'] = $vv[array_keys($vv)[0]];
+                $answer['keyCode'] = array_keys($vv)[0];
+
+                $answer_data[] = $answer;
+            }
+
+            if(is_int($key)){
+
+                $question = [];
+                $question['questionId'] = $key;
+                $question['parentId'] = $questionArr[$key]['parentId'];
+                $question['questionSort'] = $questionArr[$key]['questionSort'];
+                $question['healthyQaAnswers'] = $answer_data;
+                $healthyQaModules['healthyQaQuestions'][] = $question;
+
+            }else{
+                $questionIds = array_filter(explode(',', $key));
+
+                foreach ($questionIds as $vo){
+                    //有可能存在没返回的的问题id
+                    if(in_array($vo, $questionKey)){
+                        //封装问题
+                        $question = [];
+                        $question['questionId'] = $vo;
+                        $question['parentId'] = $questionArr[$vo]['parentId'];
+                        $question['questionSort'] = $questionArr[$vo]['questionSort'];
+                        $question['healthyQaAnswers'] = $answer_data;
+                        //$qaAnswer['healthyQaModules']['healthyQaQuestions'][] = $question;
+                        $healthyQaModules['healthyQaQuestions'][] = $question;
+                    }
+                }
+            }
+        }
+        $qaAnswer['healthyQaModules'][] = $healthyQaModules;
+
+
+        $data = $this->productRight($input['identification']);
+        $parameter = $data['parameter'];
+        $parameter['transNo'] = $input['transNo'];
+        $parameter['qaAnswer'] = $qaAnswer;
+
+        $parameter = $this->_signHelp->tySign($parameter);
+        //请求健康告知
+        $response = Curl::to(env('TY_API_SERVICE_URL') . '/ins_curl/sub_health_statement')
+            ->returnResponseObject()
+            ->withData($parameter)
+            ->withTimeout(60)
+            ->post();
+//        dump($response);
+
+        if($response->status !== 200)
+            return $this->error_notice->error($response->content, 1);
+
+        $content = json_decode($response->content, true);
+
+        $data['parameter']['healthId'] = $content['healthId'];
+
+        if(OrderPrepareParameter::where('identification', $input['identification'])->update([
+            'parameter'=> json_encode($data['parameter'])
+        ])){
+            //健康告知录入成功
+            return redirect('ins/insure/'.$input['identification']);
+        }
+    }
+
     /**
      * 获取当前产品的类型
      */
@@ -419,6 +586,7 @@ class InsApiController
         if($this->is_phone){
             $view = 'frontend.guests.mobile.add_form';
         }
+
         return view($view)
             ->with('ins',$ins)
             ->with('json',$json)
@@ -594,8 +762,41 @@ class InsApiController
     public function insurePost()
     {
         $input = $this->_request->all();
+        $type = DB::table('order_prepare_parameter')
+            ->join('product','order_prepare_parameter.ty_product_id','product.ty_product_id')
+            ->where('order_prepare_parameter.identification',$_COOKIE['identification'])
+            ->select('product.insure_type')
+            ->first();
+        switch($type->insure_type){
+            case 1:
+                if($_COOKIE['login_type'] == 'company'){
+                    setcookie('login_type','',time()-1);
+                    setcookie('user_id','',time()-1);
+                    setcookie('user_name','',time()-1);
+                    setcookie('user_type','',time()-1);
+                    Auth::logout();
+                    return $this->error_notice->error('企业客户不可以购买个险',2);
+                }
+                break;
+            case 2:
+                if($_COOKIE['login_type'] == 'user'){
+                    setcookie('login_type','',time()-1);
+                    setcookie('user_id','',time()-1);
+                    setcookie('user_name','',time()-1);
+                    setcookie('user_type','',time()-1);
+                    Auth::logout();
+                    return $this->error_notice->error('个人客户不可以购买团险',2);
+                }
+                break;
+        }
+
         if(empty($input)&&Redis::exists('prepare_order'.$_COOKIE['identification'])){
             $input = json_decode(Redis::get('prepare_order'.$_COOKIE['identification']),true);
+        }
+        $phone = json_decode($input['input'],true)['insurance_attributes']['ty_toubaoren']['ty_toubaoren_phone'];
+        $old_phone = User::where('id',Auth::user()->id)->select('phone')->first();
+        if($phone != $old_phone['phone']){
+            return $this->error_notice->error('当前登陆账户与投保账户必须保持一致',3);
         }
         $insurance_attributes = json_decode($input['insurance_attributes'],true);
         $start_time = $insurance_attributes['ty_base']['ty_start_date']??'';
@@ -615,6 +816,10 @@ class InsApiController
         }
         $data['insurance_attributes'] = json_decode($input['insurance_attributes'],true);
         $data['quote_selected'] = $parameter['selected'];
+
+//        $data['insurance_attributes']['ty_toubaoren']['ty_toubaoren_area'] =  "110000,110100,110101";
+        //健康告知id
+        $data['healthId'] = $parameter['healthId'] ?? '';
 //        $policy_res = $data['insurance_attributes']['ty_toubaoren'];
 //        $user_res = User::where('phone',$policy_res['ty_toubaoren_phone'])->select('phone')->first();
         $data = $this->_signHelp->tySign($data);
@@ -624,7 +829,7 @@ class InsApiController
             ->withData($data)
             ->withTimeout(600)
             ->post();
-//         print_r($response->content);die;
+//        print_r($response);die;
         if($response->status != 200){
             $response->content = preg_replace("/\]/",'',preg_replace("/\[/", '', $response->content));
             return $this->error_notice->error($response->content,'/ins/insure/'.$_COOKIE['identification']);
@@ -1137,6 +1342,7 @@ class InsApiController
 //            return "<script>alert('{$response->content}');history.back(-1);</script>";
         }
     }
+
     public function getPayRes(){
         $input = $this->_request->all();
         $order_res  = Order::where('order_code',$input['union_order_code'])->first();

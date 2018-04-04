@@ -76,8 +76,8 @@
 					</div>
 				</div>
 				<div class="btn-wrapper">
-					<button class="btn">返回首页</button>
-					<a href="{{config('view_url.channel_views')}}process8.html" class="btn">提交资料</a>
+					<button class="btn" id="home">返回首页</button>
+					<a href="{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id={{$claim_id}}" class="btn">提交资料</a>
 				</div>
 			</div>
 		</div>
@@ -92,6 +92,10 @@
             $('.head-img').on('tap',function(){
                 Mask.loding();
                 window.history.go(-1);
+            });
+
+            $('#home').click(function(){
+                location.href = '{{config('view_url.channel_yunda_target_url')}}claim_index';
             });
 		</script>
 	</body>

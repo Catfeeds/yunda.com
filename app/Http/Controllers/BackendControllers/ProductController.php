@@ -55,7 +55,7 @@ class ProductController extends Controller
             ->withData($data)
             ->withTimeout(60)
             ->post();
-         //print_r($response->content);exit;
+//         print_r($response->content);exit;
         if($response->status != 200)
             return (['status' => '1', 'message' => '服务器链接失败']);
         $content = $response->content;

@@ -1,4 +1,4 @@
-@extends('frontend.guests.guests_layout.base')
+ @extends('frontend.guests.guests_layout.base')
 <link rel="stylesheet/less" href="{{config('view_url.view_url')}}css/product.less"/>
 <style>
     .pagination {

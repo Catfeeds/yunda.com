@@ -2260,13 +2260,16 @@ class AgentSaleController extends AgentFuncController
         $data = $this->getMyProducts($_COOKIE['agent_id'],$where);
         foreach($data as $v){
             $v['json'] = json_decode($v['json'],true);
-            $v['clauses'] = json_decode($v['clauses'],true);
             $v['price'] = $this->getProductPremium($v['ty_product_id']);
             $v['rate'] = $this->marketDitchRelationRepository->getMyAgentBrokerage($v['ty_product_id'],$dith_id,$_COOKIE['agent_id']);
-
+            $v['clauses'] = json_decode($v['clauses'],true);
         }
-        if(count($data) != 0){
-            foreach($data as $v){
+        $company_data = $this->getMyProducts($_COOKIE['agent_id']);
+        foreach($company_data as $v){
+            $v['json'] = json_decode($v['json'],true);
+        }
+        if(count($company_data) != 0){
+            foreach($company_data as $v){
                 $company[] = $v['json']['company'];
                 $category[] = $v['json']['category'];
             }
@@ -2902,6 +2905,7 @@ class AgentSaleController extends AgentFuncController
         ])->pluck('ty_product_id');
         $product_list = Product::where($product_where)
             ->whereIn('ty_product_id',$market)
+            ->where('ty_product_id','>=',0)
             ->get();
         foreach($product_list as $k=>$v){
             $v['rate'] = $this->marketDitchRelationRepository->getMyAgentBrokerage($v->ty_product_id,$ditch_id,$agent_id);

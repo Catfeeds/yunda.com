@@ -30,23 +30,23 @@
 	<!--新增内容end-->
 	<div id="select-date" class="list margin-t" >
 		<div class="listL">
-	    	<img src="{{config('view_url.channel_url')}}imges/serviceIndex02.png" class="listImg">
-	        <div class="listText">
-	        	<P class="t-ora ulev2 fw">我要理赔</P>
-	            <P class="t-6 ulev-1 margin-t">理赔报案  提交材料</P>
-	        </div>
-	    </div>
-	    <div class="listR"><img src="{{config('view_url.channel_url')}}imges/serviceIndex08.png" class="serviceIndex08"></div>
+			<img src="{{config('view_url.channel_url')}}imges/serviceIndex02.png" class="listImg">
+			<div class="listText">
+				<P class="t-ora ulev2 fw">我要理赔</P>
+				<P class="t-6 ulev-1 margin-t">理赔报案  提交材料</P>
+			</div>
+		</div>
+		<div class="listR"><img src="{{config('view_url.channel_url')}}imges/serviceIndex08.png" class="serviceIndex08"></div>
 	</div>
 	<div class="list margin-t">
 		<div class="listL">
-	    	<img src="{{config('view_url.channel_url')}}imges/serviceIndex04.png" class="listImg">
-	        <div class="listText">
-	        	<P class="t-ora ulev2 fw">理赔记录查询</P>
-	            <P class="t-6 ulev-1 margin-t">进度查询  历史查询</P>
-	        </div>
-	    </div>
-	    <div class="listR"><img src="{{config('view_url.channel_url')}}imges/serviceIndex08.png" class="serviceIndex08"></div>
+			<img src="{{config('view_url.channel_url')}}imges/serviceIndex04.png" class="listImg">
+			<div class="listText">
+				<P class="t-ora ulev2 fw">理赔记录查询</P>
+				<P class="t-6 ulev-1 margin-t">进度查询  历史查询</P>
+			</div>
+		</div>
+		<div class="listR"><img src="{{config('view_url.channel_url')}}imges/serviceIndex08.png" class="serviceIndex08"></div>
 	</div>
 	@include('frontend.channels.insure_alert')
 	<script type="text/javascript" src="{{config('view_url.channel_url')}}js/jquery-1.10.2.min.js"></script>
@@ -66,7 +66,10 @@
             $('#claim-alertwin').hide();
         });
 		$('#select-date').click(function(){
-			$('#claim-alertwin').show();
+			//$('#claim-alertwin').show();
+            //Mask.loding();
+            location.href = '/api/channels/yunda/claim_user?warranty_id=1';
+
 		})
 		function scrollindex() {
 			var elem = document.getElementById('mySwipe');

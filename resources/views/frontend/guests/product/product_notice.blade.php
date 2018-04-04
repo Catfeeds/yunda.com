@@ -2,9 +2,11 @@
 <div class="notification-right fr">
     <div class="notification-right-info">
         <div class="notification-right-header">
+            @if($parameter['health_verify'] != 1)
             <div class="notification-right-img">
                 <img src="{{env('TY_API_PRODUCT_SERVICE_URL')}}/{{substr(json_decode($product_res['json'],true)['company']['logo'],0,1)=="/"?substr(json_decode($product_res['json'],true)['company']['logo'],1):json_decode($product_res['json'],true)['company']['logo']}}">
             </div>
+            @endif
             <div class="notification-right-content">
                 <ul>
                     <li class="clearfix">
@@ -29,6 +31,7 @@
                     @endforeach
                     @endif
                 </ul>
+
                 <ul>
                     <li class="clearfix">
                         <div class="col1 bold">价格</div>

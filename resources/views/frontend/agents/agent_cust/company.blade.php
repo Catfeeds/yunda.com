@@ -344,16 +344,18 @@
                 credit_code: {
                     required: true,
                     sqlCheck: true,
+                    creditCheck: true,
                     notStringCheck: true
                 },
                 organization_code: {
                     required: true,
                     sqlCheck: true,
-                    notStringCheck: true
+                    organizationCheck: true
                 },
                 license_code: {
                     required: true,
                     sqlCheck: true,
+                    licenseCheck: true,
                     notStringCheck: true
                 },
                 taxpayer_code: {

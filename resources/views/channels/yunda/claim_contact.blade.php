@@ -30,25 +30,28 @@
 			</div>
 		</header>
 		<div>
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<div>
-						<ul class="process-wrapper">
-							<li class="active"><div class="icon"></div><div>出险人员</div></li>
-							<li class="active"><div class="icon"></div><div>出险类型</div></li>
-							<li class="active"><div class="icon"></div><div>出险信息</div></li>
-							<li class="active"><div class="icon"></div><div>联系方式</div></li>
-						</ul>
-						<ul class="form-wrapper">
-							<li style="font-weight: bold;">联系方式</li>
-							<li>姓名<input type="text" value="" placeholder="请输入"/></li>
-							<li>手机号码<input type="text" value="" placeholder="请输入" maxlength="11"/></li>
-							<li>电子邮箱<input type="text" value="" placeholder="请输入"/></li>
-						</ul>
-						<button id="next" disabled class="btn btn-next">确认并提交</button>
+			<form action="{{config('view_url.channel_yunda_target_url')}}claim_result" method="post" id="claim_result">
+				<input type="hidden" name="input" value="{{json_encode($data)}}">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div>
+							<ul class="process-wrapper">
+								<li class="active"><div class="icon"></div><div>出险人员</div></li>
+								<li class="active"><div class="icon"></div><div>出险类型</div></li>
+								<li class="active"><div class="icon"></div><div>出险信息</div></li>
+								<li class="active"><div class="icon"></div><div>联系方式</div></li>
+							</ul>
+							<ul class="form-wrapper">
+								<li style="font-weight: bold;">联系方式</li>
+								<li>姓名<input type="text" name="contact_name" value="" placeholder="请输入"/></li>
+								<li>手机号码<input type="text" name="phone" value="" placeholder="请输入" maxlength="11"/></li>
+								<li>电子邮箱<input type="text" name="email" value="" placeholder="请输入"/></li>
+							</ul>
+							<button id="next" disabled class="btn btn-next">确认并提交</button>
+						</div>
 					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 		<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>

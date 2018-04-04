@@ -33,11 +33,7 @@
 				{{--<p class="slogon">科技让保险无限可能</p>--}}
 				<div class="choose-wrapper" style="margin:0;">
 					@if(isset($_COOKIE['user_id']))
-<<<<<<< Updated upstream
-						<a class="btn" href="/" style="display: block;margin: .4rem auto;">个人用户</a>
-=======
                			<a class="btn" href="/" style="display: block;margin: .4rem auto;">个人用户</a>
->>>>>>> Stashed changes
 						<a class="btn" href="/" style="display: block;margin: .4rem auto;">企业用户</a>
 						<a class="btn" href="/" style="display: block;margin: .4rem auto;">代理人</a>
 					@else

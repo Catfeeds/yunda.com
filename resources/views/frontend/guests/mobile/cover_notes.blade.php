@@ -42,12 +42,13 @@
 			var identification = "{{$identification}}";
             mui('#noticePopover').popover('show');
             $('.btn-agree').on('tap', function() {
-				@if($product_type == 2)
+				@if($res == 2)
 				window.location.href = '/ins/mobile_group_ins/insure/'+identification;
-				@else
-				  //window.location.href = '/ins/insure2/'+identification;
+				@elseif($res != 3)
 				  window.location.href = '/ins/insure/'+identification;
-//                window.location.href = '/product/health_notice/'+identification;//健康告知
+				@else
+//				  window.location.href = '/ins/insure/'+identification;
+                window.location.href = 'health_notice/'+identification;//健康告知
 				@endif
             });
             $('.icon-guanbi').on('tap', function() {
@@ -56,30 +57,44 @@
             });
 
 			// 投保须知-健康告知格式转换
+//			function changeInfo(cont){
+//				var html = '<ul>';
+//				cont = cont.replace(/\d\./g,"//").split('//');
+//				var arr = [];
+//				for (var i=0,l=cont.length;i<l;i++) {
+//					if(!cont[i].trim()){continue;}
+//					arr = cont[i].replace(/\d、/g,"//").split('//');
+//					for(var j=0,len=arr.length;j<len;j++){
+//						if(len == 1){
+//							html += '<li><span>'+ (i) + '.</span>' +arr[j] +'</li>';
+//						}else{
+//							if(!arr[j].trim()){continue;}
+//							if(j==1){
+//								html += '<li><span>'+ (i) + '.</span>' + (j) + '、' +arr[j] +'</li>';
+//							}else{
+//								html += '<li class="level2"><span>'+ (j) + '、</span>' +arr[j] +'</li>';
+//							}
+//						}
+//					}
+//				}
+//				html += '</ul>';
+//				return html;
+//			}
+//
+//			$(".list1").html(changeInfo($('.list1').text()));
 			function changeInfo(cont){
 				var html = '<ul>';
-				cont = cont.replace(/\d\./g,"//").split('//');
+				cont = cont.replace(/\d+[\.]/g,"///").split('///');
 				var arr = [];
-				for (var i=0,l=cont.length;i<l;i++) {
-					if(!cont[i].trim()){continue;}
-					arr = cont[i].replace(/\d、/g,"//").split('//');
-					for(var j=0,len=arr.length;j<len;j++){
-						if(len == 1){
-							html += '<li><span>'+ (i) + '.</span>' +arr[j] +'</li>';
-						}else{
-							if(!arr[j].trim()){continue;}
-							if(j==1){
-								html += '<li><span>'+ (i) + '.</span>' + (j) + '、' +arr[j] +'</li>';
-							}else{
-								html += '<li class="level2"><span>'+ (j) + '、</span>' +arr[j] +'</li>';
-							}
-						}
+				$.each(cont,function(index){
+					if(index !== 0){
+						html += '<li><span>'+ (index) + '.</span>' +cont[index] +'</li>';
 					}
-				}
+				});
 				html += '</ul>';
 				return html;
 			}
-
+			//            console.log($('.list1').text());
 			$(".list1").html(changeInfo($('.list1').text()));
 		</script>
 	</body>

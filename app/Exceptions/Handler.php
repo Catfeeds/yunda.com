@@ -49,13 +49,19 @@ class Handler extends ExceptionHandler
     {
         $debug = config('app.debug', false);
         if(!$debug) {
-            $code = $exception->getStatusCode();
-            $message  = $exception->getMessage();
-            if ($request->expectsJson()) {
-                return response()->json(['error' => $message], $code);
+            //如果是session过期则跳转到登陆页
+            if(count($_COOKIE) == 0){
+                return redirect('/login');
             }
-            if (view()->exists('error.' . $code)) {
-                return response()->view('error.' . $code, ['message'=>$message], $code);
+            if ($exception instanceof HttpException) {
+                $code = $exception->getStatusCode();
+                $message = $exception->getMessage();
+                if ($request->expectsJson()) {
+                    return response()->json(['error' => $message], $code);
+                }
+                if (view()->exists('error.' . $code)) {
+                    return response()->view('error.' . $code, ['message' => $message], $code);
+                }
             }
             return parent::render($request, $exception);
         }

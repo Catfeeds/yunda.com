@@ -105,8 +105,8 @@ foreach($selected as $k => $v){
                                 </button>
                             @else
                                 @for($i=$vv['min'];$i<=$vv['max'];$i+=$vv['step'])
-                                    <button type="button"  class='btn-select {{$s_arr[$protectItemId] == ($i . $unit) ? 'label-active' : ''}}' data-value='{"protectItemId":"{{$protectItemId}}","key":"{{$ty_key}}","value":"{{$i . $vv['unit']}}","sort":{{$v['sort']}}}'>
-                                        {{$i . $unit}}
+                                    <button type="button"  class='btn-select {{$s_arr[$protectItemId] == ($i . $vv['unit']) ? 'label-active' : ''}}' data-value='{"protectItemId":"{{$protectItemId}}","key":"{{$ty_key}}","value":"{{$i . $vv['unit']}}","sort":{{$v['sort']}}}'>
+                                        {{$i . $vv['unit']}}
                                     </button>
                                 @endfor
                             @endif
@@ -196,8 +196,8 @@ foreach($selected as $k => $v){
                     new_val=new_val.substring(0,new_val.length-1);
                     new_val += ']';
                     that.newVal = new_val;
-                    console.log('new:'+that.newVal);
-                    console.log('old:'+that.oldVal);
+//                    console.log('new:'+that.newVal);
+//                    console.log('old:'+that.oldVal);
 //                    console.log(that.oldOption);
                     app.requestApi();
                 });

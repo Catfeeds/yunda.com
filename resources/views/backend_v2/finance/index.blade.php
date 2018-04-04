@@ -3,7 +3,6 @@
 @section('head-more')
 	<link rel="stylesheet" href="{{asset('r_backend/v2/css/finance.css')}}" />
 	<link rel="stylesheet" href="{{asset('r_backend/v2/css/lib/iconfont.css')}}" />
-@stop
 @section('main')
 		<div class="main-wrapper">
 			<div class="row income">
@@ -212,7 +211,4 @@
 
             });
 		</script>
-
-		</body>
-
-</html>
+@stop

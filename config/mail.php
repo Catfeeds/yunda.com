@@ -1,7 +1,10 @@
 <?php
 
 return [
-
+    'mailgun' => [
+        'domain' => 'your-mailgun-domain',
+        'secret' => '123qwe~~',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Mail Driver

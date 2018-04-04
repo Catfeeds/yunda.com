@@ -48,7 +48,7 @@ class BrokerageController extends BaseController
                     ->where('status','1')
                     ->paginate(config('list_num.backend.brokerage_ditch'));//过滤线下产品
         }
-        return view('backend_v2.brokerage.index', compact('products', 'ditches', 'input', 'res'));
+        return view('backend_v2.brokerage.index', compact('products', 'ditches', 'input', 'res','ty_product_id','ditch_id'));
     }
 
     public function agentBrokerage()

@@ -71,7 +71,7 @@
                                 <div class="col-xs-2">张小张</div>
                                 <div class="col-xs-8">代理人</div>
                                 <div class="col-xs-2 text-right">
-                                    <a href="html/message/message_details.html" class="btn btn-primary">再次发送</a>
+                                    {{--<a href="html/message/message_details.html" class="btn btn-primary">再次发送</a>--}}
                                 </div>
                             </li>
                         </ul>

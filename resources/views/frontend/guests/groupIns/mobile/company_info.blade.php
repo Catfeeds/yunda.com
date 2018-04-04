@@ -82,14 +82,14 @@
                             @if($beibaoren_data)
                                 @foreach($beibaoren_data['insurance_attributes']['ty_beibaoren'] as $k=>$v)
                                     <li class="k" id="{{$k}}">
-                                <span class="recognizee-name">{{$v['ty_beibaoren_name']}}<span>
-                                        @if(substr($v['ty_beibaoren_id_number'],16,1)%2==1)
-                                            男
-                                        @else
-                                            女
-                                        @endif
-                                    </span><span><i class="iconfont icon-shenfenzheng"></i>{{$v['ty_beibaoren_id_number']}}</span><span><i class="iconfont icon-shouji"></i>{{$v['ty_beibaoren_phone']}}</span>
-                                    </span>
+                                        <span class="recognizee-name">{{$v['ty_beibaoren_name']}}<span>
+                                            @if(substr($v['ty_beibaoren_id_number'],16,1)%2==1)
+                                                男
+                                            @else
+                                                女
+                                            @endif
+                                        </span><span><i class="iconfont icon-shenfenzheng"></i>{{$v['ty_beibaoren_id_number']}}</span><span><i class="iconfont icon-shouji"></i>{{$v['ty_beibaoren_phone']}}</span>
+                                        </span>
                                         <div class="recognizee-operation">
                                             <div class="btn-wrapper fr">
                                                 <button class="btn btn-edite">修改</button>
@@ -231,6 +231,7 @@
     //点击确定弹层关闭
     $('.btn-sure').on('click',function(){
         mui('.mui-popover').popover('hide');
+
     });
     //点击被保人填写出来的弹层
     $('.passive').on('tap',function(){
@@ -386,10 +387,15 @@
             type:'post',
             data:{_token:_token,identification:identification},
             success:function(res){
-                Mask.alert(res.msg);
-                setTimeout(function(){
-                    a.remove();
-                },1500);
+                if (res.code == 200){
+                    Mask.alert(res.msg);
+                    setTimeout(function(){
+                        a.remove();
+                    },1500);
+                }else{
+                    Mask.alert(res.msg);
+                }
+
             }
         })
     });

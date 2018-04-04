@@ -116,7 +116,7 @@
                             @if($v['module_key'] == 'ty_beibaoren')
                                 @foreach($insured_lists as $ik => $iv)
                                 <li>
-                                    <span class="name">被保人{{$ik+1}}</span>
+                                    <span class="name">被保人</span>
                                     <input type="text" value="{{$iv['ty_beibaoren_name']}}" readonly/>
                                 </li>
                                 @endforeach

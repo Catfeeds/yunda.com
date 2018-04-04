@@ -32,11 +32,11 @@ class AgentController extends BaseController
         $agents = Agent::with(['user','ditches', 'customers']);
         $where = array();
         //
-        if(isset($request['pending_status']))
+        if(isset($request['pending_status']) && !is_null($request['pending_status']))
         $where[] = ['pending_status', '=', $request['pending_status']];
         if(isset($request['certification_status']) && $request['certification_status'] != -1)
             $where[] = ['certification_status', '=', $request['certification_status']];
-        if(isset($request['work_status']))
+        if(isset($request['work_status']) && !is_null($request['work_status']))
             $where[] = ['work_status', '=', $request['work_status']];
         if(isset($request['keyword'])){
             $keyword = $request['keyword'];

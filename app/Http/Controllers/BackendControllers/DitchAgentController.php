@@ -155,7 +155,7 @@ class DitchAgentController extends BaseController
         $p_brokerage = [];
         if($res){
             $p_json = json_decode($res->json, true);
-            $p_brokerage = $p_json['brokerage'];
+            $p_brokerage = $p_json['brokerage']??"";
         }
         //渠道下所有代理人
         $man = DitchAgent::where(['ditch_id'=>$id,'status'=>'on'])

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\FrontendControllers\AgentControllers;
 
+use App\Helper\RsaSignHelp;
 use App\Models\Cust;
 use App\Models\CustRule;
 use App\Models\MarketDitchRelation;
@@ -11,36 +12,37 @@ use App\Models\Product;
 use App\Models\Warranty;
 use App\Models\WarrantyRule;
 use App\Services\UploadImage;
-use Illuminate\Http\Request;
+use \Illuminate\Http\Request as Requests;
 use App\Models\Agent;
-use App\Http\Controllers\FrontendControllers\BaseController;
 use App\Repositories\MarketDitchRelationRepository;
-use DB;
+use Request,DB;
 
-class AgentSaleOfflineController extends BaseController
+class AgentSaleOfflineController extends AgentFuncController
 {
 
+    protected $_request;
+    protected $_signHelp;
     private $cust;
     private $custRule;
     private $product;
     private $marketDitchRelationRepository;
-    private $agent;
 
-    public function __construct(Cust $cust, CustRule $custRule, Product $product,
-                                MarketDitchRelationRepository $marketDitchRelationRepository)
+    public function __construct(Request $request,Cust $cust, CustRule $custRule, Product $product, MarketDitchRelationRepository $marketDitchRelationRepository)
     {
+        $this->_request = $request;
+        $this->_signHelp = new RsaSignHelp();
         $this->cust = $cust;
         $this->custRule = $custRule;
         $this->product = $product;
         $this->marketDitchRelationRepository = $marketDitchRelationRepository;
-        $this->agent = $_COOKIE['agent_id'];
     }
 
     /**
      * 添加客户
      */
-    public function addCust(Request $request)
+    public function addCust(Requests $request)
     {
+        $agent_id = $this->checkAgent();//检测是否是代理人
         $input = $request->all()['cust'];
         $input['cust_from'] = '代理人';
         $custRule = [];
@@ -62,7 +64,7 @@ class AgentSaleOfflineController extends BaseController
                 $query->orWhere('cust.phone',$input['phone']);
             })
             ->where('cust.type',$input['type'])
-            ->where('cust_rule.agent_id',$this->agent)
+            ->where('cust_rule.agent_id',$agent_id)
             ->get();
         if(count($custList) != 0){
             return ['status'=>false,'msg'=>'已有此客户，请重新添加！'];
@@ -71,7 +73,7 @@ class AgentSaleOfflineController extends BaseController
 
             //保存客户关系
             $custRule['code'] = $input['code'];
-            $custRule['agent_id'] = $this->agent;
+            $custRule['agent_id'] = $agent_id;
             $custRule['from_type'] = 0;
             $this->custRule->fill($custRule)->save();
 
@@ -82,10 +84,10 @@ class AgentSaleOfflineController extends BaseController
     /**
      * 把base64转换成image上传到服务器
      *
-     * @param Request $request
+     * @param Requests $request
      * @return bool|string
      */
-    public function uploadImage(Request $request)
+    public function uploadImage(Requests $request)
     {
         $size = file_get_contents($request->get('url'));
         if(strlen($size)/1024 > 5*1024){
@@ -106,8 +108,9 @@ class AgentSaleOfflineController extends BaseController
     /**
      * 添加产品
      */
-    public function addProduct(Request $request)
+    public function addProduct(Requests $request)
     {
+        $agent_id = $this->checkAgent();//检测是否是代理人
         $input = $request->all()['cust'];
         if(isset($input['main_insure'])){//主险
             $input['personal'] = json_encode(['main_insure'=>$input['main_insure']]);
@@ -131,8 +134,8 @@ class AgentSaleOfflineController extends BaseController
         //保存MarketDitchRelation表数据
         $marketDitchRelation = new MarketDitchRelation();
         $marketDitchRelation->ty_product_id = $input['ty_product_id'];
-        $marketDitchRelation->ditch_id = $this->getMyDitch($this->agent);
-        $marketDitchRelation->agent_id = $this->agent;
+        $marketDitchRelation->ditch_id = $this->getMyDitch($agent_id);
+        $marketDitchRelation->agent_id = $agent_id;
         $marketDitchRelation->by_stages_way = is_null($input['base_stages_way']) ? '0年':$input['base_stages_way'];
         $marketDitchRelation->rate = -1;//佣金比等于-1 的时候表示 线下产品的状态为待审核
         $marketDitchRelation->status = 'on';
@@ -143,19 +146,20 @@ class AgentSaleOfflineController extends BaseController
     /**
      * 制作线下单
      */
-    public function addOfflinePlan(Request $request)
+    public function addOfflinePlan(Requests $request)
     {
+        $agent_id = $this->checkAgent();//检测是否是代理人
         $option = 'agentOffline';
-        $authentication = $this->isAuthentication($this->agent);
+        $authentication = $this->isAuthentication($agent_id);
         $input = $request->all();
 
         /** 投保人列表 */
         $input['policy_type'] = isset($input['policy_type']) ? $input['policy_type'] : 1;
-        $policyQuery = Cust::whereHas('cust_rule',function($query){
-                $query->where('agent_id',$this->agent);
+        $policyQuery = Cust::whereHas('cust_rule',function($query) use ($agent_id){
+                $query->where('agent_id',$agent_id);
             })
 //            ->join('cust_rule','cust_rule.code','cust.code')
-//            ->where('agent_id',$this->agent)
+//            ->where('agent_id',$agent_id)
             ->where('type',$input['policy_type']);
         if(isset($input['policy_search_type']) && !is_null($input['policy_search_type'])){
             $policySearchType = $input['policy_search_type'];
@@ -207,8 +211,8 @@ class AgentSaleOfflineController extends BaseController
         $input['recognize_type'] = isset($input['recognize_type']) ? $input['recognize_type'] : 1;
         //如果投保人是个人，则被保人不能是企业
         $input['recognize_type'] = $input['policy_type'] == 1 ? 1: $input['recognize_type'];
-        $recognizeQuery = Cust::whereHas('cust_rule',function($query){
-                $query->where('agent_id',$this->agent);
+        $recognizeQuery = Cust::whereHas('cust_rule',function($query) use ($agent_id){
+                $query->where('agent_id',$agent_id);
             })
             ->where('type',$input['recognize_type']);
         if(isset($input['recognize_search_type']) && !is_null($input['recognize_search_type'])){
@@ -259,7 +263,6 @@ class AgentSaleOfflineController extends BaseController
         $recognizeCount = count($recognize);
 
         /** 产品列表 */
-        $agent_id = $this->agent;//检测是否是代理人
         $ditch_id = $this->getMyDitch($agent_id);//获取渠道
 
         if(isset($input['product_content']) && !is_null($input['product_content'])){
@@ -307,7 +310,7 @@ class AgentSaleOfflineController extends BaseController
 //        var_export(json_decode($product_list,true));exit;
 
         /** 代理人信息 */
-        $jurisdiction = Agent::where('id',$this->agent)
+        $jurisdiction = Agent::where('id',$agent_id)
             ->whereHas('user.user_authentication_person',function($q){
                 $q->where('status',2);
             })
@@ -333,7 +336,7 @@ class AgentSaleOfflineController extends BaseController
     /**
      * 线下单预览
      */
-    public function getOfflinePreview(Request $request)
+    public function getOfflinePreview(Requests $request)
     {
         $input = json_decode($request->get('preview'),true);
 
@@ -364,7 +367,7 @@ class AgentSaleOfflineController extends BaseController
         //产品信息
         $product = $this->product->where('ty_product_id',$product_id)->first();
 
-        $agent_id = $this->agent;
+        $agent_id = $this->checkAgent();//检测是否是代理人
         $ditch_id = $this->getMyDitch($agent_id);//获取渠道
         //计算佣金比
         $product['rate'] = $this->marketDitchRelationRepository->getMyAgentBrokerage($product_id,$ditch_id,$agent_id);
@@ -376,8 +379,9 @@ class AgentSaleOfflineController extends BaseController
     /**
      * 生成线下单提交
      */
-    public function addOfflineSubmit(Request $request)
+    public function addOfflineSubmit(Requests $request)
     {
+        $agent_id = $this->checkAgent();//检测是否是代理人
         $warranty_code = $request->get('warranty_code');
         $start_time = $request->get('start_time');
         $end_time = $request->get('end_time');
@@ -394,8 +398,8 @@ class AgentSaleOfflineController extends BaseController
         //生成订单号
         $order->order_code = $warranty_code . date('Ymd',time());
         $order->is_settlement = 0;
-        $order->agent_id = $this->agent;
-        $order->ditch_id = $this->getMyDitch($this->agent);
+        $order->agent_id = $agent_id;
+        $order->ditch_id = $this->getMyDitch($agent_id);
         $order->ty_product_id = $input['product_id'];
         $order->by_stages_way = $product['base_stages_way'];
         $order->pay_time = is_null($pay_time)?$start_time:$pay_time;
@@ -414,8 +418,8 @@ class AgentSaleOfflineController extends BaseController
         $orderBrokerage->by_stages_way = $product['base_stages_way'];
         $orderBrokerage->rate = -1;
         $orderBrokerage->user_earnings = 0;
-        $orderBrokerage->agent_id = $this->agent;
-        $orderBrokerage->ditch_id = $this->getMyDitch($this->agent);
+        $orderBrokerage->agent_id = $agent_id;
+        $orderBrokerage->ditch_id = $this->getMyDitch($agent_id);
         $orderBrokerage->save();
 
         //保存warranty表
@@ -433,9 +437,9 @@ class AgentSaleOfflineController extends BaseController
         $warrantyRule->order_id = $order->id;
         $warrantyRule->union_order_code = $warranty_code . date('Ymd',time());
         $warrantyRule->premium = $product['base_price'];
-        $warrantyRule->ditch_id = $this->getMyDitch($this->agent);
+        $warrantyRule->ditch_id = $this->getMyDitch($agent_id);
         $warrantyRule->warranty_id = $warranty->id;
-        $warrantyRule->agent_id = $this->agent;
+        $warrantyRule->agent_id = $agent_id;
         $warrantyRule->ty_product_id = $input['product_id'];
         $warrantyRule->type = $product['insure_type'] == 1 ? 0 : 1;
         $warrantyRule->policy_cust_id = $input['policy_id'];
@@ -448,35 +452,6 @@ class AgentSaleOfflineController extends BaseController
             'warranty_id'=>$warranty->id,
             'warranty_rule_id'=>$warrantyRule->id,
         ];
-    }
-
-    /**
-     * 移动端线下单页面
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function addOfflineMobile(Request $request)
-    {
-        return view('frontend.agents.agent_sale_offline.mobile.offline');
-    }
-
-    public function offlineCustList(Request $request)
-    {
-        $input = $request->all();
-        /** 投保人列表 */
-//        $input['policy_type'] = isset($input['policy_type']) ? $input['policy_type'] : 1;
-        $custQuery = Cust::whereHas('cust_rule',function($query){
-            $query->where('agent_id',$this->agent);
-        });
-        if(isset($input['name'])){
-            $custQuery->where('cust.name', 'like', '%' . $input['name'] . '%')
-                ->orWhere('cust.company_name', 'like', '%' . $input['name'] . '%');
-        }
-        //投保人列表
-        $custList = $custQuery->get();
-        return $custList;
-        return view('frontend.agents.agent_sale_offline.mobile.offline_client_list',compact('custList'));
     }
 
 }

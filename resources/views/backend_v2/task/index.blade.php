@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="row text-center">
-                {{ $taskRecords->links() }}
+                {{ $taskRecords->appends(['ditch'=>$ditch_id,'agent' => $agent_id])->links() }}
             </div>
             <button id="task-month-button" class="md-trigger btn btn-primary" data-modal="modal-8" style="display: none;"></button>
         </div>

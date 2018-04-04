@@ -118,7 +118,7 @@
 
         <div class="row text-center">
             <div class="row text-center">
-                {{ $res->links() }}
+                {{ $res->appends(['ty_product_id' => $ty_product_id,'ditch_id'=>$ditch_id])->links() }}
             </div>
         </div>
     </div>

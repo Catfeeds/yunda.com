@@ -16,24 +16,26 @@ use App\Models\UserThird;
 class AgentLoginController extends Controller
 {
     //
-    public function agentLogin()
+    public function agentLogin(Request $request)
     {
+        $redirect = $request->get('redirect');
         if(Auth::check() && isset($_COOKIE['agent'])){
             return redirect('/agent/');
         }
         if($this->is_mobile()){
-            return view('frontend.agents.agent_login.mobile.index');
+            return view('frontend.agents.agent_login.mobile.index',compact('redirect'));
         }
-        return view('frontend.agents.agent_login.login');
+        return view('frontend.agents.agent_login.login',compact('redirect'));
     }
     public function agentDoLogin(Request $request)
     {
         $phone = $request->get('phone');
         $password = $request->get('password');
+        $redirect = $request->get('redirect');
         if (Auth::attempt(['phone' => $phone, 'password' => $password])) {
             // 认证通过...
-            //判断是否是代理人
-            $result = Agent::where('user_id',Auth::user()->id)->first();
+            //判断是否是在职代理人
+            $result = Agent::where('user_id',Auth::user()->id)->where('work_status',1)->first();
             if($result){
                 setcookie('agent','true',(time()+3600));
                 setcookie('agent_id',$result->id,(time()+3600));
@@ -48,10 +50,14 @@ class AgentLoginController extends Controller
                         UserThird::where('app_id',$arr['openid'])->update(['user_id'=>Auth::user()->id]);
                     }else{
                          echo "<script>alert('账号已绑定，请联系管理员');</script>";
-                         return view('frontend.agents.agent_login.mobile.index');
+                         return view('frontend.agents.agent_login.mobile.index',compact('redirect'));
                     }
                 }
-                return redirect('/agent/');
+                if(is_null($redirect)) {
+                    return redirect('/agent/');
+                }else{
+                    return redirect($redirect);
+                }
             }else{
                 Auth::logout();
                 return "<script>alert('身份错误');history.back();</script>";
@@ -69,7 +75,11 @@ class AgentLoginController extends Controller
                     UserThird::where('app_id',$arr['openid'])->update(['user_id'=>$agent->user->id]);
                 }
 
-                return redirect('/agent/');
+                if(is_null($redirect)) {
+                    return redirect('/agent/');
+                }else{
+                    return redirect($redirect);
+                }
             }
         }
 
