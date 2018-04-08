@@ -17,3 +17,5 @@ include_once "web_routes/frontend.php";
 include_once "web_routes/backend.php";
 //合作渠道访问路由
 include_once "channelsapi.php";
+//webapi访问路由
+include_once "webapi.php";
