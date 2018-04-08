@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>理赔审核</title>
-    <link rel="stylesheet" href="{{config('view_url.channel_url')}}css/email.css" />
-    <link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/iconfont.css" />
+    <link rel="stylesheet" href="{{config('view_url.channel_views')}}css/email.css" />
+    <link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/iconfont.css" />
     <style type="text/css">
         .title{line-height: 1.4;}
         .result{padding: 20px;text-align: center;font-size: 30px;color: #00A2FF;}
@@ -15,7 +15,7 @@
 <body>
 <div class="header">
     <div class="content">
-        <img class="logo" src="imges/yunda.png"/><h1 class="step">理赔审核</h1>
+        <img class="logo" src="{{config('view_url.channel_views')}}imges/yunda.png"/><h1 class="step">理赔审核</h1>
     </div>
 </div>
 <div class="content">
