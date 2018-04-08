@@ -40,17 +40,24 @@
 											<li class="title">英大非机动车意外保险<i class="iconfont icon-jiantou"></i></li>
 											<li class="item">
 												<span>保单号</span>
-												<span>{{$value['id']}}</span>
+												<span>{{$value['warranty_uuid']}}</span>
 											</li>
 											<li class="item">
 												<span>保单状态</span>
-												@if($value['status']=='7')
-													<span class="special">保障中</span>
-												@elseif($value['status']=='3')
-													<span class="special">待支付</span>
-												@elseif($value['status']=='10')
-													<span class="special">已失效</span>
+												@if(isset($warranty_status) &&!empty($warranty_status))
+													@foreach($warranty_status as $key=>$v)
+														@if($value['warranty_status'] == $key)
+															<span class="special">	{{$v}}</span>
+														@endif
+													@endforeach
 												@endif
+												{{--@if($value['status']=='7')--}}
+													{{--<span class="special">保障中</span>--}}
+												{{--@elseif(isset($_GET['status'])&&$_GET['status']=='3'||$value['status']=='3')--}}
+													{{--<span class="special">待支付</span>--}}
+												{{--@elseif(isset($_GET['status'])&&$_GET['status']=='10'||$value['status']=='10')--}}
+													{{--<span class="special">已失效</span>--}}
+												{{--@endif--}}
 											</li>
 											<li class="item">
 												<span>生效时间</span>
