@@ -39,7 +39,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        $this->mapWebApiRoutes();
+        $this->mapYundaRoutes();
 
         //
     }
@@ -73,18 +73,19 @@ class RouteServiceProvider extends ServiceProvider
              ->group(base_path('routes/api.php'));
     }
 
+
     /**
-     * Define the "webapi" routes for the application.
+     * Define the "yunda" routes for the application.
      *
      * These routes are typically stateless.
      *
      * @return void
      */
-    protected function mapWebApiRoutes()
+    protected function mapYundaRoutes()
     {
-        Route::prefix('webapi')
-            ->middleware('webapi')
+        Route::prefix('yunda')
+            ->middleware('yunda')
             ->namespace($this->namespace)
-            ->group(base_path('routes/webapi.php'));
+            ->group(base_path('routes/yunda.php'));
     }
 }

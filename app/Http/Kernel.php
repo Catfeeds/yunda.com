@@ -45,7 +45,7 @@ class Kernel extends HttpKernel
             // 处理路由绑定
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
-        'webapi' => [
+        'yunda' => [
             // cookie 加密解密
             \App\Http\Middleware\EncryptCookies::class,
             // 将 cookie 添加到响应中
