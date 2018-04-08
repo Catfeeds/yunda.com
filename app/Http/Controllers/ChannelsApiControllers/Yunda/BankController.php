@@ -129,7 +129,7 @@ class BankController
         if($bank_res['bank_deal_type']=='1'){//从韵达传递过来的数据中获取的银行卡信息
             $bank_del_status = false;
         }
-        return view('channels.yunda.bank_info',compact('bank_res','bank_del_status'));
+        return view('channels.yunda.bank_info',compact('cust_id','bank_res','bank_del_status'));
     }
 
     /**
@@ -146,13 +146,12 @@ class BankController
         $cust_id = $input['cust_id'];
         $bank_cod = $input['bank_code'];
         $bank_num = Bank::where('cust_id',$cust_id)
-            ->where('bank_del','0')
             ->select('bank_code')
             ->get();
         $bank_res =  Bank::where('cust_id',$cust_id)
             ->where('bank_code',$bank_cod)
-            ->select('bank','bank_code','bank_city','bank_type','phone')
-            ->first()->toArray();
+            ->select('bank','bank_code','bank_city','bank_deal_type','phone')
+            ->first();
         if(count($bank_num)<=1){//只剩最后一张银行卡
             return json_encode(['status'=>'500','msg'=>'最后一张银行卡，不能删除']);
         }
