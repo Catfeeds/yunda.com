@@ -42,6 +42,9 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
     Route::any('claim_user', 'ClaimController@claimUser');
     Route::any('claim_send_email', 'ClaimController@claimSendEmail');
     Route::any('claim_audit', 'ClaimController@claimAudit');
+    //TODO  新接口
+    Route::any('joint_login', 'IntersController@jointLogin');//联合登录
+    Route::any('authorization_query', 'IntersController@authorizationQuery');//授权查询
 });
 
 
