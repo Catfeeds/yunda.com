@@ -270,7 +270,7 @@ class ClaimController
         $access_token = $this->request->header('access-token');
         $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
         $person_code = $access_token_data['person_code'];
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
         return view('channels.yunda.claim_index',compact('person_code','cust_id'));

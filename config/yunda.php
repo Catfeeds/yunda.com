@@ -19,5 +19,6 @@ return [
         '1'=>'审核通过'
     ],
     'request_url'=>'http://59.110.136.249:9200/proposal/warranty/insure',
+    'test_person_code'=>'620103199012171917',
 
 ];

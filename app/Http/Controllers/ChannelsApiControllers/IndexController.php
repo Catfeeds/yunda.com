@@ -923,12 +923,12 @@ class IndexController extends BaseController{
 //        $person_code  = $access_token_data['person_code'];
 //        $person_phone  = $access_token_data['person_phone'];
 //        $channel_code = isset($channel_code) ??  'YD';
-//        $person_code = isset($person_code) ?? '410881199406056514';
+//        $person_code = isset($person_code) ?? config('yunda.test_person_code');
 //        $person_phone = isset($person_phone) ??  '15701681524';
-//        $channel_prepare_res = ChannelPrepareInfo::where('channel_user_code','410881199406056514')
+//        $channel_prepare_res = ChannelPrepareInfo::where('channel_user_code',config('yunda.test_person_code'))
 //            ->where('operate_time',date('Y-m-d',time()))
 //            ->first();
-//        $channel_operete_res = ChannelOperate::where('channel_user_code','410881199406056514')
+//        $channel_operete_res = ChannelOperate::where('channel_user_code',config('yunda.test_person_code'))
 //            ->where('operate_time',date('Y-m-d',time()))
 //            ->first();
 //        if(empty($channel_operete_res)){
@@ -1506,7 +1506,7 @@ class IndexController extends BaseController{
         $input = $this->request->all();
         $claim_id = getCliamId($input);
         $data = [];
-        $data['person_code'] = '410881199406056514';
+        $data['person_code'] = config('yunda.test_person_code');
         $data['emaildress'] = $input['email'];
         $data['ismodify'] = 'Y';
         $data['claim_id'] = $claim_id;

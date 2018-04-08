@@ -45,7 +45,7 @@ class WarrantyController
      */
     public function warrantyList(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $warranty_ok_res = CustWarranty::where('user_id',$user_res['id'])
             ->where('warranty_status','7')//保障中
@@ -75,7 +75,7 @@ class WarrantyController
      */
     public function warrantyDetail($warranty_id){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         $user_res = Person::where('papers_code',$person_code)
             ->select('id','papers_code','papers_type','name','phone')
             ->first();

@@ -80,8 +80,9 @@ class YunDaPay implements ShouldQueue
     {
         //用户身份信息
         $input = $this->param;
-        $input = '{"operate_code":"","channel_code":"YD","courier_state":"","courier_start_time":"","p_code":"","is_insure":"","channel_back_url":"","channel_user_name":"王石磊","channel_user_code":"410881199406056514","channel_user_phone":"15701681524","channel_user_email":null,"channel_user_address":null,"channel_bank_code":null,"channel_bank_name":null,"channel_bank_address":null,"channel_bank_phone":null,"channel_provinces":null,"channel_city":null,"channel_county":null}';
+        $input = '{"operate_code":"","channel_code":"YD","courier_state":"","courier_start_time":"","p_code":"","is_insure":"","channel_back_url":"","channel_user_name":"张耘赫","channel_user_code":"620103199012171917","channel_user_phone":"13186050625","channel_user_email":null,"channel_user_address":null,"channel_bank_code":"6217730704649985","channel_bank_name":null,"channel_bank_address":null,"channel_bank_phone":"13186050625","channel_provinces":null,"channel_city":null,"channel_county":null}';
         $requset_url = config('yunda.request_url');
+        LogHelper::logChannelSuccess($requset_url, 'YD_request_url');
         $response = Curl::to($requset_url)
             ->returnResponseObject()
             ->withData($input)

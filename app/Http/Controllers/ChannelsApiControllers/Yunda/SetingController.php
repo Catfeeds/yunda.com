@@ -45,7 +45,7 @@ class SetingController
      */
     public function insureSetupList(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         return view('channels.yunda.insure_setup_list',compact('person_code'));
     }
 
@@ -57,7 +57,7 @@ class SetingController
      */
     public function insureSeting(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         return view('channels.yunda.insure_seting',compact('person_code'));
     }
 
@@ -69,7 +69,7 @@ class SetingController
      */
     public function insureAuto(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         $auto_res = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('auto_insure_status','auto_insure_type','auto_insure_time')
             ->first();
@@ -124,7 +124,7 @@ class SetingController
      */
     public function userInfo(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         $user_res = Person::where('papers_code',$person_code)->select('name','phone','papers_code')->first();
         return view('channels.yunda.user_info',compact('user_res'));
     }

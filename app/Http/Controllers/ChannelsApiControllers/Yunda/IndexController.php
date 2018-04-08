@@ -45,7 +45,7 @@ class IndexController
      */
     public function InsInfo(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         $user_seting = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('cust_id','authorize_status','authorize_start')
             ->first();
@@ -66,7 +66,7 @@ class IndexController
      */
     public function insureCenter(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         if($person_code){
             //TODO 匹配出没有签约的
             //TODO  匹配出签约过期的
@@ -175,7 +175,7 @@ class IndexController
      */
     public function insClause(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         return view('channels.yunda.insure_clause');
     }
 
@@ -187,7 +187,7 @@ class IndexController
      */
     public function insNotice(){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         return view('channels.yunda.ins_notice');
     }
 
@@ -218,7 +218,7 @@ class IndexController
      */
     public function insError($error_type){
         $person_code = $this->person_code;
-        $person_code = '410881199406056514';
+        $person_code = config('yunda.test_person_code');
         switch ($error_type){
             case 'empty'://投保参数不完善
                 $ins_msg = '用户信息不完善，请完善用户信息';//备注信息
