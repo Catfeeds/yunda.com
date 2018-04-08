@@ -66,6 +66,7 @@
                     success: function (data) {
                         Mask.alert(data.msg,3);
                         $('#confirm').attr("style","display:none;");
+                        window.location.reload();
                     }
                 });
             });
