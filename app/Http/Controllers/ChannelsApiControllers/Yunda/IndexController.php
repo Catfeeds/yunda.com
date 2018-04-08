@@ -120,8 +120,8 @@ class IndexController
 //            return $this->insResult($person_code,$ins_status,$ins_msg,$target_url,$warranty_res);
         }
         $bank_res = Bank::where('cust_id',$user_res['id'])
-            ->where('bank_cod',$user_setup_res['authorize_bank'])
-            ->select('bank','bank_cod','bank_city','phone')
+            ->where('bank_code',$user_setup_res['authorize_bank'])
+            ->select('bank','bank_code','bank_city','phone')
             ->first();
         $biz_content['operate_code'] = '';
         $biz_content['channel_code'] = 'YD';
@@ -137,7 +137,7 @@ class IndexController
         $biz_content['channel_user_email'] = $user_res['email'];
         $biz_content['channel_user_address'] = $user_res['address_detail'];
 
-        $biz_content['channel_bank_code'] = $bank_res['bank_cod'];
+        $biz_content['channel_bank_code'] = $bank_res['bank_code'];
         $biz_content['channel_bank_name'] = $bank_res['bank'];
         $biz_content['channel_bank_address'] = $bank_res['bank_city'];
         $biz_content['channel_bank_phone'] = $bank_res['phone'];

@@ -42,7 +42,7 @@
 						</div>
 						<div class="tab">
 							<span class="item">银行卡号</span>
-							<input type="text" name="bank_code" value="{{$bank_res['bank_cod']}}" readonly/>
+							<input type="text" name="bank_code" value="{{$bank_res['bank_code']}}" readonly/>
 						</div>
 					</div>
 				</div>

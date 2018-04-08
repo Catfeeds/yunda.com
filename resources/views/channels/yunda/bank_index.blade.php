@@ -36,7 +36,7 @@
 										<ul class="tablist" data-id="{{$value['id']}}">
 											<li class="item">{{$value['bank']}}</li>
 											<li class="item"><span>{{$value['bank_city']}}</span><i class="iconfont icon-jiantou"></i></li>
-											<li class="item"><span>{{$value['bank_cod']}}</span></li>
+											<li class="item"><span>{{$value['bank_code']}}</span></li>
 										</ul>
 									@endforeach
 								@endif

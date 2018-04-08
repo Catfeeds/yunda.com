@@ -51,7 +51,7 @@ class BankController
         $cust_id = $user_res['id'];
         $bank_res = Bank::where('cust_id',$cust_id)
             ->where('bank_del','0')
-            ->select('id','bank','bank_cod','bank_city','phone')
+            ->select('id','bank','bank_code','bank_city','phone')
             ->get()->toArray();
         return view('channels.yunda.bank_index',compact('bank_res'));
     }
@@ -82,12 +82,12 @@ class BankController
         $bank_city = $input['bank_city'];
         $bank_repeat = Bank::where('cust_id',$cust_id)
             ->where('bank',$bank)
-            ->where('bank_cod',$bank_cod)
+            ->where('bank_code',$bank_cod)
             ->select('id','bank_del')
             ->first();
         if(!empty($bank_repeat)){
             if($bank_repeat['bank_del']=='1'){//已删除
-                $update_res = Bank::where('bank_cod',$bank_cod)->update([
+                $update_res = Bank::where('bank_code',$bank_cod)->update([
                     'bank_del'=>'0',
                 ]);
                 if($update_res){
@@ -102,7 +102,7 @@ class BankController
             'cust_id'=>$cust_id,
             'cust_type'=>'1',
             'bank'=>$bank,
-            'bank_cod'=>$bank_cod,
+            'bank_code'=>$bank_cod,
             'bank_city'=>$bank_city,
             'phone'=>'',
         ]);
@@ -126,11 +126,11 @@ class BankController
      */
     public function bankInfo($bank_id){
         $bank_res = Bank::where('id',$bank_id)
-            ->select('cust_id','bank','bank_cod','bank_city','bank_type','phone')
+            ->select('cust_id','bank','bank_code','bank_city','bank_type','phone')
             ->first();
         $cust_id = $bank_res['cust_id'];
         $bank_num = Bank::where('cust_id',$cust_id)
-            ->select('bank_cod')
+            ->select('bank_code')
             ->get();
         $bank_del_status = true;//删除按钮显示状态，默认显示
         if(count($bank_num)<=1){//只剩最后一张银行卡
@@ -157,11 +157,11 @@ class BankController
         $bank_cod = $input['bank_code'];
         $bank_num = Bank::where('cust_id',$cust_id)
             ->where('bank_del','0')
-            ->select('bank_cod')
+            ->select('bank_code')
             ->get();
         $bank_res =  Bank::where('cust_id',$cust_id)
-            ->where('bank_cod',$bank_cod)
-            ->select('bank','bank_cod','bank_city','bank_type','phone')
+            ->where('bank_code',$bank_cod)
+            ->select('bank','bank_code','bank_city','bank_type','phone')
             ->first()->toArray();
         if(count($bank_num)<=1){//只剩最后一张银行卡
             return json_encode(['status'=>'500','msg'=>'最后一张银行卡，不能删除']);
@@ -170,7 +170,7 @@ class BankController
             return json_encode(['status'=>'500','msg'=>'系统银行卡数据，不能删除']);
         }
         $del_res = Bank::where('cust_id',$cust_id)
-            ->where('bank_cod',$bank_cod)
+            ->where('bank_code',$bank_cod)
             ->update(['bank_del'=>'1']);//bank_del 默认为0，已删除为1
         if($del_res){
             return json_encode(['status'=>'200','msg'=>'银行卡删除成功']);
