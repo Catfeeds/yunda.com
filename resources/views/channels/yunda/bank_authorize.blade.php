@@ -66,7 +66,9 @@
                     success: function (data) {
                         Mask.alert(data.msg,3);
                         $('#confirm').attr("style","display:none;");
-                        window.location.reload();
+                        setTimeout(function(){//两秒后跳转
+                            window.location.reload();
+                        },2000);
                     }
                 });
             });
