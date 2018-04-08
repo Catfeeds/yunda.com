@@ -17,6 +17,7 @@ return [
         '-1'=>'审核驳回',
         '0'=>'未审核',
         '1'=>'审核通过'
-    ]
+    ],
+    'request_url'=>'http://59.110.136.249:9200/proposal/warranty/insure',
 
 ];
