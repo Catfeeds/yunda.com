@@ -177,10 +177,31 @@ class BankController
     public function bankAuthorize(){
         $person_code = $this->person_code;
         $person_code = config('yunda.test_person_code');
-        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
-        $cust_id = $user_res['id'];
+        $cust_id = '';
+        $cust_name = '';
+        $user_res = Person::where('papers_code',$person_code)->select('id','name','phone')->first();
+        if(!empty($user_res)){
+            $cust_id = $user_res['id'];
+            $cust_name = $user_res['name']; 
+        }
+        $insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)->select('authorize_bank')->first();
+        $bank = [];
+        if(!empty($insure_seting)){
+            $bank['code'] = $insure_seting['authorize_bank'];
+        }
+        $bank_res = Bank::where('cust_id',$cust_id)->select('bank','bank_code','bank_city','phone','bank_deal_type')->get();
+        if(!empty($bank_res)){
+            foreach ($bank_res as $value){
+                if($value['bank_deal_type']=='1'){
+                    $bank['code']  = $value['bank_code'];
+                    $bank['name']  = $value['bank'];
+                    $bank['city']  = $value['bank_city'];
+                    $bank['phone']  = $value['phone'];
+                }
+            }
+        }
         //签约页面上会显示签约人的相关信息
-        return view('channels.yunda.bank_authorize',compact('cust_id','person_code'));
+        return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','person_code'));
     }
 
     /**
@@ -219,15 +240,31 @@ class BankController
     public function doBankAuthorize(){
         $input = $this->request->all();
         $person_code = $input['person_code'];
+        $person_name = $input['person_name'];
+        $bank_code = $input['bank_code'];
+        $bank_name = $input['bank_name'];
         $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
-        $repeat_res = ChannelInsureSeting::where('cust_id',$cust_id)
+        $seting_res = ChannelInsureSeting::where('cust_id',$cust_id)
             ->select('id')->first();
-        if(empty($repeat_res)){
+        $bank_res = Bank::where('bank_code',$bank_code)->where('bank',$bank_name)->select('id')->first();
+        if(empty($bank_res)){
+            Bank::insert([
+                'cust_type'=>'1',
+                'cust_id'=>$cust_id,
+                'bank'=>$bank_name,
+                'bank_code'=>$bank_code,
+                'bank_city'=>'',
+                'bank_deal_type'=>'1',
+                'phone'=>'',
+            ]);
+        }
+        if(empty($seting_res)){
             ChannelInsureSeting::insert([
                 'cust_id'=>$cust_id,
                 'cust_cod'=>$person_code,
                 'cust_type'=>'',
+                'authorize_bank'=>$bank_code,
                 'authorize_status'=>'1',
                 'authorize_start'=>time(),
                 'auto_insure_status'=>'1',
@@ -239,6 +276,7 @@ class BankController
             ChannelInsureSeting::where('cust_cod',$person_code)->update([
                 'authorize_status'=>'1',
                 'authorize_start'=>time(),
+                'authorize_bank'=>$bank_code,
             ]);
         }
         return json_encode(['status'=>'200','msg'=>'开通免密支付成功']);
