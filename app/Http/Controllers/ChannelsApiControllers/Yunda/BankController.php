@@ -179,17 +179,23 @@ class BankController
         $person_code = config('yunda.test_person_code');
         $cust_id = '';
         $cust_name = '';
-        $user_res = Person::where('papers_code',$person_code)->select('id','name','phone')->first();
+        $user_res = Person::where('papers_code',$person_code)
+            ->select('id','name','phone')
+            ->first();
         if(!empty($user_res)){
             $cust_id = $user_res['id'];
             $cust_name = $user_res['name']; 
         }
-        $insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)->select('authorize_bank')->first();
+        $insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)
+            ->select('authorize_bank')
+            ->first();
         $bank = [];
         if(!empty($insure_seting)){
             $bank['code'] = $insure_seting['authorize_bank'];
         }
-        $bank_res = Bank::where('cust_id',$cust_id)->select('bank','bank_code','bank_city','phone','bank_deal_type')->get();
+        $bank_res = Bank::where('cust_id',$cust_id)
+            ->select('bank','bank_code','bank_city','phone','bank_deal_type')
+            ->get();
         if(!empty($bank_res)){
             foreach ($bank_res as $value){
                 if($value['bank_deal_type']=='1'){
@@ -245,7 +251,7 @@ class BankController
         $bank_name = $input['bank_name'];
         $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
-        $seting_res = ChannelInsureSeting::where('cust_id',$cust_id)
+        $seting_res = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('id')->first();
         $bank_res = Bank::where('bank_code',$bank_code)->where('bank',$bank_name)->select('id')->first();
         if(empty($bank_res)){

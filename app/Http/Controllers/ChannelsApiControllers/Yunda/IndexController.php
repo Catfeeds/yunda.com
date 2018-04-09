@@ -52,7 +52,37 @@ class IndexController
         $cust_id = $user_seting['cust_id'];
         $authorize_status  = $user_seting['authorize_status'];//免密开通状态
         if(!$authorize_status){
-            return view('channels.yunda.bank_authorize',compact('cust_id','person_code'));
+            $cust_id = '';
+            $cust_name = '';
+            $user_res = Person::where('papers_code',$person_code)
+                ->select('id','name','phone')
+                ->first();
+            if(!empty($user_res)){
+                $cust_id = $user_res['id'];
+                $cust_name = $user_res['name'];
+            }
+            $insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)
+                ->select('authorize_bank')
+                ->first();
+            $bank = [];
+            if(!empty($insure_seting)){
+                $bank['code'] = $insure_seting['authorize_bank'];
+            }
+            $bank_res = Bank::where('cust_id',$cust_id)
+                ->select('bank','bank_code','bank_city','phone','bank_deal_type')
+                ->get();
+            if(!empty($bank_res)){
+                foreach ($bank_res as $value){
+                    if($value['bank_deal_type']=='1'){
+                        $bank['code']  = $value['bank_code'];
+                        $bank['name']  = $value['bank'];
+                        $bank['city']  = $value['bank_city'];
+                        $bank['phone']  = $value['phone'];
+                    }
+                }
+            }
+            //签约页面上会显示签约人的相关信息
+            return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','person_code'));
         }
         return view('channels.yunda.insure_info',compact('person_code'));
     }

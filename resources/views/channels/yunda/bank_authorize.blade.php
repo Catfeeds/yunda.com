@@ -33,9 +33,12 @@
 					<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:""}}"/>
 				</div>
 				<div class="tab">
+					<span class="item">证件号</span>
+					<input type="text" name="person_code" value="{{$person_code}}"/>
+				</div>
+				<div class="tab">
 					<span class="item">姓名</span>
 					<input type="text" name="person_name" value="{{$cust_name}}"/>
-					<input type="hidden" name="person_code" value="{{$person_code}}"/>
 				</div>
 			</div>
 		</div>
