@@ -230,6 +230,10 @@ class BankController
                 'cust_type'=>'',
                 'authorize_status'=>'1',
                 'authorize_start'=>time(),
+                'auto_insure_status'=>'1',
+                'auto_insure_type'=>'1',
+                'auto_insure_price'=>'2',
+                'auto_insure_time'=>time(),
             ]);
         }else{
             ChannelInsureSeting::where('cust_cod',$person_code)->update([

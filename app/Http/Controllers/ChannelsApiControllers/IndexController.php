@@ -42,7 +42,8 @@ use App\Helper\LogHelper;
 use App\Helper\Issue;
 use App\Helper\UploadFileHelper;
 use App\Helper\IdentityCardHelp;
-
+use App\Models\CustWarranty;
+use App\Models\CustWarrantyPerson;
 use App\Jobs\YunDaPay;
 
 class IndexController extends BaseController{
@@ -280,16 +281,28 @@ class IndexController extends BaseController{
                     }
                     //todo  联合登录有两种情况；未开免密；保险生效中
                     //用用户身份证信息查询授权状态
-                $user_setup_res = ChannelInsureSeting::where('cust_cod',$channel_user_code)
-                    ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time')
+                $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
+                    ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time','warranty_code','insure_days','insure_start')
                     ->first();
-                    $authorize_status = $user_setup_res['auto_insure_status'];//todo 查询免密授权状态
-                    if(!$authorize_status){//未授权(首次购买)
-                        return json_encode(['status'=>'200','msg'=>'投保失败,请前往授权页面，开通授权','url'=>'http://'.$_SERVER['HTTP_HOST'].self::INSURE_ERROR_URL.'/no_authorize'],JSON_UNESCAPED_UNICODE);
-                    }
-                    $insure_status = false;//todo 查询保单生效状态（连续购买的保单是否还在保障期）
+                if(empty($user_setup_res)) {//未授权(首次购买)
+                    return json_encode(['status'=>'200','msg'=>'投保失败,请前往授权页面，开通授权','url'=>'http://'.$_SERVER['HTTP_HOST'].self::INSURE_ERROR_URL.'/no_authorize'],JSON_UNESCAPED_UNICODE);
+                }
+                $authorize_status = $user_setup_res['authorize_status'];//todo 查询免密授权状态
+                if(!$authorize_status){//未授权(首次购买)
+                    return json_encode(['status'=>'200','msg'=>'投保失败,请前往授权页面，开通授权','url'=>'http://'.$_SERVER['HTTP_HOST'].self::INSURE_ERROR_URL.'/no_authorize'],JSON_UNESCAPED_UNICODE);
+                }
+                //todo 查询保单生效状态（连续购买的保单是否还在保障期）
+                if(empty($user_setup_res['warranty_code'])){//没有保单
+                    $insure_status = false;
+                }
+                if($user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600<time()){//保单过期
+                    $insure_status = false;
+                }else{//保单在保
+                    $insure_status = true;
+                }
                     if(!$insure_status){//需要购买新保单
-                        $current_insurance_status = true;//当前投保状态，今天有没有进行投保操作
+                        //todo 当前投保状态，今天有没有进行投保操作????
+                        $current_insurance_status = true;
                         if($current_insurance_status){//没有进行过投保操作
                             $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
                             $biz_content['price'] = '2';
