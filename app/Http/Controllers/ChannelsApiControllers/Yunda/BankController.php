@@ -179,12 +179,14 @@ class BankController
         $person_code = config('yunda.test_person_code');
         $cust_id = '';
         $cust_name = '';
+        $cust_phone = '';
         $user_res = Person::where('papers_code',$person_code)
             ->select('id','name','phone')
             ->first();
         if(!empty($user_res)){
             $cust_id = $user_res['id'];
-            $cust_name = $user_res['name']; 
+            $cust_name = $user_res['name'];
+            $cust_phone = $user_res['phone'];
         }
         $insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('authorize_bank')
@@ -207,7 +209,7 @@ class BankController
             }
         }
         //签约页面上会显示签约人的相关信息
-        return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','person_code'));
+        return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','cust_phone','person_code'));
     }
 
     /**

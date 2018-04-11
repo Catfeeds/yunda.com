@@ -18,27 +18,22 @@
 		<div class="popups-title"><i class="iconfont icon-guanbi"></i></div>
 		<div class="popups-content">
 			<div class="top">
-				<img style="margin-top: .1rem;" src="{{config('view_url.channel_views')}}imges/img-text.png" alt="" />
+				<img style="margin-top: .1rem;" src="{{config('view_url.channel_views')}}imges/banner_txt.png" alt="" />
 				<h2 class="title">开通免密支付协议</h2>
 				<p style="margin-bottom: .16rem;">为了保障您上工的安全，需要您开通免密支付协议。开通后，可以实现每日自动投保。</p>
 			</div>
 			<div class="policy_list_wrapper">
 				<div class="tab">
-					<span class="item">借记卡开户行</span>
-					<span class="choose choose-bank">选择</span>
-					<input hidden type="text" name="bank_name" />
+					<span class="item">姓名</span>
+					<input type="text" name="person_name" value="{{$cust_name}}" readonly/>
+				</div>
+				<div class="tab">
+					<span class="item">手机号</span>
+					<input type="text" name="person_code" value="{{$cust_phone}}" readonly/>
 				</div>
 				<div class="tab">
 					<span class="item">银行卡号</span>
 					<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:""}}"/>
-				</div>
-				<div class="tab">
-					<span class="item">证件号</span>
-					<input type="text" name="person_code" value="{{$person_code}}"/>
-				</div>
-				<div class="tab">
-					<span class="item">姓名</span>
-					<input type="text" name="person_name" value="{{$cust_name}}"/>
 				</div>
 			</div>
 		</div>
@@ -60,7 +55,6 @@
     var app = {
         init: function() {
             var _this = this;
-            _this.bankPicker()
             $('.icon-guanbi').click(function(){
                 history.go(-1);
             });
@@ -71,19 +65,6 @@
                 _this.isDisabled()
             })
             _this.isDisabled()
-        },
-        bankPicker: function() {
-            var bankPicker = new mui.PopPicker();
-            bankPicker.setData([{value: 'ywj',text: '工商银行'}, {value: 'aaa',text: '民生银行'}]);
-            $('.choose-bank').click(function(){
-                var _this = $(this)
-                $('input').blur();
-                bankPicker.show(function(items) {
-                    _this.next().val(items[0].text)
-                    _this.text(items[0].text).css({'color':'#303030'})
-                    app.isDisabled()
-                });
-            })
         },
         isDisabled: function() {
             var $confirm = $('#confirm');
