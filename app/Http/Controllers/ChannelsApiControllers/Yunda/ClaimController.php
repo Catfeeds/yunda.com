@@ -146,6 +146,7 @@ class ClaimController
 
         DB::beginTransaction();
         try{
+
             foreach ($input as $key=>$val){
                 $data[$key] = $this->uploadFile($this->request->file($key));
             }
@@ -153,20 +154,20 @@ class ClaimController
             ClaimYunda::where('id', $data['claim_id'])->update(['status' => 3]);
 
             $claim_yunda_info = new ClaimYundaInfo();
-            $claim_yunda_info->claim_id = $data['claim_id'];
-            $claim_yunda_info->proof = $data['proof'];
-            $claim_yunda_info->invoice = $data['invoice'];
-            $claim_yunda_info->expenses = $data['expenses'];
-            $claim_yunda_info->papers_code_img = $data['papers_code_img'];
-            $claim_yunda_info->account_info = $data['account_info'];
-            $claim_yunda_info->accident_proof = $data['accident_proof'];
-            $claim_yunda_info->proof_loss = $data['proof_loss'];
-            $claim_yunda_info->bruise_whole = $data['bruise_whole'];
-            $claim_yunda_info->bruise_face = $data['bruise_face'];
-            $claim_yunda_info->bruise_wound = $data['bruise_wound'];
-            $claim_yunda_info->maim_proof = $data['maim_proof'];
-            $claim_yunda_info->die_proof = $data['die_proof'];
-            $claim_yunda_info->beneficiary = $data['beneficiary'];
+            $claim_yunda_info->claim_id = $data['claim_id'] ?? '';
+            $claim_yunda_info->proof = $data['proof'] ?? '';
+            $claim_yunda_info->invoice = $data['invoice'] ?? '';
+            $claim_yunda_info->expenses = $data['expenses'] ?? '';
+            $claim_yunda_info->papers_code_img = $data['papers_code_img'] ?? '';
+            $claim_yunda_info->account_info = $data['account_info'] ?? '';
+            $claim_yunda_info->accident_proof = $data['accident_proof'] ?? '';
+            $claim_yunda_info->proof_loss = $data['proof_loss'] ?? '';
+            $claim_yunda_info->bruise_whole = $data['bruise_whole'] ?? '';
+            $claim_yunda_info->bruise_face = $data['bruise_face'] ?? '';
+            $claim_yunda_info->bruise_wound = $data['bruise_wound'] ?? '';
+            $claim_yunda_info->maim_proof = $data['maim_proof'] ?? '';
+            $claim_yunda_info->die_proof = $data['die_proof'] ?? '';
+            $claim_yunda_info->beneficiary = $data['beneficiary'] ?? '';
             $claim_yunda_info->status = 0; //进度 0等待审核 1审核通过 -1 审核失败
             $claim_yunda_info->save();
 
