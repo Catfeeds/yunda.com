@@ -45,6 +45,7 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
     //TODO  新接口
     Route::any('joint_login', 'IntersController@jointLogin');//联合登录
     Route::any('authorization_query', 'IntersController@authorizationQuery');//授权查询
+    Route::any('do_wechat_pay', 'IntersController@doWechatpay');//微信支付接口
 });
 
 
