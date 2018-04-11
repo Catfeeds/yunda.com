@@ -64,6 +64,10 @@
                 Mask.loding();
                 window.history.go(-1);
             });
+            $('.form-wrapper').on('tap',function(){
+                Mask.loding();
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_info";
+            });
 		</script>
 	</body>
 

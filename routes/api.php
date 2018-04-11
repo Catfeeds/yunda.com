@@ -84,8 +84,6 @@ Route::group(['prefix' => 'channels', 'namespace'=>'ChannelsApiControllers'],fun
         Route::any('insure_auto', 'SetingController@insureAuto');//自动投保页面
         Route::any('do_insure_auto', 'SetingController@doInsureAuto');//自动投保操作
         Route::any('user_info', 'SetingController@userInfo');//用户信息
-        //理赔流程
-        Route::any('claim_index', 'ClaimController@claimIndex');//理赔主页面
         //申请理赔
         Route::any('claim_contact', 'ClaimController@claimContact');//申请理赔
         Route::any('claim_email', 'ClaimController@claimEmail');

@@ -53,11 +53,11 @@
 							</a>
 						</li>
 						<li class="list-item">
-							<a   href="{{config('view_url.channel_yunda_target_url')}}claim_index" id="claim_target">
+							<a   href="{{config('view_url.channel_yunda_target_url')}}claim_progress" id="claim_target">
 								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/icon_lp.png" alt="" /></div>
 								<div class="item-content">
-									<p class="title">我要理赔</p>
-									<p class="text"><span>人身保险</span><span>财产保险</span></p>
+									<p class="title">理赔进度</p>
+									<p class="text"><span>理赔列表</span><span>查看进度</span></p>
 								</div>
 								<i class="iconfont icon-jiantou"></i>
 							</a>
@@ -67,6 +67,7 @@
 								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/icon_set.png" alt="" /></div>
 								<div class="item-content">
 									<p class="title">设置</p>
+									<p class="text"><span>个人信息</span><span>投保设置</span><span>银行卡</span></p>
 								</div>
 								<i class="iconfont icon-jiantou"></i>
 							</a>
