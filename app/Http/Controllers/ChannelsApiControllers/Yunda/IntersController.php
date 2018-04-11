@@ -17,6 +17,9 @@ use App\Models\Person;
 use App\Models\ChannelInsureSeting;
 use App\Models\CustWarranty;
 use App\Models\CustWarrantyPerson;
+use App\Models\ChannelContract;
+use App\Models\ChannelOperate;
+use App\Jobs\YdWechatPay;
 
 
 class IntersController
@@ -41,7 +44,6 @@ class IntersController
         $this->person_code = $access_token_data['person_code'];
     }
 
-
     /**
      * 联合登录接口
      * @access public
@@ -63,9 +65,9 @@ class IntersController
      */
     public function jointLogin(){
         $input = $this->request->all();
+        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
         $return_data =[];
         $webapi_route = 'http://'.$_SERVER['HTTP_HOST'].config('yunda.webapi_route');
-        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
         if(empty($input)){
             $return_data['code'] = '500';
             $return_data['message']['digest'] = 'default';
@@ -224,8 +226,8 @@ class IntersController
      */
     public function authorizationQuery(){
         $input = $this->request->all();
-        $return_data =[];
         $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527"}';
+        $return_data =[];
         if(empty($input)){
             $return_data['code'] = '500';
             $return_data['message']['digest'] = 'default';
@@ -281,5 +283,115 @@ class IntersController
             $return_data['data']['status'] = $authorize_status;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
+    }
+
+    /**
+     * 微信支付接口
+     * 提供接口给银行卡口矿失败的人用，触发此接口默认使用微信扣款
+     * @access public
+     * @param channel_code|渠道代号
+     * @param insured_name|姓名
+     * @param insured_code|证件号
+     * @param insured_phone|电话
+     * @param insured_email|y邮箱
+     * @param insured_province|省
+     * @param insured_city|市
+     * @param insured_county|县
+     * @param insured_address|详细地址
+     * @param bank_name|银行名称
+     * @param bank_code|银行卡号
+     * @param bank_phone|预留手机号
+     * @param bank_address|开户行地址
+     * @return json
+     * 参数处理
+     * 1.投保要素判空 姓名，证件号，手机号
+     * 2.判断是否开通自动投保
+     * 3.判断当天的保单是否生效
+     * 4.判断是否已经绑定过微信
+     * 5.判断是否有预投保单号
+     */
+    public function doWechatpay(){
+        $input =  $this->request->all();
+        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"6201031990121719172","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
+        $return_data =[];
+        if(empty($input)){
+            $return_data['code'] = '500';
+            $return_data['message']['digest'] = 'default';
+            $return_data['message']['details'] = 'No Parameters';
+            return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        }
+        if(!is_array($input)){
+            $input = json_decode($input,true);
+        }
+        $insured_name = $input['insured_name'];
+        $insured_code = $input['insured_code'];
+        $insured_phone = $input['insured_phone'];
+        $insured_province = $input['insured_province'];
+        $insured_city = $input['insured_city'];
+        $insured_county = $input['insured_county'];
+        $insured_address = $input['insured_address'];
+        $bank_name = $input['bank_name'];
+        $bank_code = $input['bank_code'];
+        $bank_phone = $input['bank_phone'];
+        $bank_address = $input['bank_address'];
+        //投保要素判空 姓名，证件号，手机号
+        if(!$insured_name||!$insured_code||!$insured_phone){
+            $return_data['code'] = '500';
+            $return_data['message']['digest'] = 'default';
+            $return_data['message']['details'] = 'insured_name or insure_code or insured_phone is empty';
+            return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        }
+        $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
+            ->where('auto_insure_status','1')//开通自动投保
+            ->select('warranty_id','insure_days','insure_start')
+            ->first();
+        //判断是否开通自动投保
+        if(empty($user_setup_res)){
+            $return_data['code'] = '500';
+            $return_data['message']['digest'] = 'default';
+            $return_data['message']['details'] ='No Auto-insure';
+            return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        }
+        //判断当天的保单是否生效
+        if(!empty($user_setup_res['warranty_id'])&&$user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600>time()){
+            $return_data['code'] = '500';
+            $return_data['message']['digest'] = 'default';
+            $return_data['message']['details'] ='Insurance Protecting';
+            return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        }
+        $wechat_bind = ChannelContract::where('channel_user_code',$insured_code)
+            ->where('is_valid','0')//有效签约
+            ->where('is_auto_pay','0')//开通自动投保
+            ->select('openid','contract_id','contract_expired_time')
+            ->first();
+        //判断是否已经绑定过微信
+        if(empty($wechat_bind)){
+            $return_data['code'] = '500';
+            $return_data['message']['digest'] = 'default';
+            $return_data['message']['details'] = 'No Wechat Pay';
+            return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        }
+        $insure_prepare = ChannelOperate::where('channel_user_code',$insured_code)
+            ->where('prepare_status','200')//预投保成功
+            ->where('operate_time',date('Y-m-d',time()-24*3600))//前一天的订单
+            ->select('proposal_num')
+            ->first();
+        //判断是否有预投保单号
+        if(empty($insure_prepare)){
+            $return_data['code'] = '500';
+            $return_data['message']['digest'] = 'default';
+            $return_data['message']['details'] = 'No Pre-insured';
+            return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        }
+        $params = [];
+        $params['person_code'] = $insured_code;
+        $params['union_order_code'] = $insure_prepare['proposal_num'];
+        $params['openid'] = $wechat_bind['open_id'];
+        $params['contract_id'] = $wechat_bind['contract_id'];
+        dispatch(new YdWechatPay($params));//TODO 投保操作（异步队列）
+        $return_data['code'] = '200';
+        $return_data['message']['digest'] = 'default';
+        $return_data['message']['details'] = 'insuring';
+        return json_encode($return_data,JSON_UNESCAPED_UNICODE);
     }
 }
