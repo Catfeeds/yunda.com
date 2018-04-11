@@ -50,7 +50,7 @@ use App\Jobs\DemoTest;
 use App\Jobs\YunDaIssue;
 
 
-class YunDaPay implements ShouldQueue
+class YunDaPayInsure implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -80,7 +80,7 @@ class YunDaPay implements ShouldQueue
     {
         //用户身份信息
         $input = $this->param;
-        $input = '{"operate_code":"","channel_code":"YD","courier_state":"","courier_start_time":"","p_code":"","is_insure":"","channel_back_url":"","channel_user_name":"张耘赫","channel_user_code":"620103199012171917","channel_user_phone":"13186050625","channel_user_email":null,"channel_user_address":null,"channel_bank_code":"6217730704649985","channel_bank_name":null,"channel_bank_address":null,"channel_bank_phone":"13186050625","channel_provinces":null,"channel_city":null,"channel_county":null,"price":"2","insured_days":"1"}';
+        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
         $requset_url = config('yunda.request_url');
         LogHelper::logChannelSuccess($requset_url, 'YD_request_url');
         $response = Curl::to($requset_url)

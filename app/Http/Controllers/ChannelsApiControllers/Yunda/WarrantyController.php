@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\ChannelsApiControllers\Yunda;
 
 use App\Models\CustWarranty;
-use App\Models\CustWarrantyPolicy;
+use App\Models\CustWarrantyPerson;
 use Illuminate\Http\Request;
 use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
@@ -66,7 +66,8 @@ class WarrantyController
             ->where('warranty_status',$status)//已失效
             ->select('id','warranty_code','warranty_uuid','start_time','end_time','warranty_status')
             ->get();
-        return view('channels.yunda.warranty_list',compact('warranty_ok_res','warranty_paying_res','warranty_timeout_res','warranty_res','person_code'));
+        $warranty_status = config('status_setup.warranty');//保单状态
+        return view('channels.yunda.warranty_list',compact('warranty_status','warranty_ok_res','warranty_paying_res','warranty_timeout_res','warranty_res','person_code'));
     }
 
     /**
@@ -82,7 +83,7 @@ class WarrantyController
         $warranty_res = CustWarranty::where('id',$warranty_id)
             ->select('id','warranty_code','warranty_uuid','start_time','end_time','warranty_status')
             ->first();
-        $cust_policy_res = CustWarrantyPolicy::where('warranty_uuid',$warranty_res['warranty_uuid'])
+        $cust_policy_res = CustWarrantyPerson::where('warranty_uuid',$warranty_res['warranty_uuid'])
             ->get();
         $policy_res = [];
         $inusred_res = [];
@@ -100,7 +101,8 @@ class WarrantyController
                 $inusred_res['phone'] = $value['phone'];
             }
         }
-        return view('channels.yunda.warranty_detail',compact('warranty_res','user_res','policy_res','inusred_res'));
+        $warranty_status = config('status_setup.warranty');//保单状态
+        return view('channels.yunda.warranty_detail',compact('warranty_status','warranty_res','user_res','policy_res','inusred_res'));
     }
 
 }

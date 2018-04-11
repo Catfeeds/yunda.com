@@ -76,7 +76,7 @@
 						@if(isset($list)&&!empty($list))
 							@foreach($list as $value)
 								<li class="ui-table-tr">
-									<div class="col-md-2">{{$value['warranty_code']}}</div>
+									<div class="col-md-2">{{empty($value['warranty_code'])?$value['warranty_uuid']:$value['warranty_code']}}</div>
 									<div class="col-md-1">
 										@if(isset($warranty_status) &&!empty($warranty_status))
 											@foreach($warranty_status as $key=>$v)
@@ -87,12 +87,33 @@
 										@endif
 									</div>
 									<div class="col-md-2">英大非机动车驾驶员意外险</div>
-									<div class="col-md-1">王石磊</div>
-									<div class="col-md-1">410881199406056514</div>
-									<div class="col-md-1">15701681524</div>
+									{{--@if(isset($value['warrantyPerson'])&&!empty($value['warrantyPerson']))--}}
+										{{--@foreach($value['warrantyPerson'] as $va)--}}
+											{{--@if($va['type'] == '1')--}}
+												{{--<div class="col-md-1">{{$va['name']}}</div>--}}
+												{{--<div class="col-md-1">{{$va['card_code']}}</div>--}}
+												{{--<div class="col-md-1">{{$va['phone']}}</div>--}}
+											{{--@endif--}}
+										{{--@endforeach--}}
+									{{--@else--}}
+										{{--<div class="col-md-1">王石磊</div>--}}
+										{{--<div class="col-md-1">410881199406056514</div>--}}
+										{{--<div class="col-md-1">15701681524</div>--}}
+									{{--@endif--}}
+									@if(isset($value['person'])&&!empty($value['person']))
+										<div class="col-md-1">{{$value['person']['name']}}</div>
+										<div class="col-md-1">{{$value['person']['papers_code']}}</div>
+										<div class="col-md-1">{{$value['person']['phone']}}</div>
+									@else
+										<div class="col-md-1">王石磊</div>
+										<div class="col-md-1">410881199406056514</div>
+										<div class="col-md-1">15701681524</div>
+									@endif
+
 									<div class="col-md-1">2</div>
 									<div class="col-md-1">1</div>
-									<div class="col-md-1">{{$value['updated_at']}}</div>
+									<div class="col-md-1"></div>
+									{{--{{date('Y-m-d H:i:s',$value['updated_at'])}}--}}
 									<div class="col-md-1 text-right">
 										<a class="btn btn-primary" href="{{url('backend/warranty/info/'.$value['warranty_uuid'])}}">查看详情</a>
 									</div>

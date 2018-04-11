@@ -45,6 +45,20 @@ class Kernel extends HttpKernel
             // 处理路由绑定
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+        'yunda' => [
+            // cookie 加密解密
+            \App\Http\Middleware\EncryptCookies::class,
+            // 将 cookie 添加到响应中
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            // 开启会话
+            \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            // 检验 CSRF ,防止跨站请求伪造的安全威胁
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            // 处理路由绑定
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
     // API 中间件组，应用于 routes/api.php 路由文件
         'api' => [
             // 使用别名来调中间件

@@ -10,13 +10,13 @@ class CustWarranty extends Model
     protected $table = 'cust_warranty';
 
     //关联用户
-    public function warrantyPerson()
+    public function person()
     {
-        return $this->hasOne('App\Models\Person','id_code','user_id');
+        return $this->hasOne('App\Models\Person','id','user_id');
     }
     //关联被保人
-    public function warrantyPolicy()
+    public function warrantyPerson()
     {
-        return $this->hasMany('App\Models\CustWarrantyPolicy','private_code','private_code');
+        return $this->hasMany('App\Models\CustWarrantyPerson','warranty_uuid','warranty_uuid');
     }
 }

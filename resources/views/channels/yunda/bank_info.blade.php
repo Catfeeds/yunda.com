@@ -64,7 +64,7 @@
             });
             $('#del').click(function(){
                 var bank_code = $("input[name='bank_code']").val();
-                var cust_id = '1';
+                var cust_id ="{{$cust_id}}";
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

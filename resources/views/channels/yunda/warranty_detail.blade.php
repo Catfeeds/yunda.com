@@ -33,16 +33,16 @@
 									</div>
 									<div class="line">
 										<span>保单号</span>
-										<span>{{$warranty_res['warranty_code']}}</span>
+										<span>{{$warranty_res['warranty_uuid']}}</span>
 									</div>
 									<div class="line">
 										<span>状态</span>
-										@if($warranty_res['status']=='7')
-											<span class="special">保障中</span>
-										@elseif($warranty_res['status']=='3')
-											<span class="special">待支付</span>
-										@elseif($warranty_res['status']=='10')
-											<span class="special">已失效</span>
+										@if(isset($warranty_status) &&!empty($warranty_status))
+											@foreach($warranty_status as $key=>$v)
+												@if($warranty_res['warranty_status'] == $key)
+													<span class="special">	{{$v}}</span>
+												@endif
+											@endforeach
 										@endif
 									</div>
 								</div>
@@ -113,7 +113,7 @@
 									</div>
 									<div class="line">
 										<span>性别</span>
-										<span>{{substr($user_res['papers_code'], (strlen($user_res['papers_code'])==15 ? -2 : -1), 1) % 2 ? '女' : '男'}}</span>
+										<span>{{substr($user_res['papers_code'], (strlen($user_res['papers_code'])==15 ? -2 : -1), 1) % 2 ? '男' : '女'}}</span>
 									</div>
 									<div class="line">
 										<span>手机号码</span>
@@ -145,9 +145,11 @@
 										<span>{{$user_res['phone']}}</span>
 									</div>
 								</div>
-								<div class="btn">
-									<button id="claim_target">申请理赔</button>
-								</div>
+									@if($warranty_res['warranty_status'] == '7')
+									<div class="btn">
+										<button id="claim_target">申请理赔</button>
+									</div>
+									@endif
 							</div>
 						</div>
 					</div>

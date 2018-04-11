@@ -29,7 +29,7 @@ use App\Models\DitchAgent;
 use App\Models\Product;
 use App\Models\Person;
 use App\Models\CustWarranty;
-use App\Models\CustWarrantyPolicy;
+use App\Models\CustWarrantyPerson;
 
 use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
@@ -79,42 +79,58 @@ class CustWarrantyController extends BaseController{
         $date_end = isset($_GET['date_end'])?$_GET['date_end']:'';
         $page = isset($_GET['page'])?$_GET['page']:'1';//分页默认为1
         if($status_id == '-1' || $status_id == ""&&empty($date)&&empty($date_start)&&empty($date_end)){
-            $warranty_res = CustWarranty::orderBy('created_at','desc')
+            $warranty_res = CustWarranty::where('state','1')
+                ->with('person')
+                ->orderBy('created_at','desc')
                 ->paginate(config('list_num.backend.agent'));
         }else{
-            $warranty_res = CustWarranty::where('warranty_status',$status_id)->orderBy('created_at','desc')
+            $warranty_res = CustWarranty::where('warranty_status',$status_id)->where('state','1')
+                 ->with('person')
+                ->orderBy('created_at','desc')
                 ->paginate(config('list_num.backend.agent'));
         }
         if(!empty($date)){
             switch ($date){
                 case '0':
-                    $warranty_res = CustWarranty::orderBy('created_at','desc')
+                    $warranty_res = CustWarranty::where('state','1')
+                        ->with('person')
+                        ->orderBy('created_at','desc')
                         ->paginate(config('list_num.backend.agent'));
                     break;
                 case '1':
-                    $warranty_res = CustWarranty::orderBy('created_at','desc')
+                    $warranty_res = CustWarranty::where('state','1')
+                        ->with('person')
+                        ->orderBy('created_at','desc')
                         ->paginate(config('list_num.backend.agent'));
                     break;
                 case '-1':
-                    $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*2).'00:00:00')))
+                    $warranty_res = CustWarranty::where('state','1')
+                        ->where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*2).'00:00:00')))
                         ->where('created_at','<',date('Ymd',strtotime(date('Y-m-d',time()).'00:00:00')))
+                        ->with('person')
                         ->orderBy('created_at','desc')
                         ->paginate(config('list_num.backend.agent'));
                     break;
                 case '7':
-                    $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*7).'00:00:00')))
+                    $warranty_res = CustWarranty::where('state','1')
+                        ->where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*7).'00:00:00')))
+                        ->with('person')
                         ->orderBy('created_at','desc')
                         ->paginate(config('list_num.backend.agent'));
                     break;
                 case '30':
-                    $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*30).'00:00:00')))
+                    $warranty_res = CustWarranty::where('state','1')
+                        ->where('created_at','>',date('Ymd',strtotime(date('Y-m-d',time()-24*3600*30).'00:00:00')))
+                        ->with('person')
                         ->orderBy('created_at','desc')
                         ->paginate(config('list_num.backend.agent'));
                     break;
             }
             if(!empty($date_start)&&!empty($date_end)){
-                $warranty_res = CustWarranty::where('created_at','>',date('Ymd',strtotime($date_start.'00:00:00')))
+                $warranty_res = CustWarranty::where('state','1')
+                    ->where('created_at','>',date('Ymd',strtotime($date_start.'00:00:00')))
                     ->where('created_at','<',date('Ymd',strtotime($date_end.'23:59:59')))
+                    ->with('person')
                     ->orderBy('created_at','desc')
                     ->paginate(config('list_num.backend.agent'));
             }
@@ -135,6 +151,7 @@ class CustWarrantyController extends BaseController{
     public function warrantyInfo($warranty_uuid)
     {
         $warranty_res = CustWarranty::where('warranty_uuid',$warranty_uuid)
+            ->with('warrantyPerson')
             ->first();
         $agent_id = $warranty_res['agent_id'];
         $ditch_id = $warranty_res['ditch_id'];
@@ -144,7 +161,7 @@ class CustWarrantyController extends BaseController{
         $ditch_res = [];//渠道
         $product_res = [];//产品
         $company_res = [];//保险公司
-        $cust_policy_res = CustWarrantyPolicy::where('warranty_uuid',$warranty_uuid)->get();
+        $cust_policy_res = CustWarrantyPerson::where('warranty_uuid',$warranty_uuid)->get();
         $policy_res = [];//投保人
         $insured_res = [];//被保人
         $beneficiary_res = [];//受益人

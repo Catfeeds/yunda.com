@@ -20,5 +20,14 @@ return [
     ],
     'request_url'=>'http://59.110.136.249:9200/proposal/warranty/insure',
     'test_person_code'=>'620103199012171917',
+    'webapi_route'=>'/yunda/webapi/',
+    'joint_status'=>[
+        'yes'=>'01',
+        'no'=>'02',
+    ],
+    'authorize_status'=>[
+        'no'=>'01',
+        'yes'=>'02',
+    ],
 
 ];

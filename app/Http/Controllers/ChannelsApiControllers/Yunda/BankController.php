@@ -50,7 +50,6 @@ class BankController
         $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
         $bank_res = Bank::where('cust_id',$cust_id)
-            ->where('bank_del','0')
             ->select('id','bank','bank_code','bank_city','phone')
             ->get()->toArray();
         return view('channels.yunda.bank_index',compact('bank_res'));
@@ -65,7 +64,7 @@ class BankController
     public function bankBind(){
         $person_code = $this->person_code;
         $person_code = config('yunda.test_person_code');
-        return view('channels.yunda.bank_bind');
+        return view('channels.yunda.bank_bind',compact('person_code'));
     }
 
     /**
@@ -76,30 +75,21 @@ class BankController
      */
     public function doBankBind(){
         $input = $this->request->all();
-        $cust_id = $input['cust_id'];
+        $person_code = $input['person_code'];
         $bank = $input['bank_name'];
         $bank_cod = $input['bank_code'];
         $bank_city = $input['bank_city'];
-        $bank_repeat = Bank::where('cust_id',$cust_id)
+        $cust_res = Person::where('papers_code',$person_code)->select()->first();
+        $bank_repeat = Bank::where('cust_id',$cust_res['id'])
             ->where('bank',$bank)
             ->where('bank_code',$bank_cod)
-            ->select('id','bank_del')
+            ->select('id')
             ->first();
         if(!empty($bank_repeat)){
-            if($bank_repeat['bank_del']=='1'){//已删除
-                $update_res = Bank::where('bank_code',$bank_cod)->update([
-                    'bank_del'=>'0',
-                ]);
-                if($update_res){
-                    return json_encode(['status'=>'200','msg'=>'银行卡添加成功']);
-                }else{
-                    return json_encode(['status'=>'500','msg'=>'银行卡添加失败']);
-                }
-            }
             return json_encode(['status'=>'500','msg'=>'银行卡已存在，请更换银行卡！']);
         }
         $insert_res = Bank::insert([
-            'cust_id'=>$cust_id,
+            'cust_id'=>$cust_res['id'],
             'cust_type'=>'1',
             'bank'=>$bank,
             'bank_code'=>$bank_cod,
@@ -126,7 +116,7 @@ class BankController
      */
     public function bankInfo($bank_id){
         $bank_res = Bank::where('id',$bank_id)
-            ->select('cust_id','bank','bank_code','bank_city','bank_type','phone')
+            ->select('cust_id','bank','bank_code','bank_city','bank_deal_type','phone')
             ->first();
         $cust_id = $bank_res['cust_id'];
         $bank_num = Bank::where('cust_id',$cust_id)
@@ -136,10 +126,10 @@ class BankController
         if(count($bank_num)<=1){//只剩最后一张银行卡
             $bank_del_status = false;
         }
-        if($bank_res['bank_type']=='own'){//从韵达传递过来的数据中获取的银行卡信息
+        if($bank_res['bank_deal_type']=='1'){//从韵达传递过来的数据中获取的银行卡信息
             $bank_del_status = false;
         }
-        return view('channels.yunda.bank_info',compact('bank_res','bank_del_status'));
+        return view('channels.yunda.bank_info',compact('cust_id','bank_res','bank_del_status'));
     }
 
     /**
@@ -156,13 +146,12 @@ class BankController
         $cust_id = $input['cust_id'];
         $bank_cod = $input['bank_code'];
         $bank_num = Bank::where('cust_id',$cust_id)
-            ->where('bank_del','0')
             ->select('bank_code')
             ->get();
         $bank_res =  Bank::where('cust_id',$cust_id)
             ->where('bank_code',$bank_cod)
-            ->select('bank','bank_code','bank_city','bank_type','phone')
-            ->first()->toArray();
+            ->select('bank','bank_code','bank_city','bank_deal_type','phone')
+            ->first();
         if(count($bank_num)<=1){//只剩最后一张银行卡
             return json_encode(['status'=>'500','msg'=>'最后一张银行卡，不能删除']);
         }
@@ -171,7 +160,7 @@ class BankController
         }
         $del_res = Bank::where('cust_id',$cust_id)
             ->where('bank_code',$bank_cod)
-            ->update(['bank_del'=>'1']);//bank_del 默认为0，已删除为1
+            ->delete();
         if($del_res){
             return json_encode(['status'=>'200','msg'=>'银行卡删除成功']);
         }else{
@@ -188,10 +177,37 @@ class BankController
     public function bankAuthorize(){
         $person_code = $this->person_code;
         $person_code = config('yunda.test_person_code');
-        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
-        $cust_id = $user_res['id'];
+        $cust_id = '';
+        $cust_name = '';
+        $user_res = Person::where('papers_code',$person_code)
+            ->select('id','name','phone')
+            ->first();
+        if(!empty($user_res)){
+            $cust_id = $user_res['id'];
+            $cust_name = $user_res['name']; 
+        }
+        $insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)
+            ->select('authorize_bank')
+            ->first();
+        $bank = [];
+        if(!empty($insure_seting)){
+            $bank['code'] = $insure_seting['authorize_bank'];
+        }
+        $bank_res = Bank::where('cust_id',$cust_id)
+            ->select('bank','bank_code','bank_city','phone','bank_deal_type')
+            ->get();
+        if(!empty($bank_res)){
+            foreach ($bank_res as $value){
+                if($value['bank_deal_type']=='1'){
+                    $bank['code']  = $value['bank_code'];
+                    $bank['name']  = $value['bank'];
+                    $bank['city']  = $value['bank_city'];
+                    $bank['phone']  = $value['phone'];
+                }
+            }
+        }
         //签约页面上会显示签约人的相关信息
-        return view('channels.yunda.bank_authorize',compact('cust_id','person_code'));
+        return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','person_code'));
     }
 
     /**
@@ -230,22 +246,43 @@ class BankController
     public function doBankAuthorize(){
         $input = $this->request->all();
         $person_code = $input['person_code'];
+        $person_name = $input['person_name'];
+        $bank_code = $input['bank_code'];
+        $bank_name = $input['bank_name'];
         $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
-        $repeat_res = ChannelInsureSeting::where('cust_id',$cust_id)
+        $seting_res = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('id')->first();
-        if(empty($repeat_res)){
+        $bank_res = Bank::where('bank_code',$bank_code)->where('bank',$bank_name)->select('id')->first();
+        if(empty($bank_res)){
+            Bank::insert([
+                'cust_type'=>'1',
+                'cust_id'=>$cust_id,
+                'bank'=>$bank_name,
+                'bank_code'=>$bank_code,
+                'bank_city'=>'',
+                'bank_deal_type'=>'1',
+                'phone'=>'',
+            ]);
+        }
+        if(empty($seting_res)){
             ChannelInsureSeting::insert([
                 'cust_id'=>$cust_id,
                 'cust_cod'=>$person_code,
                 'cust_type'=>'',
+                'authorize_bank'=>$bank_code,
                 'authorize_status'=>'1',
                 'authorize_start'=>time(),
+                'auto_insure_status'=>'1',
+                'auto_insure_type'=>'1',
+                'auto_insure_price'=>'2',
+                'auto_insure_time'=>time(),
             ]);
         }else{
             ChannelInsureSeting::where('cust_cod',$person_code)->update([
                 'authorize_status'=>'1',
                 'authorize_start'=>time(),
+                'authorize_bank'=>$bank_code,
             ]);
         }
         return json_encode(['status'=>'200','msg'=>'开通免密支付成功']);
