@@ -36,8 +36,8 @@
 					<div>
 						<ul class="form-wrapper">
 							<li style="font-weight: bold;">英大非机动车意外保险</li>
-							<li>理赔状态<input style="color: #267cfc;" disabled type="text" value="资料上传"/></li>
-							<li>申请时间<input disabled type="text"  value="2018-03-21"/></li>
+							<li>理赔状态<input style="color: #267cfc;" @if($result->claim_status == 2)onclick="uploadInfo({{$result->claim_id}})"@endif  type="text" value="{{$status['claim_status'][$result->status]}}"/></li>
+							<li>申请时间<input disabled type="text"  value="{{$result->claim_created_at}}"/></li>
 						</ul>
 						<div class="division"></div>
 						<ul class="form-wrapper">
@@ -45,14 +45,25 @@
 						</ul>
 						<div>
 							<ul class="process-wrapper">
-								<li class="active"><div class="icon"></div><div>出险人员</div></li>
-								<li><div class="icon"></div><div>出险类型</div></li>
-								<li><div class="icon"></div><div>出险信息</div></li>
-								<li><div class="icon"></div><div>联系方式</div></li>
+								<li @if($result->claim_status >= 1 || $result->claim_status == -1)class="active"@endif><div class="icon"></div><div>申请理赔</div></li>
+								<li @if($result->claim_status >= 2 || $result->claim_status == -1)class="active"@endif><div class="icon"></div><div>提交资料</div></li>
+								<li @if($result->claim_status >= 3 || $result->claim_status == -1)class="active"@endif><div class="icon"></div><div>等待审核</div></li>
+								@if($result->claim_status != -1)
+									<li @if($result->claim_status == 4)class="active"@endif><div class="icon"></div><div>审核通过</div></li>
+								@endif
+								@if($result->claim_status == -1)
+									<li class="active"><div class="icon"></div><div>审核驳回</div></li>
+								@endif
 							</ul>
 							<ul class="list">
-								<li>2017-11-11 <span class="fr">申请完成</span></li>
-								<li>2017-11-11 <span class="fr">申请完成</span></li>
+								<li>{{$result->claim_created_at}} <span class="fr">申请理赔</span></li>
+								@if($result->claim_status >= 2 || $result->claim_status == -1)
+									<li>{{$result->claim_info_created_at}} <span class="fr">提交资料</span></li>
+								@endif
+								@if($result->claim_status == 4 || $result->claim_status == -1)
+									<li>{{$result->claim_info_updated_at}} <span class="fr">{{$status['claim_status'][$result->status]}}</span></li>
+									<li>审核备注： <span class="fr">{{$result->remark}} </span></li>
+								@endif
 							</ul>
 						</div>
 					</div>
@@ -71,6 +82,10 @@
                 Mask.loding();
                 window.history.go(-1);
             });
+            //上传资料
+            function uploadInfo(id){
+                location.href = '{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id='+id;
+            }
 		</script>
 	</body>
 </html>

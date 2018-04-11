@@ -29,5 +29,10 @@ return [
         'no'=>'01',
         'yes'=>'02',
     ],
+    //产品ID对应邮箱地址
+    'product_id_email'=>[
+        '1'=>'386800893@qq.com',
+        '2'=>'taomy@inschos.com',
+    ],
 
 ];
