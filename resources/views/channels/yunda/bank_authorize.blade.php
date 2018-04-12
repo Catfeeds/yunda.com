@@ -29,11 +29,12 @@
 				</div>
 				<div class="tab">
 					<span class="item">手机号</span>
-					<input type="text" name="person_code" value="{{$cust_phone}}" readonly/>
+					<input type="text" name="person_phone" value="{{$cust_phone}}" readonly/>
 				</div>
 				<div class="tab">
 					<span class="item">银行卡号</span>
 					<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:""}}"/>
+					<input type="hidden" name="person_code" value="{{$person_code}}"/>
 				</div>
 			</div>
 		</div>
@@ -95,7 +96,6 @@
         Mask.loding();
     });
     $('#confirm').on('click',function(){
-        var bank_name = $("input[name='bank_name']").val();
         var bank_code = $("input[name='bank_code']").val();
         var person_name = $("input[name='person_name']").val();
         var person_code = $("input[name='person_code']").val();
@@ -105,7 +105,7 @@
             },
             url: "{{config('view_url.channel_yunda_target_url')}}do_insure_authorize",
             type: "post",
-            data: {'person_name':person_name,'person_code':person_code,'bank_name':bank_name,'bank_code':bank_code},
+            data: {'person_name':person_name,'person_code':person_code,'bank_code':bank_code},
             dataType: "json",
             success: function (data) {
                 Mask.alert(data.msg,3);

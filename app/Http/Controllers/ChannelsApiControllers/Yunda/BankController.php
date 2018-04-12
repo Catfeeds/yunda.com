@@ -170,6 +170,8 @@ class BankController
 
     /**
      * 免密授权详情页面
+     * 1.是否有银行卡，优先银行卡支付
+     * 2.判断有没有预投保，然后显示是否开通微信免密支付
      * @access public
      * @return view
      *
