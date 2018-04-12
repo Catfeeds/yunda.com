@@ -537,8 +537,9 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 #process2 .popups-agree{
 			}
 			#process2 .popups-agree .popups{
-				height: 76%;
+				height: auto;
 				overflow: hidden;
+				padding-bottom: .3rem;
 			}
 			#process2 .popups-content{
 				margin: 0;
@@ -562,12 +563,41 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 				font-size: .26rem;
 			}
 			#process2 .btn{
-				width: 84%;
-				height: 1rem;
-				line-height: 1rem;
+				width: 92%;
+				height: .7rem;
+				line-height: .7rem;
 				font-size: .3rem;
 				color: #fff;
 				background: #00a2ff;
+			}
+			#process2 .label-wrapper{
+				margin: .3rem 0;margin-left: .2rem;text-align: left;color: #909090;
+			}
+			#process2 .wechat{
+				margin-left: .1rem; text-align: left;line-height: 2;color: #909090;
+			}
+			#process2 .or{
+				position: relative;
+				text-align: center;
+				color: #ddd;
+			}
+			#process2 .or:after{
+				position: absolute;
+				top: 8px;
+				left: 0;
+				content: '';
+				height: 1px;
+				width: 40%;
+				background: #ddd;
+			}
+			#process2 .or:before{
+				position: absolute;
+				top: 8px;
+				right: 0;
+				content: '';
+				height: 1px;
+				width: 40%;
+				background: #ddd;
 			}
 #process7 .section{
 				padding: 0;
@@ -718,8 +748,8 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			#process2 .policy_list_wrapper .tab {
 				padding: 0 .2rem;
 				background: #fff;
-				height: 1rem;
-				line-height: 1rem;
+				height: .8rem;
+				line-height: .8rem;
 				border-bottom: 1px solid #DDDDDD;
 				overflow: hidden;
 			}
