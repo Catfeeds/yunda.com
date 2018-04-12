@@ -121,10 +121,10 @@ class ClaimController
     public function claimMaterialUpload(){
         $input = $this->request->all();
         $result = DB::table('claim_yunda')
-            ->join('warranty','warranty.id','=','claim_yunda.warranty_id')
-            ->join('product','product.id','=','warranty.product_id')
+            ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
+            ->join('product','product.id','=','cust_warranty.product_id')
             ->where('claim_yunda.id',$input['claim_id'])
-            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','warranty.*','product.*')
+            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','cust_warranty.*','product.*')
             ->first();
         return view('channels.yunda.claim_material_upload',compact('result'));
     }
@@ -136,33 +136,45 @@ class ClaimController
         $input = $this->request->all();
         $data = [];
         $data['claim_id'] = $input['claim_id'];
+
+        $result = DB::table('claim_yunda')
+            ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
+            ->join('product','product.id','=','cust_warranty.product_id')
+            ->where('claim_yunda.id',$data['claim_id'])
+            ->select('product.id')
+            ->first();
+
         unset($input['claim_id']);
         DB::beginTransaction();
         try{
+
             foreach ($input as $key=>$val){
                 $data[$key] = $this->uploadFile($this->request->file($key));
             }
             ClaimYunda::where('id', $data['claim_id'])->update(['status' => 3]);
             $claim_yunda_info = new ClaimYundaInfo();
-            $claim_yunda_info->claim_id = $data['claim_id'];
-            $claim_yunda_info->proof = $data['proof'];
-            $claim_yunda_info->invoice = $data['invoice'];
-            $claim_yunda_info->expenses = $data['expenses'];
-            $claim_yunda_info->papers_code_img = $data['papers_code_img'];
-            $claim_yunda_info->account_info = $data['account_info'];
-            $claim_yunda_info->accident_proof = $data['accident_proof'];
-            $claim_yunda_info->proof_loss = $data['proof_loss'];
-            $claim_yunda_info->bruise_whole = $data['bruise_whole'];
-            $claim_yunda_info->bruise_face = $data['bruise_face'];
-            $claim_yunda_info->bruise_wound = $data['bruise_wound'];
-            $claim_yunda_info->maim_proof = $data['maim_proof'];
-            $claim_yunda_info->die_proof = $data['die_proof'];
-            $claim_yunda_info->beneficiary = $data['beneficiary'];
+            $claim_yunda_info->claim_id = $data['claim_id'] ?? '';
+            $claim_yunda_info->proof = $data['proof'] ?? '';
+            $claim_yunda_info->invoice = $data['invoice'] ?? '';
+            $claim_yunda_info->expenses = $data['expenses'] ?? '';
+            $claim_yunda_info->papers_code_img = $data['papers_code_img'] ?? '';
+            $claim_yunda_info->account_info = $data['account_info'] ?? '';
+            $claim_yunda_info->accident_proof = $data['accident_proof'] ?? '';
+            $claim_yunda_info->proof_loss = $data['proof_loss'] ?? '';
+            $claim_yunda_info->bruise_whole = $data['bruise_whole'] ?? '';
+            $claim_yunda_info->bruise_face = $data['bruise_face'] ?? '';
+            $claim_yunda_info->bruise_wound = $data['bruise_wound'] ?? '';
+            $claim_yunda_info->maim_proof = $data['maim_proof'] ?? '';
+            $claim_yunda_info->die_proof = $data['die_proof'] ?? '';
+            $claim_yunda_info->beneficiary = $data['beneficiary'] ?? '';
             $claim_yunda_info->status = 0; //进度 0等待审核 1审核通过 -1 审核失败
             $claim_yunda_info->save();
             $data['claim_yunda_info_id'] =  $claim_yunda_info->id;
             DB::commit();
-            Mail::to(['386800893@qq.com'])->send(new YundaEmail($data));
+
+            Mail::to([config('yunda.product_id_email')[$result->id]])->send(new YundaEmail($data));
+
+
             return json_encode(['code'=>200,'msg'=>'邮件发送成功，等待审核！']);
         }catch (\Exception $e){
             DB::rollBack();
@@ -178,10 +190,10 @@ class ClaimController
         $input = $this->request->all();
         $result = DB::table('claim_yunda')
             ->join('claim_yunda_info','claim_yunda_info.claim_id','=','claim_yunda.id')
-            ->join('warranty','warranty.id','=','claim_yunda.warranty_id')
-            ->join('product','product.id','=','warranty.product_id')
+            ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
+            ->join('product','product.id','=','cust_warranty.product_id')
             ->where('claim_yunda_info.id', $input['claim_yunda_info_id'])
-            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','warranty.*','product.*','claim_yunda_info.*')
+            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','cust_warranty.*','product.*','claim_yunda_info.*')
             ->first();
         return view('channels.yunda.claim_email',compact('result'));
     }
@@ -221,17 +233,41 @@ class ClaimController
         $where = [1,2,3];
         if($type != '0') $where = [-1,4];
         $list = DB::table('claim_yunda')
-            ->join('warranty','warranty.id','=','claim_yunda.warranty_id')
-            ->join('product','product.id','=','warranty.product_id')
+            ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
+            ->join('product','product.id','=','cust_warranty.product_id')
             ->where('claim_yunda.user_id',$users->id)
             ->whereIn('claim_yunda.status',$where)
-            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','warranty.*','product.product_name')
+            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.status as claim_status', 'claim_yunda.created_at as claim_created_at','claim_yunda.id as claim_id','cust_warranty.*','product.product_name')
             ->get();
         $status = config('yunda');
-        return view('channels.yunda.claim_progress', compact('list','status'));
+        return view('channels.yunda.claim_progress', compact('list','status', 'type'));
     }
+
+
+
+
     public function claimInfo(){
-        return view('channels.yunda.claim_info');
+        $input = $this->request->all();
+        $result = DB::table('claim_yunda')
+            ->join('claim_yunda_info','claim_yunda_info.claim_id','=','claim_yunda.id')
+            ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
+            ->join('product','product.id','=','cust_warranty.product_id')
+            ->where('claim_yunda.id', $input['claim_id'])
+            ->select(
+                'claim_yunda.*',
+                'claim_yunda.type as claim_type',
+                'claim_yunda.status as claim_status',
+                'claim_yunda.created_at as claim_created_at',
+                'claim_yunda_info.created_at as claim_info_created_at',
+                'claim_yunda_info.updated_at as claim_info_updated_at',
+                'claim_yunda_info.remark',
+                'claim_yunda.id as claim_id','cust_warranty.*',
+                'product.product_name'
+            )
+            ->first();
+        $status = config('yunda');
+
+        return view('channels.yunda.claim_info', compact('result','status'));
     }
 
     /**
