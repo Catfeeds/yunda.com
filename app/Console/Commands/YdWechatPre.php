@@ -8,6 +8,7 @@
  */
 namespace App\Console\Commands;
 
+use App\Models\ChannelContract;
 use App\Models\ChannelPrepareInfo;
 use Illuminate\Http\Request;
 use App\Helper\DoChannelsSignHelp;
@@ -71,7 +72,11 @@ class YdWechatPre extends Command
     {
         LogHelper::logChannelSuccess(date('Y-m-d H:i:s',time()), 'YD_prepara_start');
         LogHelper::logChannelSuccess(date('Y-m-d H:i:s',time()), 'YD_prepara_end');
-
+        $contract_res = ChannelContract::with(['channel_user_info'=>function($a){
+            $a->select('channel_user_name','channel_user_code','channel_user_phone','courier_start_time','courier_state','channel_user_address','channel_provinces','channel_city','channel_county');
+        }])
+            ->select('is_auto_pay','openid','contract_id','contract_expired_time')
+            ->get();//查询所有已签约的客户
     }
 
 

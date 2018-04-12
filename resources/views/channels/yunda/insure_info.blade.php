@@ -117,13 +117,20 @@
 						</ul>
 					</div>
 					<div class="section section-more">
-						<p>更多详情，请查看
-							<a href="{{config('view_url.channel_yunda_target_url')}}ins_clause" id="ins_clause">《保险条款》</a>
+						<p>更多详情请查看</p >
+						<p>泰康在线财险相关资料：</p >
+						<p><a href="">《保险条款》</a><a href="">《投保须知》</a></p >
+					<p>泰康在线财险相关资料：</p >
+					<p><a href="">《保险条款》</a><a href="">《投保须知》</a></p >
+					</div>
+					{{--<div class="section section-more">--}}
+						{{--<p>更多详情，请查看--}}
+							{{--<a href="{{config('view_url.channel_yunda_target_url')}}ins_clause" id="ins_clause">《保险条款》</a>--}}
 							{{--<a href="{{config('view_url.channel_views')}}">《投保须知》</a>--}}
 							{{--<a href="{{config('view_url.channel_views')}}">《投保责任书》</a>--}}
-							的全部内容。
-						</p>
-					</div>
+							{{--的全部内容。--}}
+						{{--</p>--}}
+					{{--</div>--}}
 				</div>
 			</div>
 			<div class="buttons-wrapper">

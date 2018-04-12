@@ -606,6 +606,15 @@ class ChannelInfosController extends BaseController
         $respose =  json_encode(['status'=>'200','content'=>'出单完成'],JSON_UNESCAPED_UNICODE);
         return true;
     }
+
+    public function testWechatPre(){
+        $contract_res = ChannelContract::with(['channel_user_info'=>function($a){
+            $a->select('channel_user_name','channel_user_code','channel_user_phone','courier_start_time','courier_state','channel_user_address','channel_provinces','channel_city','channel_county');
+        }])
+            ->select('is_auto_pay','openid','contract_id','contract_expired_time')
+            ->get();//查询所有已签约的客户
+        dump($contract_res);
+    }
 }
 
 
