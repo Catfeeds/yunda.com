@@ -65,7 +65,7 @@ class IntersController
      */
     public function jointLogin(){
         $input = $this->request->all();
-        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
+//        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
         $return_data =[];
         $webapi_route = 'http://'.$_SERVER['HTTP_HOST'].config('yunda.webapi_route');
         if(empty($input)){
@@ -226,7 +226,7 @@ class IntersController
      */
     public function authorizationQuery(){
         $input = $this->request->all();
-        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527"}';
+//        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527"}';
         $return_data =[];
         if(empty($input)){
             $return_data['code'] = '500';
@@ -312,7 +312,7 @@ class IntersController
      */
     public function doWechatpay(){
         $input =  $this->request->all();
-        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"6201031990121719172","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
+//        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"6201031990121719172","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
         $return_data =[];
         if(empty($input)){
             $return_data['code'] = '500';
