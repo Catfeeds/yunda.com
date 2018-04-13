@@ -31,8 +31,7 @@
 				<div class="mui-scroll">
 					<div class="info">
 						<div class="header">
-							<h1 class="title">英大非机动车驾驶员意外险</h1>
-							<img class="logo" src="{{config('view_url.channel_views')}}imges/logo.png" alt="" />
+							<h1 class="title">快递保.意外险</h1>
 						</div>
 						<ul class="list">
 							<li>被保人姓名<span class="fr">{{$user_res['name']}}</span></li>

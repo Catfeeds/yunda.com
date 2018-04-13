@@ -25,7 +25,7 @@
 						<div class="mui-scroll">
 							<div class="policy_list_wrapper">
 								<ul class="tab" id="insure_setup">
-									<li class="item">英大非机动车驾驶员意外险 <i class="iconfont icon-jiantou"></i></li>
+									<li class="item">快递保.意外险 <i class="iconfont icon-jiantou"></i></li>
 								</ul>
 						</div>
 					</div>

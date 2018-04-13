@@ -18,7 +18,7 @@
 		</div>
 		<div class="content">
 			<div class="section">
-				<h2  class="title">英大非机动车驾驶员意外险</h2>
+				<h2  class="title">快递保.意外险</h2>
 				<ul class="info">
 					<li><span class="name">保单号</span><span>{{$result->warranty_code}}</span></li>
 					<li><span class="name">保障时间</span><span>{{$result->start_time}}   {{$result->end_time}}</span></li>

@@ -75,10 +75,10 @@
 		<div class="mui-content">
 			<div class="header">
 				<div>
-					<span class="detil-name">产品名称:<span class="detil-name-color">泰爱保·百万医疗保险</span></span>
+					<span class="detil-name">产品名称:<span class="detil-name-color">韵达快递保·人身意外综合保险</span></span>
 				</div>
 				<div class="header-bottom">
-					<span class="detil-name">保险公司名称:<span class="detil-name-color">泰康人寿</span></span>
+					<span class="detil-name">保险公司名称:<span class="detil-name-color">泰康在线财产保险股份有限公司</span></span>
 				</div>
 			</div>
 			<div class="find_nav">

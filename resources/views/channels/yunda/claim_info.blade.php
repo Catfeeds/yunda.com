@@ -35,7 +35,7 @@
 				<div class="mui-scroll">
 					<div>
 						<ul class="form-wrapper">
-							<li style="font-weight: bold;">英大非机动车意外保险</li>
+							<li style="font-weight: bold;">快递保.意外险</li>
 							<li>理赔状态<input style="color: #267cfc;" @if($result->claim_status == 2)onclick="uploadInfo({{$result->claim_id}})"@endif  type="text" value="{{$status['claim_status'][$result->status]}}"/></li>
 							<li>申请时间<input disabled type="text"  value="{{$result->claim_created_at}}"/></li>
 						</ul>
