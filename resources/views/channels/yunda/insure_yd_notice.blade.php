@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>天眼互联-科技让保险无限可能</title>
+		<title>快递保</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/mui.min.css">
 		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/iconfont.css" />

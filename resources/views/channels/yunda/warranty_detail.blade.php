@@ -29,7 +29,6 @@
 								<div class="item policy">
 									<div class="title">
 										<span class="info">快递保.意外险</span>
-										<img src="{{config('view_url.channel_views')}}imges/logo.png" />
 									</div>
 									<div class="line">
 										<span>保单号</span>
@@ -70,7 +69,7 @@
 									<ul class="ul-list">
 										<span class="tit">非机动车驾驶员意外险</span>
 										<li class="ul-item">
-											<span>非机动车驾驶员意外险</span>
+											<span>意外伤残、身故</span>
 											<span>20万</span>
 										</li>
 										<li class="ul-item">
