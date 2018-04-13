@@ -87,7 +87,7 @@
 						<img src="{{config('view_url.channel_views')}}imges/banner_text.png" alt="" />
 					</div>
 					<div class="section section-welfare">
-						<p class="title">快递保</p>
+						<p class="title">快递保·意外险</p>
 						<p style="color: #ff6c30;">韵达给大家提供的福利：<span style="color: #000000;">市场上都买不来的第三者责任</span></p>
 					</div>
 					<div class="section section-rights">

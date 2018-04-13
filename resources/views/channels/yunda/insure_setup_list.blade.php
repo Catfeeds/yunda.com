@@ -23,7 +23,7 @@
 				<i class="iconfont icon-close"></i>
 			</div>
 			<div class="head-title">
-				<span>快递保</span>
+				<span>快递保·意外险</span>
 			</div>
 		</header>
 		<div class="step4">

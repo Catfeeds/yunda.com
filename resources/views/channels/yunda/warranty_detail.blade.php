@@ -28,7 +28,7 @@
 							<div class="policy_wrapper ">
 								<div class="item policy">
 									<div class="title">
-										<span class="info">快递保.意外险</span>
+										<span class="info">快递保·意外险</span>
 									</div>
 									<div class="line">
 										<span>保单号</span>
