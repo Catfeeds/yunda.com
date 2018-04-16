@@ -30,7 +30,7 @@
 				<div class="mui-scroll">
 					<a style="display: block;" href="{{config('view_url.channel_yunda_target_url')}}ins_info" id="insure_target">
 						<div class="banner">
-							<img src="{{config('view_url.channel_views')}}imges/banner_3.png" alt="" />
+							<img src="{{config('view_url.channel_views')}}imges/banner_text.png" alt="" />
 						</div>
 					</a>
 					@if(!$auto_insure_status)

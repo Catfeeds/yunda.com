@@ -2,70 +2,50 @@
 /**
  * Created by PhpStorm.
  * User: wangsl
- * Date: 2018/01/16
- * Time: 16:03
- * 韵达投保微信代扣定时任务（凌晨四点到十点）
+ * Date: 2018/04/12
+ * Time: 12:03
+ * 韵达已签约业务员预投保定时任务-从凌晨开始
  */
 namespace App\Console\Commands;
 
+use App\Models\ChannelContract;
 use App\Models\ChannelPrepareInfo;
-use App\Models\Warranty;
 use Illuminate\Http\Request;
 use App\Helper\DoChannelsSignHelp;
 use App\Helper\RsaSignHelp;
 use App\Helper\AesEncrypt;
 use Ixudra\Curl\Facades\Curl;
 use Validator, DB, Image, Schema;
-use App\Models\Channel;
 use App\Models\ChannelOperate;
-use App\Models\UserChannel;
-use App\Models\UserChannels;
 use App\Models\User;
-use App\Models\UserContact;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Session,Cache;
 use App\Models\Order;
 use App\Models\OrderParameter;
 use App\Models\WarrantyPolicy;
 use App\Models\WarrantyRecognizee;
 use App\Models\WarrantyRule;
-use App\Models\OrderBrokerage;
 use App\Helper\LogHelper;
-use App\Models\Product;
-use App\Models\ApiInfo;
-use App\Models\Bank;
 use App\Models\UserBank;
 use App\Models\Competition;
-use App\Models\CompanyBrokerage;
-use App\Models\OrderPrepareParameter;
-use App\Models\ChannelClaimApply;
-use App\Models\ChannelInsureInfo;
-use App\Helper\Issue;
-use App\Helper\UploadFileHelper;
 use App\Helper\IdentityCardHelp;
-use App\Models\ChannelContract;
 use Illuminate\Console\Command;
 use \Illuminate\Support\Facades\Redis;
-use App\Models\TimedTask;
 
-
-class YunDaPrepare extends Command
+class YdWechatPre extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'yunda_prepare';
+    protected $signature = 'yunda_wechat_prepare';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'yunda_prepare Command description';
+    protected $description = 'yunda_wechat_prepare Command description';
 
 
     /**
@@ -85,62 +65,18 @@ class YunDaPrepare extends Command
 
     /**
      *
-     * 预投保信息处理
-     * 出队，变形，投保，入库
-     * todo  定时任务，处理信息（出队，变形，投保，入库）
+     * 已签约用户预投保操作
+     *
      */
     public function handle()
     {
-        $count = Redis::Llen('prepare_info');
-        if($count<1){
-            exit;
-        }
-        set_time_limit(0);//永不超时
-        echo '处理开始时间'.date('Y-m-d H:i:s', time()).'<br/>';
-        $file_area = "/var/www/html/yunda.inschos.com/public/Tk_area.json";
-        $file_bank = "/var/www/html/yunda.inschos.com/public/Tk_bank.json";
-        $json_area = file_get_contents($file_area);
-        $json_bank = file_get_contents($file_bank);
-        $area = json_decode($json_area,true);
-        $bank = json_decode($json_bank,true);
-        for($i=0;$i<$count;$i++) {
-            $value = json_decode(base64_decode(Redis::lpop('prepare_info')),true);
-            foreach($value as $key=>$item){//每次1000条数据
-                if(key_exists($item['channel_provinces'],$area)) {
-                    $item['channel_provinces'] = $area[$item['channel_provinces']];
-                }
-                if(key_exists($item['channel_city'],$area)){
-                    $item['channel_city'] = $area[$item['channel_city']];
-                }
-                if(key_exists($item['channel_county'],$area)){
-                    $item['channel_county'] = $area[$item['channel_county']];
-                }
-                if(key_exists($item['channel_bank_name'],$bank)){
-                    $item['channel_bank_name'] = $bank[$item['channel_bank_name']];
-                }
-                $item['operate_time'] = date('Y-m-d',time());
-                //预投保操作，批量操作（定时任务）
-                $idCard_status = IdentityCardHelp::getIDCardInfo($item['channel_user_code']);
-                if($idCard_status['status']=='2') {
-                    //TODO 判断是否已经投保
-                    $channel_insure_res = ChannelOperate::where('channel_user_code',$item['channel_user_code'])
-                        ->where('operate_time',$item['operate_time'])
-                        ->where('prepare_status','200')
-                        ->select('proposal_num')
-                        ->first();
-                    //已经投保的，不再投保
-                    if(!empty($channel_insure_res)){
-                        return 'end';
-                    }
-//                    $insure_status = $this->doInsurePrepare($item);
-                    $item['operate_code'] = '实名信息正确,预投保成功';
-                }else{
-                    $item['operate_code'] = '实名信息出错:身份证号';
-                }
-                ChannelPrepareInfo::insert($item);
-            }
-        }
-		 LogHelper::logChannelSuccess($count, 'YD_prepara_ok');
+        LogHelper::logChannelSuccess(date('Y-m-d H:i:s',time()), 'YD_prepara_start');
+        LogHelper::logChannelSuccess(date('Y-m-d H:i:s',time()), 'YD_prepara_end');
+        $contract_res = ChannelContract::with(['channel_user_info'=>function($a){
+            $a->select('channel_user_name','channel_user_code','channel_user_phone','courier_start_time','courier_state','channel_user_address','channel_provinces','channel_city','channel_county');
+        }])
+            ->select('is_auto_pay','openid','contract_id','contract_expired_time')
+            ->get();//查询所有已签约的客户
     }
 
 

@@ -58,7 +58,9 @@
 								<input  hidden type="radio"  value="3" />
 							</li>
 						</ul>
-						<span class="tips">注：每次上工时根据自动投保的保障期为您 投保。多天保障期内不会重复投保</span>
+						<span class="tips">注：每次上工时根据自动投保的保障期为您投保。多天保障期内不会重复投保。
+						<p><b>"3天期保障"和"10天期保障"只针对银行卡免密支付生效。</b></p>
+						</span>
 					</div>
 				</div>
 			</div>

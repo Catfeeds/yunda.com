@@ -157,6 +157,74 @@ class ChannelInfosController extends BaseController
     }
 
     /**
+     *
+     * 签约用户预投保操作
+     * @param $this->request->all()
+     * @return json
+     *
+     */
+    public function testWechatPre(){
+        set_time_limit(0);//永不超时
+        LogHelper::logChannelSuccess(date('Y-m-d H:i:s', time()), 'YD_check_insure_start_time');
+        $contract_res_key = 'wechat_pre';
+        $prepare_info_key = 'wechat_pre_info';
+        if(!Redis::exists($contract_res_key)){
+            $contract_res = ChannelContract::with('channel_user_info')
+                ->select('is_auto_pay','openid','contract_id','contract_expired_time','channel_user_code')
+                ->get();//查询所有已签约的客户
+            Redis::set($contract_res_key,$contract_res);
+        }
+        $contract_res = Redis::get($contract_res_key);
+        if(empty($contract_res)){
+            return false;
+        }
+        $contract_res  = json_decode($contract_res,true);
+        $contract_count = count($contract_res);
+        $prepare_info_count = Redis::Llen($prepare_info_key);
+        if($prepare_info_count<1){
+            foreach ($contract_res as $value){
+                $value = json_encode($value);
+                Redis::rPush($prepare_info_key,$value);//入队操作
+            }
+        }
+        if($prepare_info_count<1){
+            die;
+        }
+        $file_area = "./Tk_area.json";
+        $file_bank = "./Tk_bank.json";
+        $json_area = file_get_contents($file_area);
+        $json_bank = file_get_contents($file_bank);
+        $area = json_decode($json_area,true);
+        $bank = json_decode($json_bank,true);
+        for($i=0;$i<$prepare_info_count;$i++) {//遍历出队
+            $item = Redis::lpop($prepare_info_key);
+            $item = json_decode($item,true);
+            $item['channel_user_info']['operate_time'] = date('Y-m-d',time());
+            //预投保操作，批量操作（定时任务）
+            $idCard_status = IdentityCardHelp::getIDCardInfo($item['channel_user_info']['channel_user_code']);
+            if($idCard_status['status']=='2') {
+                    //TODO 判断是否已经投保
+                    $channel_insure_res = ChannelOperate::where('channel_user_code',$item['channel_user_info']['channel_user_code'])
+                        ->where('operate_time',$item['channel_user_info']['operate_time'])
+                        ->where('prepare_status','200')
+                        ->select('proposal_num')
+                        ->first();
+                    //已经投保的，不再投保
+                if(!empty($channel_insure_res)){
+                    return 'end';
+                }
+                $insure_status = $this->doInsurePrepare($item['channel_user_info']);
+                $item['operate_code'] = '实名信息正确,预投保成功';
+            }else{
+                $item['operate_code'] = '实名信息出错:身份证号';
+            }
+                ChannelPrepareInfo::insert($item['channel_user_info']);
+            }
+        LogHelper::logChannelSuccess(date('Y-m-d H:i:s', time()), 'YD_check_insure_end_time');
+        return 'end';
+    }
+
+    /**
      * 预投保操作
      *
      */
@@ -606,6 +674,8 @@ class ChannelInfosController extends BaseController
         $respose =  json_encode(['status'=>'200','content'=>'出单完成'],JSON_UNESCAPED_UNICODE);
         return true;
     }
+
+
 }
 
 

@@ -132,7 +132,7 @@ class YunDaPre extends Command
                     if(!empty($channel_insure_res)){
                         return 'end';
                     }
-                    $insure_status = $this->doInsurePrepare($item);
+//                    $insure_status = $this->doInsurePrepare($item);
                     $item['operate_code'] = '实名信息正确,预投保成功';
                 }else{
                     $item['operate_code'] = '实名信息出错:身份证号';

@@ -84,65 +84,48 @@
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<div class="banner">
-						<img src="{{config('view_url.channel_views')}}imges/banner_3.png" alt="" />
+						<img src="{{config('view_url.channel_views')}}imges/banner_text.png" alt="" />
 					</div>
 					<div class="section section-welfare">
-						<img class="logo" src="{{config('view_url.channel_views')}}imges/logo.png" alt="" />
-						<p class="title">英大非机动车驾驶员意外险</p>
-						<p style="color: #ff6c30;">韵达给大家提供的福利：</p>
-						<p>市场上都买不来的第三者责任</p>
+						<p class="title">快递保·意外险</p>
+						<p style="color: #ff6c30;">韵达给大家提供的福利：<span style="color: #000000;">市场上都买不来的第三者责任</span></p>
 					</div>
 					<div class="section section-rights">
 						<h3 class="name">保障权益</h3>
 						<ul>
 							<li><span class="ellipsis">非机动车驾驶员意外险</span></li>
-							<li><span class="ellipsis">非机动车驾驶员意外险</span><span class="fr">1万</span></li>
-							<li><span class="ellipsis">附加意外伤害险</span><span class="fr">5万</span></li>
+							<li><span class="ellipsis">意外伤残、身故</span><span class="fr">20万</span></li>
+							<li><span class="ellipsis">附加意外伤害险</span><span class="fr">1万</span></li>
 						</ul>
 						<ul>
 							<li><span class="ellipsis">第三者责任险</span></li>
-							<li><span class="ellipsis">第三方人身伤害（死亡、伤残、医疗）</span><span class="fr">1万</span></li>
-							<li><span class="ellipsis">第三方财产损失</span><span class="fr">5万</span></li>
+							<li><span class="ellipsis">第三方人身伤害（死亡、伤残、医疗）</span><span class="fr">5万</span></li>
+							<li><span class="ellipsis">第三方财产损失</span><span class="fr">1万</span></li>
 						</ul>
 					</div>
 					
 					<div class="section section-notice">
-						<h3 class="name">购买须知</h3>
-						<ul>
-							<li>1、本保单起保时间为当天xxx(以保单生效时间为准)，止保时间为当天23:59:59。</li>
-							<li>2. 本保单仅承保被保险人驾驶公司指定的非机动车从货物分拣开始至送达或取件结束期间发生的意外损失,具体保障责任时间以上述两个时间段为准。</li>
-							<li>3.本产品被保险人年龄为18周岁至60周岁，不符合此年龄的保单自始无效。</li>
-							<li>4.本保单出险后被保险人需提供交警开具的《交通事故责任认定书》或公安部门出具的报/立案证明。</li>
-							<li>5、本保单第三者责任险每次事故免赔额为500元或损失金额的10%，两者以高者为准。</li>
-						</ul>
-					</div>
-					<div class="section section-more">
-						<p>更多详情，请查看
-							<a href="{{config('view_url.channel_yunda_target_url')}}ins_clause" id="ins_clause">《保险条款》</a>
-							{{--<a href="{{config('view_url.channel_views')}}">《投保须知》</a>--}}
-							{{--<a href="{{config('view_url.channel_views')}}">《投保责任书》</a>--}}
-							的全部内容。
-						</p>
-					</div>
+						<div class="section section-more">
+							<p><b>承保公司为"泰康在线财产保险"和"英大泰和财产保险"，了解更多保险详情请查看</b></p >
+							<p>泰康在线财险相关资料：</p >
+							<p>
+								<a href="{{config('view_url.channel_yunda_target_url')}}insure_yd_clause" class="ins_clause">《保险条款》</a>
+								<a href="{{config('view_url.channel_yunda_target_url')}}insure_yd_notice" class="ins_clause">《投保须知》</a>
+							</p >
+						<p>泰康在线财险相关资料：</p >
+						<p>
+							<a href="{{config('view_url.channel_yunda_target_url')}}insure_tk_clause" class="ins_clause">《保险条款》</a>
+							<a href="{{config('view_url.channel_yunda_target_url')}}insure_tk_notice" class="ins_clause">《投保须知》</a>
+						</p >
+						</div>
+
 				</div>
 			</div>
 			<div class="buttons-wrapper">
 				<button type="button" class="btn btn-right" id="do_insured">立即投保</button>
 			</div>
 		</div>
-		
-		<!--投保失败弹出层-->
-		<div class="popups-wrapper popups-msg">
-			<div class="popups-bg"></div>
-			<div class="popups popups-tips">
-				<div class="popups-title"><i class="iconfont icon-guanbi"></i></div>
-				<div class="popups-content color-wraning">
-					<i class="iconfont icon-error"></i>
-					<p class="tips">投保失败</p>
-				</div>
-			</div>
 		</div>
-		
 		<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
@@ -160,10 +143,9 @@
                 Mask.loding();
                 window.history.go(-1);
             });
-            $('#ins_clause').on('tap',function(){
+            $('.ins_clause').on('tap',function(){
                 Mask.loding();
             });
 		</script>
 	</body>
-
 </html>

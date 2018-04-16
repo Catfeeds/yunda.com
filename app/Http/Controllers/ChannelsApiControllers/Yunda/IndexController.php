@@ -198,27 +198,51 @@ class IndexController
     }
 
     /**
-     * 保险条款页
+     * 保险条款页--英大
      * @access public
      * @return view
      *
      */
-    public function insClause(){
+    public function insYdClause(){
         $person_code = $this->person_code;
         $person_code = config('yunda.test_person_code');
-        return view('channels.yunda.insure_clause');
+        return view('channels.yunda.insure_yd_clause');
     }
 
     /**
-     * 投保告知页
+     * 保险条款页-泰康
      * @access public
      * @return view
      *
      */
-    public function insNotice(){
+    public function insTkClause(){
         $person_code = $this->person_code;
         $person_code = config('yunda.test_person_code');
-        return view('channels.yunda.ins_notice');
+        return view('channels.yunda.insure_tk_clause');
+    }
+
+    /**
+     * 投保告知页-泰康
+     * @access public
+     * @return view
+     *
+     */
+    public function insTkNotice(){
+        $person_code = $this->person_code;
+        $person_code = config('yunda.test_person_code');
+        return view('channels.yunda.ins_tk_notice');
+    }
+
+    /**
+     * 投保告知页-英大
+     * @access public
+     * @return view
+     *
+     */
+    public function insYdNotice(){
+        $person_code = $this->person_code;
+        $person_code = config('yunda.test_person_code');
+        return view('channels.yunda.insure_yd_notice');
     }
 
     /**

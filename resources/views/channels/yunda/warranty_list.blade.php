@@ -37,7 +37,7 @@
 								@else
 									@foreach($warranty_res as $value)
 										<ul class="content" data-id="{{$value['id']}}">
-											<li class="title">英大非机动车意外保险<i class="iconfont icon-jiantou"></i></li>
+											<li class="title">快递保.意外险<i class="iconfont icon-jiantou"></i></li>
 											<li class="item">
 												<span>保单号</span>
 												<span>{{$value['warranty_uuid']}}</span>

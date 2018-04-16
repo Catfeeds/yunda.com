@@ -18,34 +18,46 @@
 		<div class="popups-title"><i class="iconfont icon-guanbi"></i></div>
 		<div class="popups-content">
 			<div class="top">
-				<img style="margin-top: .1rem;" src="{{config('view_url.channel_views')}}imges/banner_txt.png" alt="" />
 				<h2 class="title">开通免密支付协议</h2>
 				<p style="margin-bottom: .16rem;">为了保障您上工的安全，需要您开通免密支付协议。开通后，可以实现每日自动投保。</p>
 			</div>
 			<div class="policy_list_wrapper">
+				<div class="tab" style="color: #adadad">
+					<span class="item">银行卡</span>
+				</div>
 				<div class="tab">
 					<span class="item">姓名</span>
-					<input type="text" name="person_name" value="{{$cust_name}}" readonly/>
+					<input type="text" name="person_name" value="{{$cust_name}}" />
 				</div>
 				<div class="tab">
 					<span class="item">手机号</span>
-					<input type="text" name="person_code" value="{{$cust_phone}}" readonly/>
+					<input type="text" name="person_phone" value="{{$cust_phone}}" />
 				</div>
 				<div class="tab">
-					<span class="item">银行卡号</span>
+					<span class="item">卡号</span>
 					<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:""}}"/>
+					<input type="hidden" name="person_code" value="{{$person_code}}"/>
 				</div>
 			</div>
 		</div>
 		<div class="popups-footer">
-			<div style="margin: .3rem 0;">
+			<div class="label-wrapper">
 				<label><input id="agree" checked type="checkbox" />我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}insure_authorize_info" style="color: #00A2FF;" id="insure_authorize_info">《转账授权书》</a></label>
 			</div>
 			<button disabled id="confirm" type="button" class="btn btn-default">已阅读并开通</button>
+			@if($wechat_status)
+				<form action="{{$wechat_url}}" method="post" id="do_insure_sign">
+				</form>
+			<div class="label-wrapper">
+				<div class="or">or</div>
+				<div class="wechat">微信</div>
+				{{--<label><input id="agree" checked type="checkbox" />我已阅读并同意<a style="color: #00A2FF;">《免密授权书》</a></label>--}}
+			</div>
+			<button type="button" id="wechat_pay" class="btn btn-default" style="background: #1aad19;">开通微信免密支付</button>
+			@endif
 		</div>
 	</div>
 </div>
-
 <script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
 <script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 <script src="{{config('view_url.channel_views')}}js/lib/mui.picker.all.js"></script>
@@ -55,6 +67,8 @@
     var app = {
         init: function() {
             var _this = this;
+            _this.bankPicker()
+            _this.areaPicker()
             $('.icon-guanbi').click(function(){
                 history.go(-1);
             });
@@ -66,8 +80,35 @@
             })
             _this.isDisabled()
         },
+        bankPicker: function() {
+            var bankPicker = new mui.PopPicker();
+            bankPicker.setData([{value: 'ywj',text: '工商银行'}, {value: 'aaa',text: '民生银行'}]);
+            $('.choose-bank').click(function(){
+                var _this = $(this)
+                $('input').blur();
+                bankPicker.show(function(items) {
+                    _this.next().val(items[0].value)
+                    _this.text(items[0].text).css({'color':'#303030'})
+                    app.isDisabled()
+                });
+            })
+        },
+        areaPicker: function() {
+            var cityPicker = new mui.PopPicker({layer: 3});
+            $('.choose-area').on('tap',function(){
+                var _this = $(this)
+                $('input').blur();
+                var _this = $(this);
+                cityPicker.setData(changeCityData(areaData));
+                cityPicker.show(function(items) {
+                    _this.text(items[0].text+"-"+items[1].text+"-"+items[2].text).css({'color':'#303030'});
+                    _this.next().val(items[0].value+"-"+items[1].value+"-"+items[2].value);
+                    app.isDisabled()
+                });
+            })
+        },
         isDisabled: function() {
-            var $confirm = $('#confirm');
+            var $confirm = $('.btn-default');
             var status = this.checkInput() || this.isAgree()
             $confirm.prop('disabled',status)
         },
@@ -95,7 +136,6 @@
         Mask.loding();
     });
     $('#confirm').on('click',function(){
-        var bank_name = $("input[name='bank_name']").val();
         var bank_code = $("input[name='bank_code']").val();
         var person_name = $("input[name='person_name']").val();
         var person_code = $("input[name='person_code']").val();
@@ -105,13 +145,17 @@
             },
             url: "{{config('view_url.channel_yunda_target_url')}}do_insure_authorize",
             type: "post",
-            data: {'person_name':person_name,'person_code':person_code,'bank_name':bank_name,'bank_code':bank_code},
+            data: {'person_name':person_name,'person_code':person_code,'bank_code':bank_code},
             dataType: "json",
             success: function (data) {
                 Mask.alert(data.msg,3);
                 $('#confirm').attr("style","display:none;");
             }
         });
+    });
+    $('#wechat_pay').on('tap',function(){
+        Mask.loding();
+		$('#do_insure_sign').submit();
     });
 </script>
 </body>
