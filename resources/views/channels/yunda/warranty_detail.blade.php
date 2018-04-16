@@ -146,7 +146,7 @@
 								</div>
 									@if($warranty_res['warranty_status'] == '7')
 									<div class="btn">
-										<button id="claim_target">申请理赔</button>
+										<button id="claim_target" value="{{$warranty_res['id']}}">申请理赔</button>
 									</div>
 									@endif
 							</div>
@@ -167,8 +167,9 @@
                 window.history.go(-1);
             });
             $('#claim_target').on('click',function () {
+                var id = $('#claim_target').val();
                 Mask.loding();
-                window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_index";
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_user?warranty_id="+id;
             });
 		</script>
 	</body>
