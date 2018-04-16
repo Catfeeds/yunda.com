@@ -15,6 +15,7 @@ use App\Helper\RsaSignHelp;
 use App\Jobs\YunDaPay;
 use App\Models\Person;
 use App\Models\ChannelInsureSeting;
+use APP\Helper\PageHelper;
 
 class IndexController
 {
@@ -298,6 +299,19 @@ class IndexController
         $warranty_res = [];
         $user_res = Person::where('papers_code',$person_code)->select('name','papers_type','papers_code','phone','address')->first();
         return view('channels.yunda.insure_result',compact('person_code','ins_status','ins_msg','target_url','warranty_res','user_res'));
+    }
+
+    //测试分页
+    public function testPage(){
+        $params = [];
+        $params['table_name'] = 'channel_operate';
+        $params['page_key'] = 'order_id';
+        $params['offset'] = '30';
+        $params['start'] = '49';
+        $params['order'] = 'desc';
+        $params['lastId'] = '0';
+        $res = LogHelper::getPage($params);
+        dd($res);die;
     }
 
 }

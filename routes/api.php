@@ -101,6 +101,8 @@ Route::group(['prefix' => 'channels', 'namespace'=>'ChannelsApiControllers'],fun
         Route::any('claim_send_email', 'ClaimController@claimSendEmail');
         Route::any('claim_audit', 'ClaimController@claimAudit');
     });
+
+
 });
 
-
+Route::any('test_page', 'ChannelsApiControllers\Yunda\IndexController@testPage');
