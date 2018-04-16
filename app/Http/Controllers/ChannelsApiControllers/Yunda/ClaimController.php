@@ -173,8 +173,7 @@ class ClaimController
             DB::commit();
 
             Mail::to([config('yunda.product_id_email')[$result->id]])->send(new YundaEmail($data));
-
-
+            
             return json_encode(['code'=>200,'msg'=>'邮件发送成功，等待审核！']);
         }catch (\Exception $e){
             DB::rollBack();
@@ -195,6 +194,9 @@ class ClaimController
             ->where('claim_yunda_info.id', $input['claim_yunda_info_id'])
             ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','cust_warranty.*','product.*','claim_yunda_info.*')
             ->first();
+
+        if(empty($result))  return view('error.404');
+
         return view('channels.yunda.claim_email',compact('result'));
     }
 
