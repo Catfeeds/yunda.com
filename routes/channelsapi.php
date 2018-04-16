@@ -18,6 +18,7 @@ Route::group(['prefix' => 'channelsapi','namespace'=>'ChannelsApiControllers'],f
     //测试预投保信息
     Route::any('test_prepare','ChannelInfosController@testPrepare');
     Route::any('test_wechat_pre','ChannelInfosController@testWechatPre');
+    Route::any('test_pre','ChannelInfosController@testPre');
 
     //签约回调
     Route::any('contract_call_back', 'IndexController@contractCallBack');
