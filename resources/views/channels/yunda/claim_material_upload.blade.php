@@ -36,7 +36,7 @@
 				</div>
 				<ul class="list">
 					<li>被保人<span class="fr">{{$result->name}}</span></li>
-					<li>保障期限<span class="fr">{{$result->start_time}}  -  {{$result->end_time}}</span></li>
+					<li>保障期限<span class="fr">{{date('Y-m-d H:i:s', $result->start_time/1000)}}  -  {{date('Y-m-d H:i:s',$result->end_time/1000)}}</span></li>
 					<li>保单号<span class="fr">{{$result->warranty_code}}</span></li>
 					<li>保费<span class="fr">{{$result->premium / 100}}</span></li>
 				</ul>
@@ -155,7 +155,7 @@
 				@endif
     	</div>
    	</div>
-    <button id="next" class="btn-next" disabled>确认修改</button>
+    <button id="next" class="btn-next" disabled>确认提交</button>
 	</form>
 </div>
 <script type="text/javascript" src="{{config('view_url.channel_views')}}js/jquery-1.10.2.min.js"></script>

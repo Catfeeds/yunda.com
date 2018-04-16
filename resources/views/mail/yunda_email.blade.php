@@ -9,6 +9,6 @@
 </style>
 <body style="font-size: 16px;">
     <p>您好。以下是理赔审核连接，点击审核！</p>
-    <a href="http://yunda.inschos.com/test/api/channels/yunda/claim_email?claim_yunda_info_id={{$data['claim_yunda_info_id']}}">进入审核页面 >> </a>
+    <a href="{{$data['url']}}">进入审核页面 >> </a>
 </body>
 </html>

@@ -29,10 +29,12 @@ return [
         'no'=>'01',
         'yes'=>'02',
     ],
+    //邮件路径
+    'email_url'=>'/test/api/channels/yunda',
     //产品ID对应邮箱地址
     'product_id_email'=>[
-        '1'=>'386800893@qq.com',
-        '2'=>'taomy@inschos.com',
+        '1'=>'ydgfkfb@163.com',
+        '2'=>'ydgfkfb@163.com',
     ],
 
 ];

@@ -92,6 +92,9 @@ class ClaimController
         unset($input['input']);
         $data = array_merge($json, $input);
         $person_code = $this->person_code;
+
+        $person_code = '340323199305094715';
+
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $claim_yunda = new ClaimYunda();
         $claim_yunda->user_id = $user_res['id'];    //所属用户id
@@ -123,8 +126,14 @@ class ClaimController
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
             ->where('claim_yunda.id',$input['claim_id'])
-            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','cust_warranty.*','product.*')
+            ->select(
+                'claim_yunda.*',
+                'claim_yunda.type as claim_type',
+                'claim_yunda.id as claim_id',
+                'cust_warranty.*',
+                'product.*')
             ->first();
+
         return view('channels.yunda.claim_material_upload',compact('result'));
     }
 
@@ -170,6 +179,8 @@ class ClaimController
             $claim_yunda_info->save();
             $data['claim_yunda_info_id'] =  $claim_yunda_info->id;
             DB::commit();
+
+            $data['url'] = env('APP_URL').config('yunda.email_url').'/claim_email?claim_yunda_info_id='.$claim_yunda_info->id;
 
             Mail::to([config('yunda.product_id_email')[$result->id]])->send(new YundaEmail($data));
             
@@ -229,6 +240,9 @@ class ClaimController
         $input = $this->request->all();
         $type = $input['type'] ?? '0';
         $person_code = $this->person_code;
+
+        $person_code = '340323199305094715';
+
         $users = Person::where('papers_code',$person_code)->first();
         $where = [1,2,3];
         if($type != '0') $where = [-1,4];
