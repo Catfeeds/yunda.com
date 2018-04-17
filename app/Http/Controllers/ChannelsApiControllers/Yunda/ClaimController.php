@@ -143,8 +143,7 @@ class ClaimController
     public function claimSendEmail(){
         $input = $this->request->all();
         $data = [];
-        $data['claim_id'] = $input['claim_id'];
-
+        $data = $input;
         $result = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
@@ -152,13 +151,9 @@ class ClaimController
             ->select('product.id')
             ->first();
 
-        unset($input['claim_id']);
         DB::beginTransaction();
         try{
 
-            foreach ($input as $key=>$val){
-                $data[$key] = $this->uploadFile($this->request->file($key));
-            }
             ClaimYunda::where('id', $data['claim_id'])->update(['status' => 3]);
             $claim_yunda_info = new ClaimYundaInfo();
             $claim_yunda_info->claim_id = $data['claim_id'] ?? '';
@@ -301,5 +296,39 @@ class ClaimController
         $name = date("YmdHis") . rand(1000, 9999) . '.' . $extension;
         $file -> move($path, $name);
         return $path . $name;
+    }
+
+    /**
+     * base64图片上传
+     * @param $base64_img
+     * @return array
+     */
+    public function baseUploadFile()
+    {
+        $base64_img = trim($_POST['base64']);
+
+        $up_dir = 'upload/claim/'.date('Y-m-d',time()).'/';
+
+        if(!file_exists($up_dir)){
+            mkdir($up_dir,0777);
+        }
+
+        if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_img, $result)){
+            $type = $result[2];
+            if(in_array($type,array('pjpeg','jpeg','jpg','gif','bmp','png'))){
+                $new_file = $up_dir.date('YmdHis').rand(1000, 9999).'.'.$type;
+                if(file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64_img)))){
+                    return json_encode(['code'=>200,'url'=>$new_file]);
+                }else{
+                    return json_encode(['code'=>500,'msg'=>'图片上传失败']);
+                }
+            }else{
+                //文件类型错误
+                return json_encode(['code'=>500,'msg'=>'图片上传类型错误']);
+            }
+        }else{
+            //文件错误
+            return json_encode(['code'=>500,'msg'=>'文件错误']);
+        }
     }
 }

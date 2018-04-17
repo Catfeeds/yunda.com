@@ -100,6 +100,7 @@ Route::group(['prefix' => 'channels', 'namespace'=>'ChannelsApiControllers'],fun
         Route::any('claim_user', 'ClaimController@claimUser');
         Route::any('claim_send_email', 'ClaimController@claimSendEmail');
         Route::any('claim_audit', 'ClaimController@claimAudit');
+        Route::any('base_upload_file', 'ClaimController@baseUploadFile');
     });
 
 

@@ -47,56 +47,56 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-front" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input id="front" name="proof" hidden onchange="upLoadImg(this);" accept="image/*" type="file"  accept=".gif,.jpg,.jpeg,.png">
-						<input id="frontVal" name="proof" hidden type="text"></input>
+					<input id="front"  hidden onchange="upLoadImg(this);" accept="image/*" type="file"  accept=".gif,.jpg,.jpeg,.png">
+						<input id="frontVal" name="proof" type="hidden">
 				</div>
 				<div class="formW formW1">
 					<p class="text">医疗发票</p>
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input id="invoice" name="invoice" hidden onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-						<input id="invoiceVal" name="invoice" hidden type="text"></input>
+					<input id="invoice" hidden onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+						<input id="invoiceVal" name="invoice" type="hidden">
 				</div>
 				<div class="formW formW1">
 					<p class="text">费用清单</p>
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input id="expenses" name="expenses" hidden onchange="upLoadImg(this);" accept="image/*" type="file"  accept=".gif,.jpg,.jpeg,.png">
-						<input id="expensesVal" name="expenses" hidden type="text"></input>
+					<input id="expenses" hidden onchange="upLoadImg(this);" accept="image/*" type="file"  accept=".gif,.jpg,.jpeg,.png">
+						<input id="expensesVal" name="expenses" type="hidden">
 				</div>
 				<div class="formW formW1">
 					<p class="text">伤者身份证复印件</p>
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="papers_code_img" name="papers_code_img" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-						<input hidden id="papers_code_imgVal" name="papers_code_img" type="text"></input>
+					<input hidden id="papers_code_img"  onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="papers_code_imgVal" name="papers_code_img" type="hidden">
 				</div>
 				<div class="formW formW1">
 					<p class="text">划款户名、帐号、开户行信息</p>
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="account_info" name="account_info" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-					<input hidden id="account_infoVal" name="account_info" type="text"></input>
+					<input hidden id="account_info" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="account_infoVal" name="account_info" type="hidden">
 				</div>
 				<div class="formW formW1">
 					<p class="text">交通事故责任认定书</p>
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="accident_proof" name="accident_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-					<input hidden id="accident_proofVal" name="accident_proof" type="text"></input>
+					<input hidden id="accident_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="accident_proofVal" name="accident_proof" type="hidden">
 				</div>
 				<div class="formW formW1">
 					<p class="text">财产损失证明材料</p>
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="proof_loss" name="proof_loss" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-					<input hidden id="proof_lossVal" name="proof_loss" type="text"></input>
+					<input hidden id="proof_loss"  onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="proof_lossVal" name="proof_loss" type="hidden">
 				</div>
 
 				<div class="formW formW1">
@@ -104,24 +104,24 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="bruise_whole" name="bruise_whole" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-					<input hidden id="bruise_wholeVal" name="bruise_whole" type="text"></input>
+					<input hidden id="bruise_whole" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_wholeVal" name="bruise_whole" type="hidden">
 				</div>
 				<div class="formW formW1">
 					<p class="text">伤者相片-面部照</p>
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="bruise_face" name="bruise_face" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-					<input hidden id="bruise_faceVal" name="bruise_face" type="text"></input>
+					<input hidden id="bruise_face" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_faceVal" name="bruise_face" type="hidden">
 				</div>
 				<div class="formW formW1">
 					<p class="text">伤者相片-伤处照</p>
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="bruise_wound" name="bruise_wound" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-					<input hidden id="bruise_woundVal" name="bruise_wound" type="text"></input>
+					<input hidden id="bruise_wound" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_woundVal" name="bruise_wound" type="hidden">
 				</div>
 
 				@if(strpos('-'.$result->claim_type,'2'))
@@ -130,8 +130,8 @@
 					</div>
 					<div class="formW formW2">
 						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-						<input hidden id="maim_proof" name="maim_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-						<input hidden id="maim_proofVal" name="maim_proof" type="text"></input>
+						<input hidden id="maim_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="maim_proofVal" name="maim_proof" type="hidden">
 					</div>
 				@endif
 
@@ -141,16 +141,16 @@
 					</div>
 					<div class="formW formW2">
 						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-						<input hidden id="die_proof" name="die_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-						<input hidden id="die_proofVal" name="die_proof" type="text"></input>
+						<input hidden id="die_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="die_proofVal" name="die_proof" type="hidden">
 					</div>
 					<div class="formW formW1">
 						<p class="text">受益人</p>
 					</div>
 					<div class="formW formW2">
 						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-						<input hidden id="beneficiary" name="beneficiary" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
-						<input hidden id="beneficiaryVal" name="beneficiary" type="text"></input>
+						<input hidden id="beneficiary"  onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="beneficiaryVal" name="beneficiary" type="hidden">
 					</div>
 				@endif
     	</div>
@@ -171,15 +171,34 @@
 		var file = $c.files[0],reader = new FileReader();
 	    reader.readAsDataURL(file);
 	    reader.onload = function(e){
-	    	num++
-	    	_this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
-	    	var $targetEle = _this.find('input:hidden').eq(1);
-	    	$targetEle.val(e.target.result);
+            var event = this;
+            $.ajax({
+                type: 'POST',
+                url: "{{config('view_url.channel_yunda_target_url')}}base_upload_file",
+                dataType: "json",
+                data: {"base64": event.result},
+                async: false,
+                success: function(data) {
+                    if(data.code == 200){
+                        num++
+                        _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
+                        var $targetEle = _this.find('input:hidden').eq(1);
+                        $targetEle.val(e.target.result);
+                        console.log($targetEle.attr("id"));
+                        $targetEle.val(data.url);
+
+					}else{
+                        alert(data.msg);
+					}
+                }
+            });
 	    	if(num>0){
 	    		$('#next').prop('disabled',false);
 	    	}
 		};
 	};
+
+
    $('.head-right').on('tap',function () {
        Mask.loding();
        location.href="bmapp:homepage";
