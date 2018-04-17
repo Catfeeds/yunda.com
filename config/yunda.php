@@ -30,7 +30,7 @@ return [
         'yes'=>'02',
     ],
     //邮件路径
-    'email_url'=>'/api/channels/yunda',
+    'email_url'=>'api/channels/yunda',
     //产品ID对应邮箱地址
     'product_id_email'=>[
         '1'=>'ydgfkfb@163.com',

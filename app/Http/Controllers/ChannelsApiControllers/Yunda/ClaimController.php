@@ -297,7 +297,7 @@ class ClaimController
         if(!in_array($extension, $types)){
             throw  new \Exception('文件类型错误');
         }
-        $path = '/upload/claim/'.date('Y-m-d',time()).'/';
+        $path = 'upload/claim/'.date('Y-m-d',time()).'/';
         $name = date("YmdHis") . rand(1000, 9999) . '.' . $extension;
         $file -> move($path, $name);
         return $path . $name;
