@@ -777,7 +777,7 @@ class ChannelInfosController extends BaseController
 		$prepare['union_order_code'] = '0';
 		$return_data = json_decode($response->content, true);
 		//todo  本地订单录入
-		$add_res = $this->testaddOrder($return_data, $prepare,$toubaoren);
+		$add_res = $this->testaddOrder($return_data, $prepare,$toubaoren,$beibaoren);
 		if($add_res){
 			$return_data =  json_encode(['status'=>'200','content'=>'投保完成'],JSON_UNESCAPED_UNICODE);
 			return true;
@@ -816,10 +816,6 @@ class ChannelInfosController extends BaseController
 	 */
 	protected function testaddOrder($return_data, $prepare, $policy_res,$holder_res)
 	{
-//		dump($return_data);
-//		dump($prepare);
-//		dump($policy_res);
-//		dump($holder_res);
 		DB::beginTransaction();//开启事务
 		try{
 		$policy_check_res  = Person::where('papers_code',$policy_res['ty_toubaoren_id_number'])
