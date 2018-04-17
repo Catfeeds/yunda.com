@@ -667,6 +667,7 @@ class ChannelInfosController extends BaseController
             }
         }
     }
+
     /**
      *
      * 出单操作
@@ -786,6 +787,10 @@ class ChannelInfosController extends BaseController
 		}
 	}
 
+	/**
+	 * 测试订单处理数据
+	 *
+	 */
 	public function testOrder(){
 		$return_data = '{"order_list":[{"out_order_no":"000021122201824029647205616","premium":200,"union_order_code":"000021122201824029647205616","name":"\u738b\u77f3\u78ca","card_type":"01","card_id":"342921199408271616","relation":"1","ins_start_time":"2018-04-17 07:00:00","ins_end_time":"2018-04-17 23:59:59"}],"total_premium":200,"union_order_code":"000021122201824029647205616","pay_way":{"pc":{"cardPay":"\u94f6\u884c\u5361\u652f\u4ed8"},"mobile":{"cardPay":"\u94f6\u884c\u5361\u652f\u4ed8"}}}';
 		$prepare = '{"channel_user_name":"\u738b\u77f3\u78ca","channel_user_type":"01","channel_user_code":"342921199408271616","channel_user_phone":"15701681524","channel_user_email":"wangsl@inschos.com","channel_user_address":"\u5317\u4eac\u5e02\u4e1c\u57ce\u533a\u5915\u7167\u5bfa\u4e2d\u885714\u53f7","channel_bank_name":"\u4e2d\u56fd\u5efa\u8bbe\u94f6\u884c","channel_bank_address":"\u5317\u4eac\u5e02\u4e1c\u57ce\u533a","channel_bank_code":"621710007000065287892","channel_bank_phone":"15701681524","channel_provinces":"110000","channel_city":"110000","channel_county":"110014","courier_state":"\u56de\u9f99\u89c2\u4e1c\u5927\u8857","courier_start_time":"0000-00-00 00:00:00","channel_back_url":"","channel_account_id":"","channel_code":"","operate_code":"","operate_time":"2018-04-16","p_code":"","is_insure":"","created_at":null,"updated_at":null,"parameter":"0","private_p_code":"VGstMTEyMkEwMUcwMQ","ty_product_id":"VGstMTEyMkEwMUcwMQ","agent_id":"0","ditch_id":"0","user_id":"342921199408271616","identification":"0","union_order_code":"0"} ';
@@ -805,6 +810,7 @@ class ChannelInfosController extends BaseController
 	 * @param $return_data|订单返回数据
 	 * @param $prepare|预投保信息
 	 * @param $policy_res|投保人信息
+	 * @param $holder_res|被保人信息
 	 * @return mixed
 	 * 新版表结构,保单返回数据只需要添加cust_warranty、cust_warranty_person、channel_operate、user
 	 */
@@ -913,85 +919,58 @@ class ChannelInfosController extends BaseController
 		//投保人信息
 		$cust_warranty_person = new CustWarrantyPerson();
 		$cust_warranty_person->warranty_uuid = '';//内部保单唯一标识
-		$cust_warranty_person->out_order_no = '';//被保人单号
-		$cust_warranty_person->type = '';//人员类型: 1投保人 2被保人 3受益人
+		$cust_warranty_person->out_order_no = $return_data['union_order_code'];//被保人单号
+		$cust_warranty_person->type = '1';//人员类型: 1投保人 2被保人 3受益人
 		$cust_warranty_person->relation_name = '';//被保人 投保人的（关系）
-		$cust_warranty_person->name = '';//姓名
-		$cust_warranty_person->card_type = '';//证件类型（1为身份证，2为护照，3为军官证）
-		$cust_warranty_person->card_code = '';//证件号
-		$cust_warranty_person->phone = '';//手机号
+		$cust_warranty_person->name = $policy_res['ty_toubaoren_name'];//姓名
+		$cust_warranty_person->card_type = $policy_res['ty_toubaoren_id_type'];//证件类型（1为身份证，2为护照，3为军官证）
+		$cust_warranty_person->card_code = $policy_res['ty_toubaoren_id_number'];//证件号
+		$cust_warranty_person->phone = $policy_res['ty_toubaoren_phone'];//手机号
 		$cust_warranty_person->occupation = '';//职业
-		$cust_warranty_person->birthday = '';//生日
-		$cust_warranty_person->sex = '';//性别 1 男 2 女 '
+		$cust_warranty_person->birthday = $policy_res['ty_toubaoren_birthday'];//生日
+		$cust_warranty_person->sex = $policy_res['ty_toubaoren_sex'];//性别 1 男 2 女 '
 		$cust_warranty_person->age = '';//年龄
-		$cust_warranty_person->email = '';//邮箱
-		$cust_warranty_person->nationality = '';//国籍
+		$cust_warranty_person->email = $policy_res['ty_toubaoren_email'];//邮箱
+		$cust_warranty_person->nationality = '中国';//国籍
 		$cust_warranty_person->annual_income = '';//年收入
 		$cust_warranty_person->height = '';//身高
 		$cust_warranty_person->weight = '';//体重
-		$cust_warranty_person->area = '';//地区
-		$cust_warranty_person->address = '';//详细地址
+		$cust_warranty_person->area = $policy_res['ty_toubaoren_provinces'].'-'.$policy_res['ty_toubaoren_city'].'-'.$policy_res['ty_toubaoren_county'];//地区
+		$cust_warranty_person->address = $policy_res['channel_user_address'];//详细地址
 		$cust_warranty_person->start_time = '';//起保时间
 		$cust_warranty_person->end_time = '';//保障结束时间
 		$cust_warranty_person->created_at = time();//创建时间
 		$cust_warranty_person->updated_at = time();//更新时间
 		$cust_warranty_person->save();
 		//被保人信息
-		if(count($holder_res)>1){//多个被保人
+		if(count($holder_res)>0){//多个被保人
 			foreach($holder_res as $value){
 				$cust_warranty_person = new CustWarrantyPerson();
 				$cust_warranty_person->warranty_uuid = '';//内部保单唯一标识
-				$cust_warranty_person->out_order_no = '';//被保人单号
-				$cust_warranty_person->type = '';//人员类型: 1投保人 2被保人 3受益人
+				$cust_warranty_person->out_order_no = $return_data['union_order_code'];//被保人单号
+				$cust_warranty_person->type = '2';//人员类型: 1投保人 2被保人 3受益人
 				$cust_warranty_person->relation_name = '';//被保人 投保人的（关系）
-				$cust_warranty_person->name = '';//姓名
-				$cust_warranty_person->card_type = '';//证件类型（1为身份证，2为护照，3为军官证）
-				$cust_warranty_person->card_code = '';//证件号
-				$cust_warranty_person->phone = '';//手机号
+				$cust_warranty_person->name = $value['ty_beibaoren_name'];//姓名
+				$cust_warranty_person->card_type = $value['ty_beibaoren_id_type'];//证件类型（1为身份证，2为护照，3为军官证）
+				$cust_warranty_person->card_code = $value['ty_beibaoren_id_number'];//证件号
+				$cust_warranty_person->phone = $value['ty_beibaoren_phone'];//手机号
 				$cust_warranty_person->occupation = '';//职业
-				$cust_warranty_person->birthday = '';//生日
-				$cust_warranty_person->sex = '';//性别 1 男 2 女 '
+				$cust_warranty_person->birthday = $value['ty_beibaoren_birthday'];//生日
+				$cust_warranty_person->sex = $value['ty_beibaoren_sex'];//性别 1 男 2 女 '
 				$cust_warranty_person->age = '';//年龄
-				$cust_warranty_person->email = '';//邮箱
-				$cust_warranty_person->nationality = '';//国籍
+				$cust_warranty_person->email = $value['ty_beibaoren_email'];//邮箱
+				$cust_warranty_person->nationality = '中国';//国籍
 				$cust_warranty_person->annual_income = '';//年收入
 				$cust_warranty_person->height = '';//身高
 				$cust_warranty_person->weight = '';//体重
-				$cust_warranty_person->area = '';//地区
-				$cust_warranty_person->address = '';//详细地址
+				$cust_warranty_person->area = $value['ty_beibaoren_provinces'].'-'.$value['ty_beibaoren_city'].'-'.$value['ty_beibaoren_county'];//地区
+				$cust_warranty_person->address = $value['channel_user_address'];//详细地址
 				$cust_warranty_person->start_time = '';//起保时间
 				$cust_warranty_person->end_time = '';//保障结束时间
 				$cust_warranty_person->created_at = time();//创建时间
 				$cust_warranty_person->updated_at = time();//更新时间
 				$cust_warranty_person->save();
 			}
-		}else{
-			//只有一个被保人
-			$cust_warranty_person = new CustWarrantyPerson();
-			$cust_warranty_person->warranty_uuid = '';//内部保单唯一标识
-			$cust_warranty_person->out_order_no = '';//被保人单号
-			$cust_warranty_person->type = '';//人员类型: 1投保人 2被保人 3受益人
-			$cust_warranty_person->relation_name = '';//被保人 投保人的（关系）
-			$cust_warranty_person->name = '';//姓名
-			$cust_warranty_person->card_type = '';//证件类型（1为身份证，2为护照，3为军官证）
-			$cust_warranty_person->card_code = '';//证件号
-			$cust_warranty_person->phone = '';//手机号
-			$cust_warranty_person->occupation = '';//职业
-			$cust_warranty_person->birthday = '';//生日
-			$cust_warranty_person->sex = '';//性别 1 男 2 女 '
-			$cust_warranty_person->age = '';//年龄
-			$cust_warranty_person->email = '';//邮箱
-			$cust_warranty_person->nationality = '';//国籍
-			$cust_warranty_person->annual_income = '';//年收入
-			$cust_warranty_person->height = '';//身高
-			$cust_warranty_person->weight = '';//体重
-			$cust_warranty_person->area = '';//地区
-			$cust_warranty_person->address = '';//详细地址
-			$cust_warranty_person->start_time = '';//起保时间
-			$cust_warranty_person->end_time = '';//保障结束时间
-			$cust_warranty_person->created_at = time();//创建时间
-			$cust_warranty_person->updated_at = time();//更新时间
-			$cust_warranty_person->save();
 		}
 		//渠道操作表
 		$ChannelOperate = new ChannelOperate();
