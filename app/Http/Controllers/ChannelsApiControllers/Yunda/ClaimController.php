@@ -182,6 +182,8 @@ class ClaimController
 
             $data['url'] = env('APP_URL').config('yunda.email_url').'/claim_email?claim_yunda_info_id='.$claim_yunda_info->id;
 
+            dump($data['url']);die;
+
             Mail::to([config('yunda.product_id_email')[$result->id]])->send(new YundaEmail($data));
             
             return json_encode(['code'=>200,'msg'=>'邮件发送成功，等待审核！']);
@@ -297,7 +299,7 @@ class ClaimController
         if(!in_array($extension, $types)){
             throw  new \Exception('文件类型错误');
         }
-        $path = 'upload/claim/'.date('Y-m-d',time()).'/';
+        $path = '/upload/claim/'.date('Y-m-d',time()).'/';
         $name = date("YmdHis") . rand(1000, 9999) . '.' . $extension;
         $file -> move($path, $name);
         return $path . $name;
