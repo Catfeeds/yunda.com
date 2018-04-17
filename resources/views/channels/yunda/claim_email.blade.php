@@ -54,31 +54,31 @@
 				<ul class="img-wrapper">
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->proof}}">
+							<img src="{{env('APP_URL')}}/{{$result->proof}}">
 						</div>
 						<p>病历、诊断证明、出院记录等 医疗资料</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->invoice}}">
+							<img src="{{env('APP_URL')}}/{{$result->invoice}}">
 						</div>
 						<p>医疗发票</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->expenses}}">
+							<img src="{{env('APP_URL')}}/{{$result->expenses}}">
 						</div>
 						<p>费用清单</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->papers_code_img}}">
+							<img src="{{env('APP_URL')}}/{{$result->papers_code_img}}">
 						</div>
 						<p>伤者身份证复印件</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->account_info}}">
+							<img src="{{env('APP_URL')}}/{{$result->account_info}}">
 						</div>
 						<p>划款户名、帐号、开户行信息</p>
 					</li>
@@ -90,32 +90,32 @@
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->proof_loss}}">
+							<img src="{{env('APP_URL')}}/{{$result->proof_loss}}">
 						</div>
 						<p>财产损失证明材料</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->bruise_whole}}">
+							<img src="{{env('APP_URL')}}/{{$result->bruise_whole}}">
 						</div>
 						<p>伤者相片-全身照</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->bruise_face}}">
+							<img src="{{env('APP_URL')}}/{{$result->bruise_face}}">
 						</div>
 						<p>伤者相片-面部照</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->bruise_wound}}">
+							<img src="{{env('APP_URL')}}/{{$result->bruise_wound}}">
 						</div>
 						<p>伤者相片-伤处照</p>
 					</li>
 					@if(!empty($result->maim_proof))
 						<li>
 							<div class="img" style="background-image: url(imges/banner.png);">
-								<img src="{{env('APP_URL')}}{{$result->maim_proof}}">
+								<img src="{{env('APP_URL')}}/{{$result->maim_proof}}">
 							</div>
 							<p>伤残鉴定报告</p>
 						</li>
@@ -124,13 +124,13 @@
 					@if(!empty($result->beneficiary))
 						<li>
 							<div class="img" style="background-image: url(imges/banner.png);">
-								<img src="{{env('APP_URL')}}{{$result->die_proof}}">
+								<img src="{{env('APP_URL')}}/{{$result->die_proof}}">
 							</div>
 							<p>死亡证明</p>
 						</li>
 						<li>
 							<div class="img" style="background-image: url(imges/banner.png);">
-								<img src="{{env('APP_URL')}}{{$result->beneficiary}}">
+								<img src="{{env('APP_URL')}}/{{$result->beneficiary}}">
 							</div>
 							<p>受益人</p>
 						</li>

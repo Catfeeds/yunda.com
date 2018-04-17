@@ -47,7 +47,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-front" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input id="front" name="proof" hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input id="front" name="proof" hidden onchange="upLoadImg(this);" accept="image/*" type="file"  accept=".gif,.jpg,.jpeg,.png">
 						<input id="frontVal" name="proof" hidden type="text"></input>
 				</div>
 				<div class="formW formW1">
@@ -55,7 +55,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input id="invoice" name="invoice" hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input id="invoice" name="invoice" hidden onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 						<input id="invoiceVal" name="invoice" hidden type="text"></input>
 				</div>
 				<div class="formW formW1">
@@ -63,7 +63,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input id="expenses" name="expenses" hidden onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input id="expenses" name="expenses" hidden onchange="upLoadImg(this);" accept="image/*" type="file"  accept=".gif,.jpg,.jpeg,.png">
 						<input id="expensesVal" name="expenses" hidden type="text"></input>
 				</div>
 				<div class="formW formW1">
@@ -71,7 +71,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="papers_code_img" name="papers_code_img" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="papers_code_img" name="papers_code_img" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 						<input hidden id="papers_code_imgVal" name="papers_code_img" type="text"></input>
 				</div>
 				<div class="formW formW1">
@@ -79,7 +79,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="account_info" name="account_info" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="account_info" name="account_info" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 					<input hidden id="account_infoVal" name="account_info" type="text"></input>
 				</div>
 				<div class="formW formW1">
@@ -87,7 +87,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="accident_proof" name="accident_proof" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="accident_proof" name="accident_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 					<input hidden id="accident_proofVal" name="accident_proof" type="text"></input>
 				</div>
 				<div class="formW formW1">
@@ -95,7 +95,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="proof_loss" name="proof_loss" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="proof_loss" name="proof_loss" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 					<input hidden id="proof_lossVal" name="proof_loss" type="text"></input>
 				</div>
 
@@ -104,7 +104,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="bruise_whole" name="bruise_whole" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_whole" name="bruise_whole" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 					<input hidden id="bruise_wholeVal" name="bruise_whole" type="text"></input>
 				</div>
 				<div class="formW formW1">
@@ -112,7 +112,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="bruise_face" name="bruise_face" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_face" name="bruise_face" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 					<input hidden id="bruise_faceVal" name="bruise_face" type="text"></input>
 				</div>
 				<div class="formW formW1">
@@ -120,7 +120,7 @@
 				</div>
 				<div class="formW formW2">
 					<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-					<input hidden id="bruise_wound" name="bruise_wound" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+					<input hidden id="bruise_wound" name="bruise_wound" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 					<input hidden id="bruise_woundVal" name="bruise_wound" type="text"></input>
 				</div>
 
@@ -130,7 +130,7 @@
 					</div>
 					<div class="formW formW2">
 						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-						<input hidden id="maim_proof" name="maim_proof" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="maim_proof" name="maim_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 						<input hidden id="maim_proofVal" name="maim_proof" type="text"></input>
 					</div>
 				@endif
@@ -141,7 +141,7 @@
 					</div>
 					<div class="formW formW2">
 						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-						<input hidden id="die_proof" name="die_proof" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="die_proof" name="die_proof" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 						<input hidden id="die_proofVal" name="die_proof" type="text"></input>
 					</div>
 					<div class="formW formW1">
@@ -149,7 +149,7 @@
 					</div>
 					<div class="formW formW2">
 						<img id="btn-contrary" src="{{config('view_url.channel_views')}}imges/add.png" alt="" />
-						<input hidden id="beneficiary" name="beneficiary" onchange="upLoadImg(this);" accept="image/*" type="file" capture="camera" accept=".gif,.jpg,.jpeg,.png">
+						<input hidden id="beneficiary" name="beneficiary" onchange="upLoadImg(this);" accept="image/*" type="file" accept=".gif,.jpg,.jpeg,.png">
 						<input hidden id="beneficiaryVal" name="beneficiary" type="text"></input>
 					</div>
 				@endif
