@@ -1,6 +1,7 @@
 <?php
 namespace App\Jobs;
 
+use App\Helper\AddOrderHelper;
 use Illuminate\Http\Request;
 use App\Helper\DoChannelsSignHelp;
 use App\Helper\RsaSignHelp;
@@ -66,6 +67,7 @@ class YunDaPrepare implements ShouldQueue
     {
         $this->sign_help = new DoChannelsSignHelp();
         $this->signhelp = new RsaSignHelp();
+		$this->add_order_helper = new AddOrderHelper();
         set_time_limit(0);//永不超时
     }
 
@@ -196,7 +198,7 @@ class YunDaPrepare implements ShouldQueue
         $prepare['union_order_code'] = '0';
         $return_data = json_decode($response->content, true);
         //todo  本地订单录入
-        $add_res = $this->testaddOrder($return_data, $prepare,$toubaoren,$beibaoren);
+        $add_res = $this->add_order_helper->doAddOrder($return_data, $prepare,$toubaoren,$beibaoren);
         if($add_res){
             $return_data =  json_encode(['status'=>'200','content'=>'投保完成'],JSON_UNESCAPED_UNICODE);
             print_r($return_data);
