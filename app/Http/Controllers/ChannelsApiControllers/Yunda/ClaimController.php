@@ -197,12 +197,26 @@ class ClaimController
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
             ->where('claim_yunda_info.id', $input['claim_yunda_info_id'])
-            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','cust_warranty.*','product.*','claim_yunda_info.*')
+            ->select(
+                'claim_yunda.*',
+                'claim_yunda.type as claim_type',
+                'claim_yunda.status as claim_status',
+                'claim_yunda.id as claim_id',
+                'cust_warranty.*',
+                'product.*',
+                'claim_yunda_info.*',
+                'claim_yunda_info.status as claim_yunda_info_status'
+            )
             ->first();
 
         if(empty($result))  return view('error.404');
 
-        return view('channels.yunda.claim_email',compact('result'));
+        $status = config('yunda');
+
+        if($result->claim_status == 4) return view('channels.yunda.claim_email_success',compact('result', 'status'));
+        if($result->claim_yunda_info_status != 0) return view('channels.yunda.claim_email_success',compact('result', 'status'));
+
+        return view('channels.yunda.claim_email',compact('result', 'status'));
     }
 
     /**
@@ -219,7 +233,26 @@ class ClaimController
             $claim_yunda_info->status = $input['status'];
             $claim_yunda_info->save();
             DB::commit();
-            return view('channels.yunda.claim_email_success');
+
+            $result = DB::table('claim_yunda')
+                ->join('claim_yunda_info','claim_yunda_info.claim_id','=','claim_yunda.id')
+                ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
+                ->join('product','product.id','=','cust_warranty.product_id')
+                ->where('claim_yunda_info.id', $input['id'])
+                ->select(
+                    'claim_yunda.*',
+                    'claim_yunda.type as claim_type',
+                    'claim_yunda.status as claim_status',
+                    'claim_yunda.id as claim_id',
+                    'cust_warranty.*',
+                    'product.*',
+                    'claim_yunda_info.*',
+                    'claim_yunda_info.status as claim_yunda_info_status'
+                )
+                ->first();
+            $status = config('yunda');
+
+            return view('channels.yunda.claim_email_success', compact('result', 'status'));
         }catch (\Exception $e){
             DB::rollBack();
             $message = $e->getMessage();

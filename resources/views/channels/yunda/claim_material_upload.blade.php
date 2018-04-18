@@ -184,9 +184,7 @@
                         _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
                         var $targetEle = _this.find('input:hidden').eq(1);
                         $targetEle.val(e.target.result);
-                        console.log($targetEle.attr("id"));
                         $targetEle.val(data.url);
-
 					}else{
                         alert(data.msg);
 					}
