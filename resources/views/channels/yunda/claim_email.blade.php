@@ -146,6 +146,12 @@
 				<button type="button" onclick="auditSubmit(-1);" class="btn btn-warning submit">未通过审核</button>
 				<button type="button" onclick="auditSubmit(1);" class="btn btn-primary submit">通过审核</button>
 			</div>
+			<div class="pop">
+				<div class="pop-bg"></div>
+				<div class="pop-container">
+					<div><img class="pop-img" src="" alt="" /></div>
+				</div>
+			</div>
 		</div>
 	</form>
 	<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
@@ -165,7 +171,16 @@
             $('#status').val(status);
             $('#claim_audit').submit();
 		}
+        $('.img-wrapper li').click(function() {
+            $('.pop').show()
+            var img = $(this).find('.img').css("backgroundImage")
+            var url = img.split('"')[1]
+            $('.pop-img').attr('src',url)
+        })
 
+        $('.pop-bg').click(function() {
+            $('.pop').hide()
+        })
 	</script>
 
 	</body>
