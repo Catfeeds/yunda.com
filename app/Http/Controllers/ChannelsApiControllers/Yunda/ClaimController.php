@@ -122,6 +122,7 @@ class ClaimController
      * 上传资料
      */
     public function claimMaterialUpload(){
+
         $input = $this->request->all();
         $result = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
@@ -382,8 +383,8 @@ class ClaimController
         $base64_img = trim($input['base64']);
         $data = [];
         if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_img, $result)){
-
-            $data['base64'] = max(explode(',',$base64_img));
+            $base64_img = explode(',',$base64_img);
+            $data['base64'] = $base64_img[1];
             $data['fileKey'] = md5('Yunda_'.$input['name'].$input['claim_id']);
             $data['fileName'] = 'yunda.'.$result[2]; //接口只使用后缀
 
@@ -401,6 +402,7 @@ class ClaimController
             if($content['code'] == 200){
                 return json_encode(['code'=>200,'url_key'=>$data['fileKey']]);
             }else{
+                logHelper::logSuccess($data,$content ,'image' ,'response');
                 return json_encode(['code'=>500,'msg'=>'文件上传失败！']);
             }
         }else{
