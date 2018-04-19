@@ -92,7 +92,7 @@ class IntersController
         $bank_address = $input['bank_address'];
         //姓名，身份证信息，手机号判空
         if(!$insured_name||!$insured_code||!$insured_phone){
-            $return_data['code'] = '500';
+            $return_data['code'] = '201';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'empty';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
@@ -102,7 +102,7 @@ class IntersController
         }
         //银行卡信息判空
         if(!$bank_code){
-            $return_data['code'] = '500';
+            $return_data['code'] = '202';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_bank';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
@@ -115,7 +115,7 @@ class IntersController
             ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time','warranty_id','insure_days','insure_start')
             ->first();
         if(empty($user_setup_res)){//未授权(首次购买)
-            $return_data['code'] = '500';
+            $return_data['code'] = '203';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
@@ -124,7 +124,7 @@ class IntersController
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         if(!$user_setup_res['authorize_status']||!$user_setup_res['authorize_status']){
-            $return_data['code'] = '5100';
+            $return_data['code'] = '204';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
@@ -195,7 +195,7 @@ class IntersController
                     $return_data['data']['url'] = $webapi_route.'do_insure';
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
                 }else{
-                    $return_data['code'] = '500';
+                    $return_data['code'] = '205';
                     $return_data['message']['digest'] = 'default';
                     $return_data['message']['details'] = 'isured_fail';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
