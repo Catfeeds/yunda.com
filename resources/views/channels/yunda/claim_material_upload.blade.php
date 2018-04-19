@@ -172,19 +172,20 @@
 	    reader.readAsDataURL(file);
 	    reader.onload = function(e){
             var event = this;
+            num++
+            _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
+            var $targetEle = _this.find('input:hidden').eq(1);
+
             $.ajax({
                 type: 'POST',
                 url: "{{config('view_url.channel_yunda_target_url')}}base_upload_file",
                 dataType: "json",
-                data: {"base64": event.result},
+                data: {"base64": event.result,"name":$targetEle.attr('name'),"claim_id":"{{$result->claim_id}}"},
                 async: false,
                 success: function(data) {
                     if(data.code == 200){
-                        num++
-                        _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
-                        var $targetEle = _this.find('input:hidden').eq(1);
                         $targetEle.val(e.target.result);
-                        $targetEle.val(data.url);
+                        $targetEle.val(data.url_key);
 					}else{
                         alert(data.msg);
 					}

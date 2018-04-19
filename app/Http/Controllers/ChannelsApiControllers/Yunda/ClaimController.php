@@ -16,6 +16,7 @@ use App\Helper\RsaSignHelp;
 use App\Models\Person;
 use App\Models\ClaimYunda;
 use Illuminate\Support\Facades\DB;
+use Ixudra\Curl\Facades\Curl;
 use Mail;
 
 class ClaimController
@@ -216,7 +217,43 @@ class ClaimController
         if($result->claim_status == 4) return view('channels.yunda.claim_email_success',compact('result', 'status'));
         if($result->claim_yunda_info_status != 0) return view('channels.yunda.claim_email_success',compact('result', 'status'));
 
-        return view('channels.yunda.claim_email',compact('result', 'status'));
+        $list = [];
+
+        $list['list'][]['fileKey'] = $result->proof;
+        $list['list'][]['fileKey'] = $result->invoice;
+        $list['list'][]['fileKey'] = $result->expenses;
+        $list['list'][]['fileKey'] = $result->papers_code_img;
+        $list['list'][]['fileKey'] = $result->accident_proof;
+        $list['list'][]['fileKey'] = $result->account_info;
+        $list['list'][]['fileKey'] = $result->proof_loss;
+        $list['list'][]['fileKey'] = $result->bruise_whole;
+        $list['list'][]['fileKey'] = $result->bruise_face;
+        $list['list'][]['fileKey'] = $result->bruise_wound;
+        $list['list'][]['fileKey'] = $result->maim_proof;
+        $list['list'][]['fileKey'] = $result->die_proof;
+        $list['list'][]['fileKey'] = $result->beneficiary;
+
+        $response = Curl::to(config('yunda.file_url').'file/getBatchFileUrl')
+            ->returnResponseObject()
+            ->withData(json_encode($list))
+            ->withTimeout(60)
+            ->withHeader("Content-Type: application/json;charset=UTF-8")
+            ->post();
+
+        if($response->status != 200) return json_encode(['code'=>500,'msg'=>'文件服务连接失败！']);
+
+        $content = json_decode($response->content, true);
+
+        if($content['code'] == 200){
+            $file_url  = [];
+            foreach ($content['data'] as $val){
+                $file_url[$val['fileKey']] = $val['url'];
+            }
+
+            return view('channels.yunda.claim_email',compact('result', 'status', 'file_url'));
+        }else{
+            return json_encode(['code'=>500,'msg'=>'文件上传失败！']);
+        }
     }
 
     /**
@@ -338,26 +375,33 @@ class ClaimController
      */
     public function baseUploadFile()
     {
-        $base64_img = trim($_POST['base64']);
+        $input = $this->request->all();
 
-        $up_dir = 'upload/claim/'.date('Y-m-d',time()).'/';
+        if(empty($input['name']) || empty($input['base64']) || empty($input['claim_id'])) return json_encode(['code'=>500,'msg'=>'缺少必要参数！']);
 
-        if(!file_exists($up_dir)){
-            mkdir($up_dir,0777);
-        }
-
+        $base64_img = trim($input['base64']);
+        $data = [];
         if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_img, $result)){
-            $type = $result[2];
-            if(in_array($type,array('pjpeg','jpeg','jpg','gif','bmp','png'))){
-                $new_file = $up_dir.date('YmdHis').rand(1000, 9999).'.'.$type;
-                if(file_put_contents($new_file, base64_decode(str_replace($result[1], '', $base64_img)))){
-                    return json_encode(['code'=>200,'url'=>$new_file]);
-                }else{
-                    return json_encode(['code'=>500,'msg'=>'图片上传失败']);
-                }
+
+            $data['base64'] = max(explode(',',$base64_img));
+            $data['fileKey'] = md5('Yunda_'.$input['name'].$input['claim_id']);
+            $data['fileName'] = 'yunda.'.$result[2]; //接口只使用后缀
+
+            $response = Curl::to(config('yunda.file_url').'file/upBase')
+                ->returnResponseObject()
+                ->withData(json_encode($data))
+                ->withTimeout(60)
+                ->withHeader("Content-Type: application/json;charset=UTF-8")
+                ->post();
+
+            if($response->status != 200) return json_encode(['code'=>500,'msg'=>'文件服务连接失败！']);
+
+            $content = json_decode($response->content, true);
+
+            if($content['code'] == 200){
+                return json_encode(['code'=>200,'url_key'=>$data['fileKey']]);
             }else{
-                //文件类型错误
-                return json_encode(['code'=>500,'msg'=>'图片上传类型错误']);
+                return json_encode(['code'=>500,'msg'=>'文件上传失败！']);
             }
         }else{
             //文件错误

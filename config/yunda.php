@@ -31,10 +31,11 @@ return [
     ],
     //邮件路径
     'email_url'=>'/api/channels/yunda',
+    'file_url'=>'http://59.110.136.249:9200/file/',
     //产品ID对应邮箱地址
     'product_id_email'=>[
-        '1'=>'ydgfkfb@163.com',
-        '2'=>'ydgfkfb@163.com',
+        '1'=>'taomy@inschos.com',
+        '2'=>'taomy@inschos.com',
     ],
 
 ];
