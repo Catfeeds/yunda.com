@@ -210,12 +210,13 @@
 
 
             var base64 = splitString(event.result, 100000);
+
 			console.log(base64);
             $.ajax({
                 type: 'POST',
                 url: "{{config('view_url.channel_yunda_target_url')}}base_upload_file",
                 dataType: "json",
-                timeout : 600000,
+                timeout : 120000,
                 data: {"base64": base64,"name":$targetEle.attr('name'),"claim_id":"{{$result->claim_id}}"},
                 async: false,
                 success: function(data) {
@@ -223,7 +224,6 @@
                     if(data.code == 200){
                         $targetEle.val(e.target.result);
                         $targetEle.val(data.url_key);
-                        alert(data.url_key);
 					}else{
                         alert(data.msg);
 					}
