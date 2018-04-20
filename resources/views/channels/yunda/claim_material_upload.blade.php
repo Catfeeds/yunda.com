@@ -163,6 +163,14 @@
    $('body').on('click','.formW2 img',function(){
     	$(this).parent().find('input').eq(0).click();
     })
+   function splitString(s,l){
+       var h = s.length
+       var al = (s.length%l==0)?h/l:parseInt(String((s.length/l)).split(".")[0])+1
+       var a = new Array(al)
+       for (var i=0;i<a.length;i++)
+           a[i] = s.substring(i*l,l*(i+1))
+       return(a)
+   }
     // 上传照片
   var num = 0;
 	var upLoadImg = function(e){
@@ -176,21 +184,65 @@
             _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
             var $targetEle = _this.find('input:hidden').eq(1);
 
+
+
+                {{--var formdata=new FormData();--}}
+
+                {{--formdata.append('name', $targetEle.attr('name'));--}}
+                {{--formdata.append('uploadImage',file);--}}
+                {{--formdata.append('claim_id',"{{$result->claim_id}}");--}}
+                {{--$.ajax({--}}
+                    {{--url: "{{config('view_url.channel_yunda_target_url')}}base_upload_file",--}}
+                    {{--type:'post',--}}
+                    {{--contentType:false,--}}
+                    {{--data:formdata,--}}
+                    {{--processData:false,--}}
+                    {{--success:function(info){--}}
+                        {{--console.log(info)--}}
+                    {{--},--}}
+                    {{--error:function(err){--}}
+                        {{--console.log(err)--}}
+                    {{--}--}}
+                {{--});--}}
+
+
+
+
+
+            var base64 = splitString(event.result, 100000);
+			console.log(base64);
             $.ajax({
                 type: 'POST',
                 url: "{{config('view_url.channel_yunda_target_url')}}base_upload_file",
                 dataType: "json",
-                data: {"base64": event.result,"name":$targetEle.attr('name'),"claim_id":"{{$result->claim_id}}"},
+                timeout : 600000,
+                data: {"base64": base64,"name":$targetEle.attr('name'),"claim_id":"{{$result->claim_id}}"},
                 async: false,
                 success: function(data) {
+					//console.log(data);
                     if(data.code == 200){
                         $targetEle.val(e.target.result);
                         $targetEle.val(data.url_key);
+                        alert(data.url_key);
 					}else{
                         alert(data.msg);
 					}
+
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+//                    alert('jqXHR.responseText:'+jqXHR.responseText);
+//                    alert('jqXHR.status:'+jqXHR.status);
+//                    alert('jqXHR.readyState:'+jqXHR.readyState);
+//                    alert('jqXHR.statusText:'+jqXHR.statusText);
+                    alert('jqXHR.status:'+jqXHR.status+'| jqXHR.readyState:'+jqXHR.readyState+'|jqXHR.statusText:'+jqXHR.statusText);
+//                    alert('textStatus:'+textStatus);
+//                    alert('errorThrown:'+errorThrown);
+
                 }
-            });
+
+                });
+
 	    	if(num>0){
 	    		$('#next').prop('disabled',false);
 	    	}

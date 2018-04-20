@@ -135,7 +135,6 @@ class ClaimController
                 'cust_warranty.*',
                 'product.*')
             ->first();
-
         return view('channels.yunda.claim_material_upload',compact('result'));
     }
 
@@ -146,6 +145,9 @@ class ClaimController
         $input = $this->request->all();
         $data = [];
         $data = $input;
+
+        dump($data);
+
         $result = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
@@ -378,9 +380,17 @@ class ClaimController
     {
         $input = $this->request->all();
 
+//        return json_encode(['code'=>200,$input]);
+
         if(empty($input['name']) || empty($input['base64']) || empty($input['claim_id'])) return json_encode(['code'=>500,'msg'=>'缺少必要参数！']);
 
-        $base64_img = trim($input['base64']);
+        $base64_img = '';
+        $base64_img_arr = $input['base64'];
+
+        foreach ($base64_img_arr as $value) $base64_img .= $value;
+
+        $base64_img = trim($base64_img);
+
         $data = [];
         if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_img, $result)){
             $base64_img = explode(',',$base64_img);
@@ -388,21 +398,24 @@ class ClaimController
             $data['fileKey'] = md5('Yunda_'.$input['name'].$input['claim_id']);
             $data['fileName'] = 'yunda.'.$result[2]; //接口只使用后缀
 
+            LogHelper::logSuccess($data,   'img', 'Yunda_data');
             $response = Curl::to(config('yunda.file_url').'file/upBase')
                 ->returnResponseObject()
                 ->withData(json_encode($data))
                 ->withTimeout(60)
                 ->withHeader("Content-Type: application/json;charset=UTF-8")
                 ->post();
-
             if($response->status != 200) return json_encode(['code'=>500,'msg'=>'文件服务连接失败！']);
 
             $content = json_decode($response->content, true);
+            $content['time'] = date('Y-m-d H:i:s', time());
+
+            LogHelper::logSuccess($content,   'img', 'Yunda_response');
 
             if($content['code'] == 200){
                 return json_encode(['code'=>200,'url_key'=>$data['fileKey']]);
             }else{
-                logHelper::logSuccess($data,$content ,'image' ,'response');
+                LogHelper::logError(json_encode($data), json_encode($content),  'img', 'return');
                 return json_encode(['code'=>500,'msg'=>'文件上传失败！']);
             }
         }else{
