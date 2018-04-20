@@ -53,8 +53,8 @@
 				<h2 class="title-level2">资料</h2>
 				<ul class="img-wrapper">
 					<li>
-						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{$file_url[$result->proof]}}">
+						<div style="background-image: url(imges/banner.png);">
+							<img class="img" src="{{$file_url[$result->proof]}}">
 						</div>
 						<p>病历、诊断证明、出院记录等 医疗资料</p>
 					</li>
@@ -173,8 +173,7 @@
 		}
         $('.img-wrapper li').click(function() {
             $('.pop').show()
-            var img = $(this).find('.img').css("backgroundImage")
-            var url = img.split('"')[1]
+            var url = $(this).find('img')[0].currentSrc
             $('.pop-img').attr('src',url)
         })
 
