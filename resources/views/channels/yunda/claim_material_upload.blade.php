@@ -181,64 +181,33 @@
 	    reader.onload = function(e){
             var event = this;
             num++
-            _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
             var $targetEle = _this.find('input:hidden').eq(1);
 
+			var img_base64 = event.result;
+            img_base64 =img_base64.replace(/^(data:\s*image\/(\w+);base64,)/,'');
+			var file_name = 'Yunda-claim-'+"{{$result->claim_id}}"+"-"+$targetEle.attr('name');
 
-
-                {{--var formdata=new FormData();--}}
-
-                {{--formdata.append('name', $targetEle.attr('name'));--}}
-                {{--formdata.append('uploadImage',file);--}}
-                {{--formdata.append('claim_id',"{{$result->claim_id}}");--}}
-                {{--$.ajax({--}}
-                    {{--url: "{{config('view_url.channel_yunda_target_url')}}base_upload_file",--}}
-                    {{--type:'post',--}}
-                    {{--contentType:false,--}}
-                    {{--data:formdata,--}}
-                    {{--processData:false,--}}
-                    {{--success:function(info){--}}
-                        {{--console.log(info)--}}
-                    {{--},--}}
-                    {{--error:function(err){--}}
-                        {{--console.log(err)--}}
-                    {{--}--}}
-                {{--});--}}
-
-
-
-
-
-            var base64 = splitString(event.result, 100000);
-
-			console.log(base64);
             $.ajax({
                 type: 'POST',
-                url: "{{config('view_url.channel_yunda_target_url')}}base_upload_file",
+                url: "{{config('yunda.file_url')}}file/upBase",
                 dataType: "json",
                 timeout : 120000,
-                data: {"base64": base64,"name":$targetEle.attr('name'),"claim_id":"{{$result->claim_id}}"},
+                data: JSON.stringify({"base64": img_base64,"fileKey":file_name,"fileName":"yunda.png"}),
                 async: false,
                 success: function(data) {
-					//console.log(data);
                     if(data.code == 200){
+                        _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
                         $targetEle.val(e.target.result);
-                        $targetEle.val(data.url_key);
+                        $targetEle.val(file_name);
 					}else{
-                        alert(data.msg);
+                        alert('图片上传失败！');
 					}
 
                 },
 
                 error: function (jqXHR, textStatus, errorThrown) {
-//                    alert('jqXHR.responseText:'+jqXHR.responseText);
-//                    alert('jqXHR.status:'+jqXHR.status);
-//                    alert('jqXHR.readyState:'+jqXHR.readyState);
-//                    alert('jqXHR.statusText:'+jqXHR.statusText);
-                    alert('jqXHR.status:'+jqXHR.status+'| jqXHR.readyState:'+jqXHR.readyState+'|jqXHR.statusText:'+jqXHR.statusText);
-//                    alert('textStatus:'+textStatus);
-//                    alert('errorThrown:'+errorThrown);
-
+					//alert('jqXHR.status:'+jqXHR.status+'| jqXHR.readyState:'+jqXHR.readyState+'|jqXHR.statusText:'+jqXHR.statusText);
+                    alert('连接文件服务错误！');
                 }
 
                 });

@@ -146,8 +146,6 @@ class ClaimController
         $data = [];
         $data = $input;
 
-        dump($data);
-
         $result = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
@@ -379,8 +377,6 @@ class ClaimController
     public function baseUploadFile()
     {
         $input = $this->request->all();
-
-//        return json_encode(['code'=>200,$input]);
 
         if(empty($input['name']) || empty($input['base64']) || empty($input['claim_id'])) return json_encode(['code'=>500,'msg'=>'缺少必要参数！']);
 
