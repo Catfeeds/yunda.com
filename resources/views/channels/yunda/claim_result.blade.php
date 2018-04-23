@@ -30,7 +30,11 @@
 			<div class="mui-scroll">
 				<div class="section header">
 					<p><i class="iconfont icon-chenggong"></i></p>
-					<p>申请成功</p>
+					@if($email)
+						<p>等待审核</p>
+						@else
+						<p>申请成功</p>
+					@endif
 				</div>
 				<div class="section">
 					<h2 class="title">理赔流程指引</h2>
@@ -77,7 +81,9 @@
 				</div>
 				<div class="btn-wrapper">
 					<button class="btn" id="home">返回首页</button>
-					<a href="{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id={{$claim_id}}" class="btn">提交资料</a>
+					@if($email != true)
+						<a href="{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id={{$claim_id}}" class="btn">提交资料</a>
+					@endif
 				</div>
 			</div>
 		</div>

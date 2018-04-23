@@ -115,7 +115,8 @@ class ClaimController
         $claim_yunda->status = 2; //进度 1申请理赔 2提交资料 3等待审核 4审核通过 -1 审核失败
         $claim_yunda->save();
         $claim_id = $claim_yunda->id;
-        return view('channels.yunda.claim_result',compact('claim_id'));
+        $email = false;
+        return view('channels.yunda.claim_result',compact('claim_id', 'email'));
     }
 
     /**
@@ -180,12 +181,16 @@ class ClaimController
             $data['url'] = env('APP_URL').config('yunda.email_url').'/claim_email?claim_yunda_info_id='.$claim_yunda_info->id;
 
             Mail::to([config('yunda.product_id_email')[$result->id]])->send(new YundaEmail($data));
-            
-            return json_encode(['code'=>200,'msg'=>'邮件发送成功，等待审核！']);
+            $email = true;
+
+            return view('channels.yunda.claim_result', compact('email'));
         }catch (\Exception $e){
             DB::rollBack();
             $message = $e->getMessage();
-            return json_encode(['code'=>500,'msg'=> $message]);
+            $notice = $message ?? '数据入库失败！';
+            $url = 1;
+            $sec = 3;
+            return view('error.error',compact('notice', 'url', 'sec'));
         }
     }
 
@@ -294,7 +299,10 @@ class ClaimController
         }catch (\Exception $e){
             DB::rollBack();
             $message = $e->getMessage();
-            return json_encode(['code'=>500,'msg'=>$message]);
+            $notice = $message ?? '数据修改失败！';
+            $url = 1;
+            $sec = 3;
+            return view('error.error',compact('notice', 'url', 'sec'));
         }
     }
 
