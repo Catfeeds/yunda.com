@@ -29,11 +29,12 @@
             <i class="iconfont icon-chenggong"></i><span>审核完成</span>
         </div>
         <ul class="info">
-            <li><span class="name">产品名</span><span>英大非机动车驾驶员意外险</span></li>
-            <li><span class="name">保单号</span><span>1212121212121212ddddssss</span></li>
-            <li><span class="name">保障时间</span><span>2018-04-24 9:00-208-04-25 23:59:59</span></li>
-            <li><span class="name">保费</span><span>2元</span></li>
-            <li><span class="name">审核结果</span><span>审核通过</span></li>
+            <li><span class="name">产品名</span><span>{{$result->product_name}}</span></li>
+            <li><span class="name">保单号</span><span>{{$result->warranty_code}}</span></li>
+            <li><span class="name">保障时间</span><span>{{date('Y-m-d H:i:s', $result->start_time / 1000)}} &nbsp;~&nbsp; {{date('Y-m-d H:i:s', $result->end_time / 1000)}}</span></li>
+            <li><span class="name">保费</span><span>{{$result->premium}}元</span></li>
+            <li><span class="name">审核结果</span><span>{{$status['claim_status'][$result->claim_status]}}</span></li>
+            <li><span class="name">备注信息</span><span>{{$result->remark}}</span></li>
         </ul>
     </div>
 </div>

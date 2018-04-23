@@ -75,3 +75,27 @@
 			}
 			.btn-warning{margin-right: 40px;background: #ff6262;}
 			.btn-primary{background: #00A2FF;}
+			.pop{
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				z-index: 10;
+			}
+			.pop-bg{
+				width: 100%;
+				height: 100%;
+				background: rgba(0,0,0,.8);
+			}
+			.pop-container{
+				position: absolute;
+				z-index: 11;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+			}
+			.pop-img{
+				max-height: 800px;
+			}
