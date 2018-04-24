@@ -158,66 +158,49 @@
     <button id="next" class="btn-next" disabled>确认提交</button>
 	</form>
 </div>
+{{--<script type="text/javascript" src="{{config('view_url.channel_views')}}js/jquery-1.10.2.min.js"></script>--}}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="{{config('view_url.channel_views')}}js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript">
    $('body').on('click','.formW2 img',function(){
     	$(this).parent().find('input').eq(0).click();
     })
-   function splitString(s,l){
-       var h = s.length
-       var al = (s.length%l==0)?h/l:parseInt(String((s.length/l)).split(".")[0])+1
-       var a = new Array(al)
-       for (var i=0;i<a.length;i++)
-           a[i] = s.substring(i*l,l*(i+1))
-       return(a)
-   }
     // 上传照片
-  var num = 0;
 	var upLoadImg = function(e){
 		var _this = $(e).parent();
 		var $c = _this.find('input[type=file]')[0];
 		var file = $c.files[0],reader = new FileReader();
-	    reader.readAsDataURL(file);
-	    reader.onload = function(e){
+        reader.readAsDataURL(file);
+
+        reader.onload = function(e){
             var event = this;
-            num++
             var $targetEle = _this.find('input:hidden').eq(1);
 
-			var img_base64 = event.result;
+            var img_base64 = event.result;
             img_base64 =img_base64.replace(/^(data:\s*image\/(\w+);base64,)/,'');
-			var file_name = 'Yunda-claim-'+"{{$result->claim_id}}"+"-"+$targetEle.attr('name');
+            var file_name = 'Yunda-claim-'+"{{$result->claim_id}}"+"-"+$targetEle.attr('name');
+			var url = "{{config('yunda.file_url')}}file/upBase";
 
-            $.ajax({
-                type: 'POST',
-                url: "{{config('yunda.file_url')}}file/upBase",
-                dataType: "json",
-                timeout : 120000,
-                data: JSON.stringify({"base64": img_base64,"fileKey":file_name,"fileName":"yunda.png"}),
-                async: false,
-                success: function(data) {
-                    if(data.code == 200){
-                        _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
-                        $targetEle.val(e.target.result);
-                        $targetEle.val(file_name);
-					}else{
-                        alert('图片上传失败！');
-					}
 
-                },
+            //使用新线程
+            var worker = new Worker("{{config('view_url.channel_views')}}js/worker_upload.js");
 
-                error: function (jqXHR, textStatus, errorThrown) {
-					alert('jqXHR.status:'+jqXHR.status+'| jqXHR.readyState:'+jqXHR.readyState+'|jqXHR.statusText:'+jqXHR.statusText);
-                    alert('连接文件服务错误！');
-                }
+            var data = {'base64':img_base64,'file_name':file_name,'url':url};
 
-                });
+			worker.postMessage(data);
 
-	    	if(num>0){
-	    		$('#next').prop('disabled',false);
-	    	}
+            worker.onmessage = function(evt){
+				if(evt.data.code == 200){
+                    _this.find('img').attr('src',e.target.result).css({'width':'11rem','height':'7rem'});
+                    $targetEle.val(e.target.result);
+                    $targetEle.val(file_name);
+                    $('#next').prop('disabled',false);
+				}else{
+					alert('文件上传失败！');
+				}
+            }
 		};
 	};
-
 
    $('.head-right').on('tap',function () {
        Mask.loding();
