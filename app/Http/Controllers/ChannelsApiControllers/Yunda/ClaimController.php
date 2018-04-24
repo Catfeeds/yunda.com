@@ -93,7 +93,6 @@ class ClaimController
         unset($input['input']);
         $data = array_merge($json, $input);
         $person_code = $this->person_code;
-
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $claim_yunda = new ClaimYunda();
         $claim_yunda->user_id = $user_res['id'];    //所属用户id
@@ -312,7 +311,6 @@ class ClaimController
         $input = $this->request->all();
         $type = $input['type'] ?? '0';
         $person_code = $this->person_code;
-
         $users = Person::where('papers_code',$person_code)->first();
         $where = [1,2,3];
         if($type != '0') $where = [-1,4];
