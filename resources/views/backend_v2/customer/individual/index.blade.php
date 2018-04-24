@@ -69,15 +69,11 @@
 				</div>
 			</div>
 			<div class="row text-center">
-<<<<<<< HEAD
-				{{ $channel_users->appends(['status' => $status])->links() }}
-=======
 				@if(count($channel_users)>count($users))
 					{{ $channel_users->links() }}
 				@else
 					{{ $channel_users->links() }}
 				@endif
->>>>>>> d30a30d1359cb94ab69794b558d483a91c603229
 			</div>
 		</div>
 		<script src="{{asset('r_backend/v2/js/lib/jquery-1.11.3.min.js')}}"></script>

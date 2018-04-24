@@ -20,6 +20,8 @@ class VerifyCsrfToken extends BaseVerifier
         '/ins/quote',
         '/backend/set_brokerage/set_brokerage_post',
         '/backend/setting/*',
-        '/backend/ajax/uploadImage'
+        '/backend/ajax/uploadImage',
+		'/yunda/*',
+		'/api/*',
     ];
 }
