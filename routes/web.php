@@ -17,3 +17,5 @@ include_once "web_routes/frontend.php";
 include_once "web_routes/backend.php";
 //合作渠道访问路由
 include_once "channelsapi.php";
+//韵达新接口渠道
+include_once "web_routes/webapi.php";

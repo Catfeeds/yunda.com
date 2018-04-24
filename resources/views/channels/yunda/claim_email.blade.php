@@ -53,69 +53,69 @@
 				<h2 class="title-level2">资料</h2>
 				<ul class="img-wrapper">
 					<li>
-						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->proof}}">
+						<div style="background-image: url(imges/banner.png);">
+							<img class="img" src="{{$file_url[$result->proof]}}">
 						</div>
 						<p>病历、诊断证明、出院记录等 医疗资料</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->invoice}}">
+							<img src="{{$file_url[$result->invoice]}}">
 						</div>
 						<p>医疗发票</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->expenses}}">
+							<img src="{{$file_url[$result->expenses]}}">
 						</div>
 						<p>费用清单</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->papers_code_img}}">
+							<img src="{{$file_url[$result->papers_code_img]}}">
 						</div>
 						<p>伤者身份证复印件</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->account_info}}">
+							<img src="{{$file_url[$result->account_info]}}">
 						</div>
 						<p>划款户名、帐号、开户行信息</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->accident_proof}}">
+							<img src="{{$file_url[$result->accident_proof]}}">
 						</div>
 						<p>交通事故责任认定书</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->proof_loss}}">
+							<img src="{{$file_url[$result->proof_loss]}}">
 						</div>
 						<p>财产损失证明材料</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->bruise_whole}}">
+							<img src="{{$file_url[$result->bruise_whole]}}">
 						</div>
 						<p>伤者相片-全身照</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->bruise_face}}">
+							<img src="{{$file_url[$result->bruise_face]}}">
 						</div>
 						<p>伤者相片-面部照</p>
 					</li>
 					<li>
 						<div class="img" style="background-image: url(imges/banner.png);">
-							<img src="{{env('APP_URL')}}{{$result->bruise_wound}}">
+							<img src="{{$file_url[$result->bruise_wound]}}">
 						</div>
 						<p>伤者相片-伤处照</p>
 					</li>
 					@if(!empty($result->maim_proof))
 						<li>
 							<div class="img" style="background-image: url(imges/banner.png);">
-								<img src="{{env('APP_URL')}}{{$result->maim_proof}}">
+								<img src="{{$file_url[$result->maim_proof]}}">
 							</div>
 							<p>伤残鉴定报告</p>
 						</li>
@@ -124,13 +124,13 @@
 					@if(!empty($result->beneficiary))
 						<li>
 							<div class="img" style="background-image: url(imges/banner.png);">
-								<img src="{{env('APP_URL')}}{{$result->die_proof}}">
+								<img src="{{$file_url[$result->die_proof]}}">
 							</div>
 							<p>死亡证明</p>
 						</li>
 						<li>
 							<div class="img" style="background-image: url(imges/banner.png);">
-								<img src="{{env('APP_URL')}}{{$result->beneficiary}}">
+								<img src="{{$file_url[$result->beneficiary]}}">
 							</div>
 							<p>受益人</p>
 						</li>
@@ -145,6 +145,12 @@
 			<div class="btn-wrapper">
 				<button type="button" onclick="auditSubmit(-1);" class="btn btn-warning submit">未通过审核</button>
 				<button type="button" onclick="auditSubmit(1);" class="btn btn-primary submit">通过审核</button>
+			</div>
+			<div class="pop">
+				<div class="pop-bg"></div>
+				<div class="pop-container">
+					<div><img class="pop-img" src="" alt="" /></div>
+				</div>
 			</div>
 		</div>
 	</form>
@@ -165,7 +171,15 @@
             $('#status').val(status);
             $('#claim_audit').submit();
 		}
+        $('.img-wrapper li').click(function() {
+            $('.pop').show()
+            var url = $(this).find('img')[0].currentSrc
+            $('.pop-img').attr('src',url)
+        })
 
+        $('.pop-bg').click(function() {
+            $('.pop').hide()
+        })
 	</script>
 
 	</body>

@@ -16,6 +16,7 @@ use App\Helper\RsaSignHelp;
 use App\Models\Person;
 use App\Models\ClaimYunda;
 use Illuminate\Support\Facades\DB;
+use Ixudra\Curl\Facades\Curl;
 use Mail;
 
 class ClaimController
@@ -92,7 +93,9 @@ class ClaimController
         unset($input['input']);
         $data = array_merge($json, $input);
         $person_code = $this->person_code;
+
         $person_code = '340323199305094715';
+
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $claim_yunda = new ClaimYunda();
         $claim_yunda->user_id = $user_res['id'];    //所属用户id
@@ -112,19 +115,26 @@ class ClaimController
         $claim_yunda->status = 2; //进度 1申请理赔 2提交资料 3等待审核 4审核通过 -1 审核失败
         $claim_yunda->save();
         $claim_id = $claim_yunda->id;
-        return view('channels.yunda.claim_result',compact('claim_id'));
+        $email = false;
+        return view('channels.yunda.claim_result',compact('claim_id', 'email'));
     }
 
     /**
      * 上传资料
      */
     public function claimMaterialUpload(){
+
         $input = $this->request->all();
         $result = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
             ->where('claim_yunda.id',$input['claim_id'])
-            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','cust_warranty.*','product.*')
+            ->select(
+                'claim_yunda.*',
+                'claim_yunda.type as claim_type',
+                'claim_yunda.id as claim_id',
+                'cust_warranty.*',
+                'product.*')
             ->first();
         return view('channels.yunda.claim_material_upload',compact('result'));
     }
@@ -135,7 +145,7 @@ class ClaimController
     public function claimSendEmail(){
         $input = $this->request->all();
         $data = [];
-        $data['claim_id'] = $input['claim_id'];
+        $data = $input;
 
         $result = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
@@ -144,13 +154,9 @@ class ClaimController
             ->select('product.id')
             ->first();
 
-        unset($input['claim_id']);
         DB::beginTransaction();
         try{
 
-            foreach ($input as $key=>$val){
-                $data[$key] = $this->uploadFile($this->request->file($key));
-            }
             ClaimYunda::where('id', $data['claim_id'])->update(['status' => 3]);
             $claim_yunda_info = new ClaimYundaInfo();
             $claim_yunda_info->claim_id = $data['claim_id'] ?? '';
@@ -172,14 +178,19 @@ class ClaimController
             $data['claim_yunda_info_id'] =  $claim_yunda_info->id;
             DB::commit();
 
+            $data['url'] = env('APP_URL').config('yunda.email_url').'/claim_email?claim_yunda_info_id='.$claim_yunda_info->id;
+
             Mail::to([config('yunda.product_id_email')[$result->id]])->send(new YundaEmail($data));
+            $email = true;
 
-
-            return json_encode(['code'=>200,'msg'=>'邮件发送成功，等待审核！']);
+            return view('channels.yunda.claim_result', compact('email'));
         }catch (\Exception $e){
             DB::rollBack();
             $message = $e->getMessage();
-            return json_encode(['code'=>500,'msg'=> $message]);
+            $notice = $message ?? '数据入库失败！';
+            $url = 1;
+            $sec = 3;
+            return view('error.error',compact('notice', 'url', 'sec'));
         }
     }
 
@@ -193,9 +204,62 @@ class ClaimController
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
             ->where('claim_yunda_info.id', $input['claim_yunda_info_id'])
-            ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.id as claim_id','cust_warranty.*','product.*','claim_yunda_info.*')
+            ->select(
+                'claim_yunda.*',
+                'claim_yunda.type as claim_type',
+                'claim_yunda.status as claim_status',
+                'claim_yunda.id as claim_id',
+                'cust_warranty.*',
+                'product.*',
+                'claim_yunda_info.*',
+                'claim_yunda_info.status as claim_yunda_info_status'
+            )
             ->first();
-        return view('channels.yunda.claim_email',compact('result'));
+
+        if(empty($result))  return view('error.404');
+
+        $status = config('yunda');
+
+        if($result->claim_status == 4) return view('channels.yunda.claim_email_success',compact('result', 'status'));
+        if($result->claim_yunda_info_status != 0) return view('channels.yunda.claim_email_success',compact('result', 'status'));
+
+        $list = [];
+
+        $list['list'][]['fileKey'] = $result->proof;
+        $list['list'][]['fileKey'] = $result->invoice;
+        $list['list'][]['fileKey'] = $result->expenses;
+        $list['list'][]['fileKey'] = $result->papers_code_img;
+        $list['list'][]['fileKey'] = $result->accident_proof;
+        $list['list'][]['fileKey'] = $result->account_info;
+        $list['list'][]['fileKey'] = $result->proof_loss;
+        $list['list'][]['fileKey'] = $result->bruise_whole;
+        $list['list'][]['fileKey'] = $result->bruise_face;
+        $list['list'][]['fileKey'] = $result->bruise_wound;
+        $list['list'][]['fileKey'] = $result->maim_proof;
+        $list['list'][]['fileKey'] = $result->die_proof;
+        $list['list'][]['fileKey'] = $result->beneficiary;
+
+        $response = Curl::to(config('yunda.file_url').'file/getBatchFileUrl')
+            ->returnResponseObject()
+            ->withData(json_encode($list))
+            ->withTimeout(60)
+            ->withHeader("Content-Type: application/json;charset=UTF-8")
+            ->post();
+
+        if($response->status != 200) return json_encode(['code'=>500,'msg'=>'文件服务连接失败！']);
+
+        $content = json_decode($response->content, true);
+
+        if($content['code'] == 200){
+            $file_url  = [];
+            foreach ($content['data'] as $val){
+                $file_url[$val['fileKey']] = $val['url'];
+            }
+
+            return view('channels.yunda.claim_email',compact('result', 'status', 'file_url'));
+        }else{
+            return json_encode(['code'=>500,'msg'=>'文件上传失败！']);
+        }
     }
 
     /**
@@ -212,11 +276,33 @@ class ClaimController
             $claim_yunda_info->status = $input['status'];
             $claim_yunda_info->save();
             DB::commit();
-            return view('channels.yunda.claim_email_success');
+
+            $result = DB::table('claim_yunda')
+                ->join('claim_yunda_info','claim_yunda_info.claim_id','=','claim_yunda.id')
+                ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
+                ->join('product','product.id','=','cust_warranty.product_id')
+                ->where('claim_yunda_info.id', $input['id'])
+                ->select(
+                    'claim_yunda.*',
+                    'claim_yunda.type as claim_type',
+                    'claim_yunda.status as claim_status',
+                    'claim_yunda.id as claim_id',
+                    'cust_warranty.*',
+                    'product.*',
+                    'claim_yunda_info.*',
+                    'claim_yunda_info.status as claim_yunda_info_status'
+                )
+                ->first();
+            $status = config('yunda');
+
+            return view('channels.yunda.claim_email_success', compact('result', 'status'));
         }catch (\Exception $e){
             DB::rollBack();
             $message = $e->getMessage();
-            return json_encode(['code'=>500,'msg'=>$message]);
+            $notice = $message ?? '数据修改失败！';
+            $url = 1;
+            $sec = 3;
+            return view('error.error',compact('notice', 'url', 'sec'));
         }
     }
 
@@ -228,7 +314,9 @@ class ClaimController
         $input = $this->request->all();
         $type = $input['type'] ?? '0';
         $person_code = $this->person_code;
+
         $person_code = '340323199305094715';
+
         $users = Person::where('papers_code',$person_code)->first();
         $where = [1,2,3];
         if($type != '0') $where = [-1,4];
@@ -287,5 +375,56 @@ class ClaimController
         $name = date("YmdHis") . rand(1000, 9999) . '.' . $extension;
         $file -> move($path, $name);
         return $path . $name;
+    }
+
+    /**
+     * base64图片上传
+     * @param $base64_img
+     * @return array
+     */
+    public function baseUploadFile()
+    {
+        $input = $this->request->all();
+
+        if(empty($input['name']) || empty($input['base64']) || empty($input['claim_id'])) return json_encode(['code'=>500,'msg'=>'缺少必要参数！']);
+
+        $base64_img = '';
+        $base64_img_arr = $input['base64'];
+
+        foreach ($base64_img_arr as $value) $base64_img .= $value;
+
+        $base64_img = trim($base64_img);
+
+        $data = [];
+        if(preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_img, $result)){
+            $base64_img = explode(',',$base64_img);
+            $data['base64'] = $base64_img[1];
+            $data['fileKey'] = md5('Yunda_'.$input['name'].$input['claim_id']);
+            $data['fileName'] = 'yunda.'.$result[2]; //接口只使用后缀
+
+            LogHelper::logSuccess($data,   'img', 'Yunda_data');
+            $response = Curl::to(config('yunda.file_url').'file/upBase')
+                ->returnResponseObject()
+                ->withData(json_encode($data))
+                ->withTimeout(60)
+                ->withHeader("Content-Type: application/json;charset=UTF-8")
+                ->post();
+            if($response->status != 200) return json_encode(['code'=>500,'msg'=>'文件服务连接失败！']);
+
+            $content = json_decode($response->content, true);
+            $content['time'] = date('Y-m-d H:i:s', time());
+
+            LogHelper::logSuccess($content,   'img', 'Yunda_response');
+
+            if($content['code'] == 200){
+                return json_encode(['code'=>200,'url_key'=>$data['fileKey']]);
+            }else{
+                LogHelper::logError(json_encode($data), json_encode($content),  'img', 'return');
+                return json_encode(['code'=>500,'msg'=>'文件上传失败！']);
+            }
+        }else{
+            //文件错误
+            return json_encode(['code'=>500,'msg'=>'文件错误']);
+        }
     }
 }

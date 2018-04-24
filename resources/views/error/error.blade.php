@@ -33,7 +33,7 @@
     var re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/
     var url = "{{$url}}";//跳转路由
     console.log(url);
-    var time =  "{{$sec}}"; //倒计时时间
+    var time =  "{{$sec ?? 3}}"; //倒计时时间
     $('#time').text(time);
     setInterval(function(){
         if(time>1){

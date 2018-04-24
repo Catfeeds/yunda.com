@@ -23,7 +23,7 @@ class AgentOrderController extends BaseController
     {//添加线下订单,获取所有的产品
         $product_list = Product::where('ty_product_id','>=',0)->get();
         $product_count = count($product_list);
-        return view('frontend.agents.agent_order.AddOrder',compact('product_list','product_count'));
+        return view('frontend.agents.agent_order.AddOrderHelper',compact('product_list','product_count'));
     }
 
     //线下订单表单提交表单
