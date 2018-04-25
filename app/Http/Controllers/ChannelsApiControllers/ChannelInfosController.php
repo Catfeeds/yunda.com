@@ -60,10 +60,17 @@ class ChannelInfosController extends BaseController
     public function getPrepare()
     {
         set_time_limit(0);//永不超时
-        $params = $this->request->all();
-        $biz_content = $params['biz_content'];
-        Redis::rPush("prepare_info",$biz_content);//入队操作
-        //dispatch(new YunDaPrepare());
+		$params = [];
+		$arr = [];
+		$str = '{"operate_code":"","channel_bank_address":"","channel_user_name":"黎暖芬","channel_bank_phone":"","courier_state":"","channel_code":"YD","p_code":"","channel_user_email":"","channel_user_code":"440122197910241215","is_insure":"","channel_user_address":"","courier_start_time":"","channel_user_phone":"18613182168","channel_bank_code":"","channel_back_url":"","channel_bank_name":"","channel_provinces":"","channel_city":"","channel_county":""}';
+		for($i=0;$i<1000;$i++) {
+			$arr[] = json_decode($str,true);
+		}
+		$params['biz_content'] = base64_encode(json_encode($arr));
+//        $params = $this->request->all();
+//        $biz_content = $params['biz_content'];
+        //Redis::rPush("prepare_info",$biz_content);//入队操作
+        dispatch(new YunDaPrepare($params['biz_content']));
         return json_encode(['status' => '200', 'content' => '预订单信息已收到'],JSON_UNESCAPED_UNICODE);
     }
 

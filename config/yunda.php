@@ -18,7 +18,7 @@ return [
         '0'=>'未审核',
         '1'=>'审核通过'
     ],
-    'request_url'=>'http://59.110.136.249:9200/proposal/warranty/insure',
+    'request_url'=>'http://127.0.0.1:8080/proposal/warranty/insure',
     'test_person_code'=>'620103199012171917',
     'webapi_route'=>'/yunda/webapi/',
     'joint_status'=>[
