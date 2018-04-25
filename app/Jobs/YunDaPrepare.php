@@ -55,6 +55,9 @@ class YunDaPrepare implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $sign_help;
+    protected $signhelp;
+    protected $add_order_helper;
     protected $param;
 
     /**
@@ -81,7 +84,6 @@ class YunDaPrepare implements ShouldQueue
     public function handle()
     {
 		set_time_limit(0);//永不超时
-		LogHelper::logChannelSuccess($this->param, 'YD_prepara_params');
         $area = json_decode(config('tk_msg.tk_area'),true);
         $bank = json_decode(config('tk_msg.tk_bank'),true);
         $param = json_decode(base64_decode($this->param),true);
@@ -102,14 +104,18 @@ class YunDaPrepare implements ShouldQueue
         	//预投保操作，批量操作（定时任务）
 			$idCard_status = IdentityCardHelp::getIDCardInfo($item['channel_user_code']);
 			if($idCard_status['status']=='2') {
-//			    $insure_status = $this->doInsurePrepare($item);
+			    //$insure_status = $this->doInsurePrepare($item);
 				$item['operate_code'] = '实名信息正确,预投保成功';
 			}else{
 				$item['operate_code'] = '实名信息出错:身份证号';
 			}
-			ChannelPrepareInfo::insert($item);
+			$repeat_res = ChannelPrepareInfo::where('channel_user_code',$item['channel_user_code'])->select('channel_user_code')->first();
+			if(!empty($repeat_res)){
+				ChannelPrepareInfo::where('channel_user_code',$item['channel_user_code'])->update($item);
+			}else{
+				ChannelPrepareInfo::insert($item);
+			}
         }
-        LogHelper::logChannelSuccess($param, 'YD_prepara_ok');
     }
 
     /**
@@ -158,7 +164,8 @@ class YunDaPrepare implements ShouldQueue
         $data['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
         $data['quote_selected'] = '';
         $data['insurance_attributes'] = $insurance_attributes;
-        $data = $this->signhelp->tySign($data);
+        $sigh_help = new RsaSignHelp();
+        $data = $sigh_help->tySign($data);
         //发送请求
         $response = Curl::to(env('TY_API_SERVICE_URL') . '/ins_curl/buy_ins')
             ->returnResponseObject()

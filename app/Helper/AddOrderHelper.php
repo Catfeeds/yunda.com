@@ -8,6 +8,11 @@
 
 namespace App\Helper;
 
+use DB;
+use App\Models\Person;
+use App\Models\CustWarranty;
+use App\Models\CustWarrantyPerson;
+use App\Models\ChannelOperate;
 
 class AddOrderHelper
 {
