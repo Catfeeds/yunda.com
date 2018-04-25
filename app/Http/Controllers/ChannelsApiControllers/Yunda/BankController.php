@@ -215,9 +215,9 @@ class BankController
             }
         }
         $params = [];
-        $params['person_code'] = $person_code;
-        $params['person_phone'] = $cust_phone;
-        $params['person_name'] = $cust_name;
+        $params['person_code'] = $person_code??"";
+        $params['person_phone'] = $cust_phone??"";
+        $params['person_name'] = $cust_name??"";
         $wechat_res = $this->getWechatAuthorize($params);//微信签约显示状态
         if($wechat_res['status']){
             $wechat_status = $wechat_res['status'];//微信签约按钮显示状态
