@@ -79,19 +79,10 @@ class IntersController
         if(!is_array($input)){
             $input = json_decode($input,true);
         }
-        $insured_name = $input['insured_name'];
         $insured_code = $input['insured_code'];
-        $insured_phone = $input['insured_phone'];
-        $insured_province = $input['insured_province'];
-        $insured_city = $input['insured_city'];
-        $insured_county = $input['insured_county'];
-        $insured_address = $input['insured_address'];
-        $bank_name = $input['bank_name'];
-        $bank_code = $input['bank_code'];
-        $bank_phone = $input['bank_phone'];
-        $bank_address = $input['bank_address'];
+        $bank_code = $input['bank_code']??"";
         //姓名，身份证信息，手机号判空
-        if(!$insured_name||!$insured_code||!$insured_phone){
+        if(!$input['insured_name']||!$input['insured_code']||!$input['insured_phone']){
             $return_data['code'] = '201';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'empty';
