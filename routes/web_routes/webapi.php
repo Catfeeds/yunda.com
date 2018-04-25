@@ -1,7 +1,7 @@
 <?php
 //TODO 2018-04-08韵达快递保  新接口,新路由
 Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda'],function (){
-	Route::get('/', function() { return 'Hello webapi'; });
+	Route::any('/', function() { return 'Hello webapi'; });
 	//对外接口
 	Route::any('joint_login', 'IntersController@jointLogin');//联合登录
 	Route::any('authorization_query', 'IntersController@authorizationQuery');//授权查询
