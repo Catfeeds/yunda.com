@@ -63,11 +63,12 @@ class YunDaPrepare implements ShouldQueue
      * 初始化
      *
      */
-    public function __construct()
+    public function __construct($param)
     {
         $this->sign_help = new DoChannelsSignHelp();
         $this->signhelp = new RsaSignHelp();
 		$this->add_order_helper = new AddOrderHelper();
+		$this->param = $param;//预投保参数
         set_time_limit(0);//永不超时
     }
 
@@ -79,47 +80,36 @@ class YunDaPrepare implements ShouldQueue
      */
     public function handle()
     {
-        $count = Redis::Llen('prepare_info');
-        if($count<1){
-            LogHelper::logChannelSuccess($count, 'YD_prepara_ok');
-            die;
+		set_time_limit(0);//永不超时
+		LogHelper::logChannelSuccess($this->param, 'YD_prepara_params');
+        $area = json_decode(config('tk_msg.tk_area'),true);
+        $bank = json_decode(config('tk_msg.tk_bank'),true);
+        $param = json_decode(base64_decode($this->param),true);
+        foreach($param as $key=>$item){//每次1000条数据
+        	if(key_exists($item['channel_provinces'],$area)) {
+        		$item['channel_provinces'] = $area[$item['channel_provinces']];
+        	}
+        	if(key_exists($item['channel_city'],$area)){
+        		$item['channel_city'] = $area[$item['channel_city']];
+        	}
+        	if(key_exists($item['channel_county'],$area)){
+        		$item['channel_county'] = $area[$item['channel_county']];
+        	}
+        	if(key_exists($item['channel_bank_name'],$bank)){
+        		$item['channel_bank_name'] = $bank[$item['channel_bank_name']];
+        	}
+        	$item['operate_time'] = date('Y-m-d',time());
+        	//预投保操作，批量操作（定时任务）
+			$idCard_status = IdentityCardHelp::getIDCardInfo($item['channel_user_code']);
+			if($idCard_status['status']=='2') {
+//			    $insure_status = $this->doInsurePrepare($item);
+				$item['operate_code'] = '实名信息正确,预投保成功';
+			}else{
+				$item['operate_code'] = '实名信息出错:身份证号';
+			}
+			ChannelPrepareInfo::insert($item);
         }
-        set_time_limit(0);//永不超时
-        echo '处理开始时间'.date('Y-m-d H:i:s', time()).'<br/>';
-        $file_area = "/var/www/html/yunda.inschos.com/public/Tk_area.json";
-        $file_bank = "/var/www/html/yunda.inschos.com/public/Tk_bank.json";
-        $json_area = file_get_contents($file_area);
-        $json_bank = file_get_contents($file_bank);
-        $area = json_decode($json_area,true);
-        $bank = json_decode($json_bank,true);
-        for($i=0;$i<$count;$i++) {
-            $value = json_decode(base64_decode(Redis::lpop('prepare_info')),true);
-            foreach($value as $key=>$item){//每次1000条数据
-                if(key_exists($item['channel_provinces'],$area)) {
-                    $item['channel_provinces'] = $area[$item['channel_provinces']];
-                }
-                if(key_exists($item['channel_city'],$area)){
-                    $item['channel_city'] = $area[$item['channel_city']];
-                }
-                if(key_exists($item['channel_county'],$area)){
-                    $item['channel_county'] = $area[$item['channel_county']];
-                }
-                if(key_exists($item['channel_bank_name'],$bank)){
-                    $item['channel_bank_name'] = $bank[$item['channel_bank_name']];
-                }
-                $item['operate_time'] = date('Y-m-d',time());
-                //预投保操作，批量操作（定时任务）
-                $idCard_status = IdentityCardHelp::getIDCardInfo($item['channel_user_code']);
-                if($idCard_status['status']=='2') {
-                    $insure_status = $this->doInsurePrepare($item);
-                    $item['operate_code'] = '实名信息正确,预投保成功';
-                }else{
-                    $item['operate_code'] = '实名信息出错:身份证号';
-                }
-                ChannelPrepareInfo::insert($item);
-            }
-        }
-        LogHelper::logChannelSuccess($count, 'YD_prepara_ok');
+        LogHelper::logChannelSuccess($param, 'YD_prepara_ok');
     }
 
     /**
