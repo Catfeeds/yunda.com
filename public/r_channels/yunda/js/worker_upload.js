@@ -8,7 +8,7 @@ onmessage = function (evt){
             postMessage(JSON.parse(data));
         },
         error: function(error) {
-            postMessage('错误了');
+            postMessage(error);
         }
     });
 
@@ -36,6 +36,7 @@ function ajax(params) {
             // readyState属性表示请求/响应过程的当前活动阶段，4为完成，已经接收到全部响应数据
             if(xhr.readyState == 4) {
                 var status = xhr.status;
+                var readyState = xhr.readyState ;
                 // status：响应的HTTP状态码，以2开头的都是成功
                 if(status >= 200 && status < 300) {
                     var response = '';
@@ -51,7 +52,8 @@ function ajax(params) {
                     // 成功回调函数
                     params.success && params.success(response);
                 } else {
-                    params.error && params.error(status);
+                    var error = JSON.stringify({'status':status,'readyState':readyState,'Text':xhr.responseText});
+                    params.error && params.error(error);
                 }
             };
         };

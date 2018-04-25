@@ -380,6 +380,11 @@ class ClaimController
     {
         $input = $this->request->all();
 
+        LogHelper::logSuccess($input,   'img', 'Yunda_response');
+        LogHelper::logSuccess($_FILES,   'img', 'Yunda_response');
+        return json_encode(['code'=>500,'msg'=>$input]);
+        die;
+
         if(empty($input['name']) || empty($input['base64']) || empty($input['claim_id'])) return json_encode(['code'=>500,'msg'=>'缺少必要参数！']);
 
         $base64_img = '';
