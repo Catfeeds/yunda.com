@@ -333,6 +333,20 @@ class BankController
         $person_name = $input['person_name'];
         $bank_code = $input['bank_code'];
         $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
+        if(empty($user_res)){
+			$user_res['id'] = Person::insertGetId([
+				'name'=>$person_name,
+				'papers_type'=>'1',
+				'papers_code'=>$person_code,
+				'phone'=>'',
+				'cust_type'=>'1',
+				'authentication'=>'1',
+				'del'=>'0',
+				'status'=>'1',
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
+		}
         $cust_id = $user_res['id'];
         $seting_res = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('id')->first();

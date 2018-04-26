@@ -20,5 +20,5 @@ return [
     'pc_group_ins'=>'/view_2/group_ins/pc/',
     'mobile_group_ins'=>'/view_2/mobile/group_ins/',
     'channel_views'=>'/r_channels/yunda/',
-    'channel_yunda_target_url'=>'/api/channels/yunda/',
+    'channel_yunda_target_url'=>'/webapi/',
 ];
