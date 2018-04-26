@@ -15,6 +15,8 @@ use App\Helper\RsaSignHelp;
 use App\Jobs\YunDaPay;
 use App\Models\Person;
 use App\Models\ChannelInsureSeting;
+use App\Models\ChannelContract;
+use App\Models\ChannelOperate;
 use APP\Helper\PageHelper;
 
 class IndexController
@@ -27,6 +29,7 @@ class IndexController
     /**
      * 初始化
      * @access public
+	 *
      */
     public function __construct(Request $request)
     {
@@ -53,37 +56,51 @@ class IndexController
         $cust_id = $user_seting['cust_id'];
         $authorize_status  = $user_seting['authorize_status'];//免密开通状态
         if(!$authorize_status){
-            $cust_id = '';
-            $cust_name = '';
-            $user_res = Person::where('papers_code',$person_code)
-                ->select('id','name','phone')
-                ->first();
-            if(!empty($user_res)){
-                $cust_id = $user_res['id'];
-                $cust_name = $user_res['name'];
-            }
-            $insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)
-                ->select('authorize_bank')
-                ->first();
-            $bank = [];
-            if(!empty($insure_seting)){
-                $bank['code'] = $insure_seting['authorize_bank'];
-            }
-            $bank_res = Bank::where('cust_id',$cust_id)
-                ->select('bank','bank_code','bank_city','phone','bank_deal_type')
-                ->get();
-            if(!empty($bank_res)){
-                foreach ($bank_res as $value){
-                    if($value['bank_deal_type']=='1'){
-                        $bank['code']  = $value['bank_code'];
-                        $bank['name']  = $value['bank'];
-                        $bank['city']  = $value['bank_city'];
-                        $bank['phone']  = $value['phone'];
-                    }
-                }
-            }
-            //签约页面上会显示签约人的相关信息
-            return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','person_code'));
+			$cust_id = '';
+			$cust_name = '';
+			$cust_phone = '';
+			$user_res = Person::where('papers_code',$person_code)
+				->select('id','name','phone')
+				->first();
+			if(!empty($user_res)){
+				$cust_id = $user_res['id'];
+				$cust_name = $user_res['name'];
+				$cust_phone = $user_res['phone'];
+			}
+			$insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)
+				->select('authorize_bank')
+				->first();
+			$bank = [];
+			if(!empty($insure_seting)){
+				$bank['code'] = $insure_seting['authorize_bank'];
+			}
+			$bank_res = Bank::where('cust_id',$cust_id)
+				->select('bank','bank_code','bank_city','phone','bank_deal_type')
+				->get();
+			if(!empty($bank_res)){
+				foreach ($bank_res as $value){
+					if($value['bank_deal_type']=='1'){
+						$bank['code']  = $value['bank_code'];
+						$bank['name']  = $value['bank'];
+						$bank['city']  = $value['bank_city'];
+						$bank['phone']  = $value['phone'];
+					}
+				}
+			}
+			$params = [];
+			$params['person_code'] = $person_code??"";
+			$params['person_phone'] = $cust_phone??"";
+			$params['person_name'] = $cust_name??"";
+			$wechat_res = $this->getWechatAuthorize($params);//微信签约显示状态
+			if($wechat_res['status']){
+				$wechat_status = $wechat_res['status'];//微信签约按钮显示状态
+				$wechat_url = $wechat_res['url'];//签约URL
+			}else{
+				$wechat_status = $wechat_res['status'];//微信签约按钮显示状态
+				$wechat_url = '';//签约URL
+			}
+			//签约页面上会显示签约人的相关信息
+			return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','cust_phone','person_code','wechat_status','wechat_url'));
         }
         return view('channels.yunda.insure_info',compact('person_code'));
     }
@@ -313,5 +330,69 @@ class IndexController
         $res = LogHelper::getPage($params);
         dd($res);die;
     }
+
+	/**
+	 * 获取是否可以微信免密授权
+	 * 筛选条件：
+	 * 是否签约过
+	 * 是否预投保
+	 * @access public
+	 * @return json
+	 */
+	private function getWechatAuthorize($params){
+		$person_code =  $params['person_code'];
+		$person_phone =  $params['person_phone'];
+		$person_name =  $params['person_name'];
+		$return_data = [];
+		//查询签约情况
+		$contrant_res = ChannelContract::where('channel_user_code',$person_code)
+			->select('openid','contract_id','contract_expired_time')
+			->first();
+		if(!empty($contrant_res)){
+			$return_data['status'] = false;
+			$return_data['message'] = '用户已开通微信免密支付';
+			return $return_data;
+		}
+		$channel_res = ChannelOperate::where('channel_user_code',$person_code)
+			->where('prepare_status','200')
+			->where('operate_time',date('Y-m-d',time()-24*3600))
+			->select('proposal_num')
+			->first();
+		if(empty($channel_res)){
+			$return_data['status'] = false;
+			$return_data['message'] = '用户没有预投保单';
+			return $return_data;
+		}
+		$union_order_code = $channel_res['proposal_num'];
+		$data = [];
+		$data['price'] = '2';
+		$data['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
+		$data['quote_selected'] = '';
+		$data['insurance_attributes'] = '';
+		$data['union_order_code'] = $union_order_code;
+		$data['pay_account'] = $person_name.$person_phone;
+		$data['clientIp'] = IPHelper::getIP();
+		$data = $this->sign_help->tySign($data);
+		//发送请求
+		$response = Curl::to(env('TY_API_SERVICE_URL') . '/ins_curl/contract_ins')
+			->returnResponseObject()
+			->withData($data)
+			->withTimeout(60)
+			->post();
+		if($response->status != 200){
+			ChannelOperate::where('channel_user_code',$person_code)
+				->where('proposal_num',$union_order_code)
+				->update(['pay_status'=>'500','pay_content'=>$response->content]);
+			LogHelper::logError($response->content, 'YD_pay_order_'.$union_order_code);
+			$return_data['status'] = false;
+			$return_data['message'] = '用户获取签约链接失败';
+			return $return_data;
+		}
+		$response_data =  json_decode($response->content,true);//签约返回数据
+		$return_data['status'] = true;
+		$return_data['message'] = '用户获取签约链接成功';
+		$return_data['url'] =  $response_data['result_content']['contracturl'];//禁止转义
+		return $return_data;
+	}
 
 }
