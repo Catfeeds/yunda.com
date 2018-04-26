@@ -87,6 +87,7 @@ class YunDaPrepare implements ShouldQueue
         $area = json_decode(config('tk_msg.tk_area'),true);
         $bank = json_decode(config('tk_msg.tk_bank'),true);
         $param = json_decode(base64_decode($this->param),true);
+        LogHelper::logSuccess($param,'prepare_params');
         foreach($param as $key=>$item){//每次1000条数据
         	if(key_exists($item['channel_provinces'],$area)) {
         		$item['channel_provinces'] = $area[$item['channel_provinces']];
