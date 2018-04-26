@@ -228,8 +228,6 @@ class IndexController
      *
      */
     public function insYdClause(){
-		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
         return view('channels.yunda.insure_yd_clause');
     }
 
@@ -240,8 +238,6 @@ class IndexController
      *
      */
     public function insTkClause(){
-		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
         return view('channels.yunda.insure_tk_clause');
     }
 
@@ -252,9 +248,7 @@ class IndexController
      *
      */
     public function insTkNotice(){
-		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
-        return view('channels.yunda.ins_tk_notice');
+        return view('channels.yunda.insure_tk_notice');
     }
 
     /**
@@ -264,8 +258,6 @@ class IndexController
      *
      */
     public function insYdNotice(){
-		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
         return view('channels.yunda.insure_yd_notice');
     }
 

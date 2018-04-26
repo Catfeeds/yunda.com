@@ -91,6 +91,7 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+            var token = localStorage.getItem('token');
             $('.head-right').on('tap',function () {
                 Mask.loding();
                 location.href="bmapp:homepage";
@@ -101,7 +102,7 @@
             });
 
             $('#home').click(function(){
-                location.href = '{{config('view_url.channel_yunda_target_url')}}claim_index';
+                location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+token;
             });
 		</script>
 	</body>
