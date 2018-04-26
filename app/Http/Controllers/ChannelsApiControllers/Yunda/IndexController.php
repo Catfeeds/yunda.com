@@ -153,7 +153,7 @@ class IndexController
         if(!$user_res['name']||!$user_res['papers_code']||!$user_res['phone']){
             $ins_status = '500';//投保状态：成功200/失败500/投保中100
             $ins_msg = '用户信息不完善，请完善用户信息';//备注信息
-            $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'user_info';//跳转URL
+            $target_url = 'https://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'user_info';//跳转URL
             $warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
             return $this->insResult($person_code,$ins_status,$ins_msg,$target_url,$warranty_res);
         }
@@ -163,7 +163,7 @@ class IndexController
         if(!$user_setup_res||$user_setup_res['authorize_bank']){
             $ins_status = '500';//投保状态：成功200/失败500/投保中100
             $ins_msg = '请授权银行卡免密支付';//备注信息
-            $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'insure_authorize';//跳转URL
+            $target_url = 'https://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'insure_authorize';//跳转URL
             $warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
 //            return $this->insResult($person_code,$ins_status,$ins_msg,$target_url,$warranty_res);
         }
@@ -210,7 +210,7 @@ class IndexController
         dispatch(new YunDaPay($biz_content));//TODO 投保操作（异步队列）
         $ins_status = '100';//投保状态：成功200/失败500/投保中100
         $ins_msg = '投保中，请稍等~';//备注信息
-        $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'warranty_list';//跳转URL
+        $target_url = 'https://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'warranty_list';//跳转URL
         $warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
         return $this->insResult($person_code,$ins_status,$ins_msg,$target_url,$warranty_res);
     }
@@ -294,23 +294,23 @@ class IndexController
         switch ($error_type){
             case 'empty'://投保参数不完善
                 $ins_msg = '用户信息不完善，请完善用户信息';//备注信息
-                $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'user_info';//跳转URL
+                $target_url = 'https://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'user_info';//跳转URL
                 break;
             case 'no_bank'://没有绑定银行卡
                 $ins_msg = '没有银行卡信息，请绑定银行卡';//备注信息
-                $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'bank_index';//跳转URL
+                $target_url = 'https://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'bank_index';//跳转URL
                 break;
             case 'no_authorize'://没有授权
                 $ins_msg = '银行卡没有授权免密支付，请授权';//备注信息
-                $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'insure_authorize';//跳转URL
+                $target_url = 'https://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'insure_authorize';//跳转URL
                 break;
             case 'insured_fail'://投保失败（系统错误）
                 $ins_msg = '投保失败,请重新尝试';//备注信息
-                $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'ins_info';//跳转URL
+                $target_url = 'https://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'ins_info';//跳转URL
                 break;
             default:
                 $ins_msg = '投保失败,请重新尝试';//备注信息
-                $target_url = 'http://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'ins_info';//跳转URL
+                $target_url = 'https://'.$_SERVER['HTTP_HOST'].config('view_url.channel_yunda_target_url').'ins_info';//跳转URL
         }
         $ins_status = '500';
         $warranty_res = [];
