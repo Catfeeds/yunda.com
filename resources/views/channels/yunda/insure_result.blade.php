@@ -61,7 +61,7 @@
 						<ul class="list">
 							<li class="cause">
 								<div>失败原因：<span class="fr" style="color: #606060;">{{$ins_msg}}</span></div>
-								<div style="text-align: center;"><a href="{{$target_url}}">前往操作</a></div>
+								<div style="text-align: center;"><a href="{{$target_url.'?token='.$_GET['token']}}">前往操作</a></div>
 							</li>
 						</ul>
 					</div>
