@@ -83,13 +83,12 @@ class IntersController
         $bank_code = $input['bank_code']??"";
         //姓名，身份证信息，手机号判空
         if(!$input['insured_name']||!$input['insured_code']||!$input['insured_phone']){
-            $return_data['code'] = '201';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'empty';
-            $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-            $return_data['data']['content'] = '个人信息不完善，请完善信息！';
-            $return_data['data']['url'] = $webapi_route.'ins_error/empty';
-            return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+			$return_data['code'] = '500';
+			$return_data['message']['digest'] = 'default';
+			$return_data['message']['details'] = 'empty';
+			$return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
+			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone is empty';
+			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         //银行卡信息判空
         if(!$bank_code){
