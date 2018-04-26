@@ -27,7 +27,7 @@
 				</div>
 				<div class="tab">
 					<span class="item">姓名</span>
-					<input type="text" name="person_name" value="{{$cust_name}}" />
+					<input type="text" name="person_name" value="{{$cust_name??""}}" />
 				</div>
 				<div class="tab">
 					<span class="item">手机号</span>
