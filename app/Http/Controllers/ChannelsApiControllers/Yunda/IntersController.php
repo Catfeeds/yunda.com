@@ -219,6 +219,7 @@ class IntersController
         $input = $this->request->all();
 //        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527"}';
         $return_data =[];
+		$authorize_url = 'https://api-yunda.inschos.com/webapi/insure_authorize';
         if(empty($input)){
             $return_data['code'] = '500';
             $return_data['message']['digest'] = 'default';
@@ -257,6 +258,7 @@ class IntersController
             $authorize_status = config('yunda.authorize_status.no');
             $return_data['message']['details'] = '未授权';
             $return_data['data']['status'] = $authorize_status;
+			$return_data['data']['url'] = '';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
@@ -267,11 +269,13 @@ class IntersController
             $authorize_status = config('yunda.authorize_status.no');
             $return_data['message']['details'] = '未授权';
             $return_data['data']['status'] = $authorize_status;
+            $return_data['data']['url'] = '';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }else{
             $authorize_status = config('yunda.authorize_status.yes');
             $return_data['message']['details'] = '已授权';
             $return_data['data']['status'] = $authorize_status;
+            $return_data['data']['url'] = $authorize_url;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
     }
