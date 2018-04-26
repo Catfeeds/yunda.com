@@ -67,7 +67,7 @@ class IntersController
         $input = $this->request->all();
 //        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
         $return_data =[];
-        $webapi_route = 'http://'.$_SERVER['HTTP_HOST'].config('yunda.webapi_route');
+        $webapi_route = config('yunda.server_host').config('yunda.webapi_route');
         if(empty($input)){
             $return_data['code'] = '500';
             $return_data['message']['digest'] = 'default';
@@ -219,7 +219,7 @@ class IntersController
         $input = $this->request->all();
 //        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527"}';
         $return_data =[];
-		$authorize_url = 'https://api-yunda.inschos.com/webapi/insure_authorize';
+		$webapi_route = config('yunda.server_host').config('yunda.webapi_route').'insure_authorize';
         if(empty($input)){
             $return_data['code'] = '500';
             $return_data['message']['digest'] = 'default';
@@ -275,7 +275,7 @@ class IntersController
             $authorize_status = config('yunda.authorize_status.yes');
             $return_data['message']['details'] = '已授权';
             $return_data['data']['status'] = $authorize_status;
-            $return_data['data']['url'] = $authorize_url;
+            $return_data['data']['url'] = $webapi_route;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
     }

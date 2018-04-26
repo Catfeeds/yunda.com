@@ -20,7 +20,9 @@ return [
     ],
     'request_url'=>'http://127.0.0.1:8080/proposal/warranty/insure',
     'test_person_code'=>'620103199012171917',
-    'webapi_route'=>'/yunda/webapi/',
+	'server_host'=>'https://api-yunda.inschos.com',
+    'webapi_route'=>'/webapi/',
+    'prepare_route'=>'/channelsapi/',
     'joint_status'=>[
         'yes'=>'01',
         'no'=>'02',
@@ -37,5 +39,4 @@ return [
         '1'=>'taomy@inschos.com',
         '2'=>'taomy@inschos.com',
     ],
-
 ];
