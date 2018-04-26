@@ -23,5 +23,6 @@ class VerifyCsrfToken extends BaseVerifier
         '/backend/ajax/uploadImage',
 		'/yunda/*',
 		'/api/*',
+		'/webapi/*',
     ];
 }

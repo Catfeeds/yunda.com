@@ -323,7 +323,7 @@ class ClaimController
         $list = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
-            ->where('claim_yunda.user_id',$users->id)
+            ->where('claim_yunda.user_id',$users->id??"1")
             ->whereIn('claim_yunda.status',$where)
             ->select('claim_yunda.*','claim_yunda.type as claim_type','claim_yunda.status as claim_status', 'claim_yunda.created_at as claim_created_at','claim_yunda.id as claim_id','cust_warranty.*','product.product_name')
             ->get();

@@ -9,8 +9,12 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	//投保流程
 	Route::any('ins_info', 'IndexController@insInfo');//投保详情页面
 	Route::any('do_insured/{person_code}', 'IndexController@doInsured');//投保操作
-	Route::any('ins_clause', 'IndexController@insClause');//产品条款页面
 	Route::any('ins_error/{error_type}', 'IndexController@insError');//错误提示页面
+	//静态页面
+	Route::any('insure_tk_clause', 'IndexController@insTkClause');//产品条款页面-泰康
+	Route::any('insure_yd_clause', 'IndexController@insYdClause');//产品条款页面-英大
+	Route::any('insure_tk_notice', 'IndexController@insTkNotice');//产品须知页面-泰康
+	Route::any('insure_yd_notice', 'IndexController@insYdNotice');//产品须知页面-英大
 	//银行卡操作
 	Route::any('bank_index', 'BankController@bankIndex');//银行卡列表页面
 	Route::any('bank_info/{bank_id}', 'BankController@bankInfo');//银行卡详情页面
@@ -30,8 +34,6 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('insure_auto', 'SetingController@insureAuto');//自动投保页面
 	Route::any('do_insure_auto', 'SetingController@doInsureAuto');//自动投保操作
 	Route::any('user_info', 'SetingController@userInfo');//用户信息
-	//理赔流程
-	Route::any('claim_index', 'ClaimController@claimIndex');//理赔主页面
 	//申请理赔
 	Route::any('claim_contact', 'ClaimController@claimContact');//申请理赔
 	Route::any('claim_email', 'ClaimController@claimEmail');
@@ -44,6 +46,7 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('claim_user', 'ClaimController@claimUser');
 	Route::any('claim_send_email', 'ClaimController@claimSendEmail');
 	Route::any('claim_audit', 'ClaimController@claimAudit');
+	Route::any('base_upload_file', 'ClaimController@baseUploadFile');
 });
 
 
