@@ -106,7 +106,7 @@ class IndexController
     }
 
     /**
-     * 我的保险(do_insure)
+     * 我的保险
      * @access public
      *  TODO  完善功能
      * @return view

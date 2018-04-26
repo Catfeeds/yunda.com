@@ -105,7 +105,7 @@
             });
             $('#do_insure').on('click',function () {
                 Mask.loding();
-                window.location.href = '{{config('view_url.channel_target_url')}}do_insure';
+                window.location.href = '{{config('view_url.channel_target_url')}}ins_center';
             });
             $('.head-right').on('tap',function () {
                 Mask.loding();
