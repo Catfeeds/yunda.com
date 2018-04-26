@@ -158,6 +158,7 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script type="text/javascript" charset="utf-8">
+            var token = localStorage.getItem('token');
             $('.head-right').on('tap',function () {
                 Mask.loding();
                 location.href="bmapp:homepage";
@@ -169,7 +170,7 @@
             $('#claim_target').on('click',function () {
                 var id = $('#claim_target').val();
                 Mask.loding();
-                window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_user?warranty_id="+id;
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_user?warranty_id="+id+'&token='+token;
             });
 		</script>
 	</body>

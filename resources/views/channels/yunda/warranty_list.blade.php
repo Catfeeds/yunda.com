@@ -74,17 +74,18 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script type="text/javascript" charset="utf-8">
+            var token = localStorage.getItem('token');
             $('.tab .item').click(function(){
                 var status = $(this).data('id');
                 $(this).addClass('active').siblings().removeClass('active')
-                location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_list?status='+status;
+                location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_list?status='+status+'&token='+token;
 
             })
             $('.content').click(function(){
                 var warranty_id = $(this).data('id');
                 if(warranty_id){
                     Mask.loding();
-                    location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_detail/'+warranty_id;
+                    location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_detail/'+warranty_id+'?token='+token;;
                 }
             });
             $('.head-right').on('tap',function () {

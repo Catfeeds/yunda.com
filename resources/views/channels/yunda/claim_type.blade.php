@@ -33,7 +33,7 @@
 		</header>
 		<div>
 			<div class="mui-scroll-wrapper">
-				<form action="{{config('view_url.channel_yunda_target_url')}}claim_reason" method="post" id="claim_reason">
+				<form action="{{config('view_url.channel_yunda_target_url')}}claim_reason?token={{$_GET['token']}}" method="post" id="claim_reason">
 					<input type="hidden" name="input" value="{{json_encode($input)}}">
 					<div class="mui-scroll">
 						<div>

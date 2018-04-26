@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
 use App\Models\ChannelInsureSeting;
+use App\Helper\TokenHelper;
 
 class SetingController
 {
@@ -21,7 +22,9 @@ class SetingController
 
     protected $log_helper;
 
-    protected $person_code;
+    protected $sign_help;
+
+    protected $input;
 
     /**
      * 初始化
@@ -32,9 +35,7 @@ class SetingController
         $this->request = $request;
         $this->log_helper = new LogHelper();
         $this->sign_help = new RsaSignHelp();
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $this->person_code = $access_token_data['person_code'];
+		$this->input = $this->request->all();
     }
 
     /**
@@ -44,8 +45,8 @@ class SetingController
      *
      */
     public function insureSetupList(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         return view('channels.yunda.insure_setup_list',compact('person_code'));
     }
 
@@ -56,8 +57,8 @@ class SetingController
      *
      */
     public function insureSeting(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         return view('channels.yunda.insure_seting',compact('person_code'));
     }
 
@@ -68,8 +69,8 @@ class SetingController
      *
      */
     public function insureAuto(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $auto_res = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('auto_insure_status','auto_insure_type','auto_insure_time')
             ->first();
@@ -123,8 +124,8 @@ class SetingController
      *
      */
     public function userInfo(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $user_res = Person::where('papers_code',$person_code)->select('name','phone','papers_code')->first();
         return view('channels.yunda.user_info',compact('user_res'));
     }

@@ -54,6 +54,7 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/area.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+            var token = localStorage.getItem('token');
             $('.head-right').on('tap',function () {
                 Mask.loding();
                 location.href="bmapp:homepage";
@@ -76,7 +77,7 @@
                     success: function (data) {
                         Mask.alert(data.msg,3);
                         setTimeout(function(){//两秒后跳转
-							window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index";
+							window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index?token="+token;
                         },2000);
                     }
                 });

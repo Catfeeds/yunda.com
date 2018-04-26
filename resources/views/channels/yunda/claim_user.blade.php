@@ -32,7 +32,7 @@
 		<div>
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
-					<form action="{{config('view_url.channel_yunda_target_url')}}claim_type" method="post" id="claim_type">
+					<form action="{{config('view_url.channel_yunda_target_url')}}claim_type?token={{$_GET['token']}}" method="post" id="claim_type">
 						<input type="hidden" name="warranty_id" value="{{ $warranty_id }}">
 						<div>
 							<ul class="process-wrapper">

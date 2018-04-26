@@ -31,7 +31,7 @@
 				<div class="mui-scroll">
 					<ul class="list-wrapper">
 						<li class="list-item">
-							<a  href="{{config('view_url.channel_yunda_target_url')}}user_info" id="user_setup_target">
+							<a  href="{{config('view_url.channel_yunda_target_url')}}user_info?token={{$_GET['token']}}" id="user_setup_target">
 								<div class="item-img"><i class="iconfont icon-geren"></i></div>
 								<div class="item-content">
 									<p class="title">个人信息</p>
@@ -40,7 +40,7 @@
 							</a>
 						</li>
 						<li class="list-item">
-							<a  href="{{config('view_url.channel_yunda_target_url')}}insure_seting" id="insure_setup_target">
+							<a  href="{{config('view_url.channel_yunda_target_url')}}insure_seting?token={{$_GET['token']}}" id="insure_setup_target">
 								<div class="item-img"><i class="iconfont icon-baodanyangben"></i></div>
 								<div class="item-content">
 									<p class="title">自动投保</p>
@@ -49,7 +49,7 @@
 							</a>
 						</li>
 						<li class="list-item">
-							<a  href="{{config('view_url.channel_yunda_target_url')}}bank_index" id="bank_setup_target">
+							<a  href="{{config('view_url.channel_yunda_target_url')}}bank_index?token={{$_GET['token']}}" id="bank_setup_target">
 								<div class="item-img">	<img src="{{config('view_url.channel_url')}}imges/icon_set.png" alt="" /></div>
 
 								<div class="item-content">
@@ -62,17 +62,7 @@
 				</div>
 			</div>
 		</div>
-		<!--投保成功弹出层-->
-		<div class="popups-wrapper popups-msg">
-			<div class="popups-bg"></div>
-			<div class="popups popups-tips">
-				<div class="popups-title"><i class="iconfont icon-guanbi"></i></div>
-				<div class="popups-content color-positive">
-					<i class="iconfont icon-chenggong"></i>
-					<p class="tips">投保成功</p>
-				</div>
-			</div>
-		</div>
+
 		<script src="{{config('view_url.channel_url')}}js/lib/jquery-1.11.3.min.js"></script>
 		<script src="{{config('view_url.channel_url')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_url')}}js/common.js"></script>

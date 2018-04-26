@@ -129,10 +129,12 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+			var token = "{{$_GET['token']}}";
+            localStorage.setItem('token', token);
 			$('#do_insured').on('click',function () {
 			    var person_code = "{{$person_code}}";
                 Mask.loding();
-				window.location.href = "{{config('view_url.channel_yunda_target_url')}}do_insured/"+person_code;
+				window.location.href = "{{config('view_url.channel_yunda_target_url')}}do_insured?token="+token;
             });
             $('.head-right').on('tap',function () {
                 Mask.loding();

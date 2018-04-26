@@ -15,13 +15,14 @@ use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
 use App\Models\Warranty;
 use App\Models\Person;
+use App\Helper\TokenHelper;
 
 class WarrantyController
 {
 
     protected $request;
 
-    protected $log_helper;
+    protected $sign_help;
 
     protected $person_code;
 
@@ -31,12 +32,10 @@ class WarrantyController
      */
     public function __construct(Request $request)
     {
+		set_time_limit(0);//永不超时
         $this->request = $request;
         $this->sign_help = new RsaSignHelp();
-        set_time_limit(0);//永不超时
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $this->person_code = $access_token_data['person_code'];
+		$this->input = $this->request->all();
     }
 
     /**
@@ -44,8 +43,8 @@ class WarrantyController
      * @access public
      */
     public function warrantyList(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $warranty_ok_res = CustWarranty::where('user_id',$user_res['id'])
             ->where('warranty_status','7')//保障中
@@ -75,8 +74,8 @@ class WarrantyController
      * @access public
      */
     public function warrantyDetail($warranty_id){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $user_res = Person::where('papers_code',$person_code)
             ->select('id','papers_code','papers_type','name','phone')
             ->first();

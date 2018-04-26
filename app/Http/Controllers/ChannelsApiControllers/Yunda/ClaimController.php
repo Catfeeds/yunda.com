@@ -18,6 +18,7 @@ use App\Models\ClaimYunda;
 use Illuminate\Support\Facades\DB;
 use Ixudra\Curl\Facades\Curl;
 use Mail;
+use App\Helper\TokenHelper;
 
 class ClaimController
 {
@@ -26,7 +27,9 @@ class ClaimController
 
     protected $log_helper;
 
-    protected $person_code;
+    protected $sign_help;
+
+    protected $input;
 
     /**
      * 初始化
@@ -37,9 +40,7 @@ class ClaimController
         $this->request = $request;
         $this->log_helper = new LogHelper();
         $this->sign_help = new RsaSignHelp();
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $this->person_code = $access_token_data['person_code'];
+		$this->input = $this->request->all();
     }
 
     /**
@@ -92,7 +93,8 @@ class ClaimController
         $json  = json_decode($input['input'], true);
         unset($input['input']);
         $data = array_merge($json, $input);
-        $person_code = $this->person_code;
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $claim_yunda = new ClaimYunda();
         $claim_yunda->user_id = $user_res['id'];    //所属用户id
@@ -310,7 +312,8 @@ class ClaimController
     public function claimProgress(){
         $input = $this->request->all();
         $type = $input['type'] ?? '0';
-        $person_code = $this->person_code;
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $users = Person::where('papers_code',$person_code)->first();
         $where = [1,2,3];
         if($type != '0') $where = [-1,4];

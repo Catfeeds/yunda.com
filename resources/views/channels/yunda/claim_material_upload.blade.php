@@ -26,6 +26,7 @@
 			<span>提交材料</span>
 		</div>
 	</header>
+	@if(!empty($result))
 	<form action="{{config('view_url.channel_yunda_target_url')}}claim_send_email" method="post" id="claim_send_email" enctype="multipart/form-data">
 		<input name="claim_id" type="hidden" value="{{$result->claim_id}}">
 		<div class="main">
@@ -157,6 +158,7 @@
 		</div>
 		<button id="next" class="btn-next" disabled>确认提交</button>
 	</form>
+	@endif
 </div>
 <script type="text/javascript" src="{{config('view_url.channel_views')}}js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript">
@@ -176,7 +178,7 @@
 
             var img_base64 = event.result;
             img_base64 =img_base64.replace(/^(data:\s*image\/(\w+);base64,)/,'');
-            var file_name = 'Yunda-claim-'+"{{$result->claim_id}}"+"-"+$targetEle.attr('name');
+            var file_name = 'Yunda-claim-'+"{{$result->claim_id??""}}"+"-"+$targetEle.attr('name');
             var url = "{{config('yunda.file_url')}}file/upBase";
 
 
