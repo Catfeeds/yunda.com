@@ -76,7 +76,7 @@
 							<ul class="list">
 								<li class="cause">
 									<div>原因说明：<span class="fr" style="color: #606060;">{{$ins_msg}}</span></div>
-									<div style="text-align: center;"><a href="{{$target_url}}">前往操作</a></div>
+									<div style="text-align: center;"><a href="{{$target_url.'?token='.$_GET['token']}}">前往操作</a></div>
 								</li>
 							</ul>
 						</div>
@@ -93,19 +93,20 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+            var token = localStorage.getItem('token');
             var person_code = "{{$person_code}}";
             var warranty_code = "{{$warranty_res['warranty_code']??""}}";
             $('#warranty_info').on('click',function () {
                 Mask.loding();
-                window.location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_info/'+warranty_code;
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_info/'+warranty_code+'?token='+token;
             });
             $('#insure_seting').on('click',function () {
                 Mask.loding();
-                window.location.href = '{{config('view_url.channel_yunda_target_url')}}insure_setup_list';
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token='+token;
             });
             $('#do_insure').on('click',function () {
                 Mask.loding();
-                window.location.href = '{{config('view_url.channel_target_url')}}ins_center';
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+token;
             });
             $('.head-right').on('tap',function () {
                 Mask.loding();

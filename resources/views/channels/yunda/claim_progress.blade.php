@@ -61,6 +61,7 @@
 <script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 <script src="{{config('view_url.channel_views')}}js/common.js"></script>
 <script>
+    var token = localStorage.getItem('token');
     $('.head-right').on('tap',function () {
         Mask.loding();
         location.href="bmapp:homepage";
@@ -70,18 +71,18 @@
         window.history.go(-1);
     });
     $('#underway').click(function(){
-        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_progress?type=0';
+        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_progress?type=0&token='+token;
     });
     $('#end').click(function(){
-        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_progress?type=1';
+        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_progress?type=1&token='+token;
     });
     //显示详情
     function showId(id){
-        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_info?claim_id='+id;
+        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_info?claim_id='+id+'&token='+token;
     }
     //上传资料
     function uploadInfo(id){
-        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id='+id;
+        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id='+id+'&token='+token;
     }
 
 

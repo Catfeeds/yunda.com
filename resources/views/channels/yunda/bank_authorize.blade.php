@@ -64,6 +64,8 @@
 <script src="{{config('view_url.channel_views')}}js/lib/area.js"></script>
 <script src="{{config('view_url.channel_views')}}js/common.js"></script>
 <script>
+    var token = "{{$_GET['token']}}";
+    localStorage.setItem('token', token);
     var app = {
         init: function() {
             var _this = this;

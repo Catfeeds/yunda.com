@@ -18,6 +18,7 @@ use App\Models\ClaimYunda;
 use Illuminate\Support\Facades\DB;
 use Ixudra\Curl\Facades\Curl;
 use Mail;
+use App\Helper\TokenHelper;
 
 class ClaimController
 {
@@ -26,7 +27,9 @@ class ClaimController
 
     protected $log_helper;
 
-    protected $person_code;
+    protected $sign_help;
+
+    protected $input;
 
     /**
      * 初始化
@@ -37,9 +40,7 @@ class ClaimController
         $this->request = $request;
         $this->log_helper = new LogHelper();
         $this->sign_help = new RsaSignHelp();
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $this->person_code = $access_token_data['person_code'];
+		$this->input = $this->request->all();
     }
 
     /**

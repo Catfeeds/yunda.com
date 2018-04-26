@@ -8,6 +8,7 @@
  */
 namespace App\Http\Controllers\ChannelsApiControllers\Yunda;
 
+
 use App\Models\Bank;
 use Illuminate\Http\Request;
 use App\Helper\LogHelper;
@@ -17,14 +18,19 @@ use App\Models\Person;
 use App\Models\ChannelInsureSeting;
 use App\Models\ChannelContract;
 use App\Models\ChannelOperate;
-use APP\Helper\PageHelper;
+use App\Helper\TokenHelper;
+
 
 class IndexController
 {
 
     protected $request;
 
-    protected $person_code;
+    protected $log_helper;
+
+    protected $sign_help;
+
+    protected $input;
 
     /**
      * 初始化
@@ -36,9 +42,7 @@ class IndexController
         $this->request = $request;
         $this->log_helper = new LogHelper();
         $this->sign_help = new RsaSignHelp();
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $this->person_code = $access_token_data['person_code'];
+		$this->input = $this->request->all();
     }
 
     /**
@@ -48,8 +52,8 @@ class IndexController
      *
      */
     public function InsInfo(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+    	$token_data = TokenHelper::getData($this->input['token']);
+        $person_code = $token_data['insured_code'];
         $user_seting = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('cust_id','authorize_status','authorize_start')
             ->first();
@@ -113,8 +117,8 @@ class IndexController
      *
      */
     public function insureCenter(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         if($person_code){
             //TODO 匹配出没有签约的
             //TODO  匹配出签约过期的
@@ -145,7 +149,9 @@ class IndexController
      * @return view
      *
      */
-    public function doInsured($person_code){
+    public function doInsured(){
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $user_res = Person::where('papers_code',$person_code)
             ->select('id','name','papers_type','papers_code','phone','email','address','address_detail')
             ->first();
@@ -222,8 +228,8 @@ class IndexController
      *
      */
     public function insYdClause(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         return view('channels.yunda.insure_yd_clause');
     }
 
@@ -234,8 +240,8 @@ class IndexController
      *
      */
     public function insTkClause(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         return view('channels.yunda.insure_tk_clause');
     }
 
@@ -246,8 +252,8 @@ class IndexController
      *
      */
     public function insTkNotice(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         return view('channels.yunda.ins_tk_notice');
     }
 
@@ -258,8 +264,8 @@ class IndexController
      *
      */
     public function insYdNotice(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         return view('channels.yunda.insure_yd_notice');
     }
 
@@ -289,8 +295,8 @@ class IndexController
      *
      */
     public function insError($error_type){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         switch ($error_type){
             case 'empty'://投保参数不完善
                 $ins_msg = '用户信息不完善，请完善用户信息';//备注信息
@@ -316,19 +322,6 @@ class IndexController
         $warranty_res = [];
         $user_res = Person::where('papers_code',$person_code)->select('name','papers_type','papers_code','phone','address')->first();
         return view('channels.yunda.insure_result',compact('person_code','ins_status','ins_msg','target_url','warranty_res','user_res'));
-    }
-
-    //测试分页
-    public function testPage(){
-        $params = [];
-        $params['table_name'] = 'channel_operate';
-        $params['page_key'] = 'order_id';
-        $params['offset'] = '30';
-        $params['start'] = '49';
-        $params['order'] = 'desc';
-        $params['lastId'] = '0';
-        $res = LogHelper::getPage($params);
-        dd($res);die;
     }
 
 	/**

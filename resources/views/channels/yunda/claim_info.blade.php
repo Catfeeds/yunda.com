@@ -74,6 +74,7 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+            var token = localStorage.getItem('token');
             $('.head-right').on('tap',function () {
                 Mask.loding();
                 location.href="bmapp:homepage";
@@ -84,7 +85,7 @@
             });
             //上传资料
             function uploadInfo(id){
-                location.href = '{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id='+id;
+                location.href = '{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id='+id+'&token='+token;;
             }
 		</script>
 	</body>

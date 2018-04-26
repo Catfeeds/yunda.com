@@ -28,22 +28,22 @@
 		<div class="step2">
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
-					<a style="display: block;" href="{{config('view_url.channel_yunda_target_url')}}ins_info" id="insure_target">
+					<a style="display: block;" href="{{config('view_url.channel_yunda_target_url')}}ins_info?token={{$_GET['token']}}" id="insure_target">
 						<div class="banner">
 							<img src="{{config('view_url.channel_views')}}imges/banner_text.png" alt="" />
 						</div>
 					</a>
 					@if(!$auto_insure_status)
 					<!--自动购保功能关闭时渲染-->
-						<a href="{{config('view_url.channel_yunda_target_url')}}insure_seting" id="insure_set_target" class="status-wrapper">自动购保功能关闭中，去开启   >></a>
+						<a href="{{config('view_url.channel_yunda_target_url')}}insure_seting?token={{$_GET['token']}}" id="insure_set_target" class="status-wrapper">自动购保功能关闭中，去开启   >></a>
 					@else
 							@if(!$insured_status)
-								<a href="{{config('view_url.channel_yunda_target_url')}}ins_info" id="insure_no_target" class="status-wrapper">保障未生效，点击查看详情  >></a>
+								<a href="{{config('view_url.channel_yunda_target_url')}}ins_info?token={{$_GET['token']}}" id="insure_no_target" class="status-wrapper">保障未生效，点击查看详情  >></a>
 							@endif
 					@endif
 					<ul class="list-wrapper">
 						<li class="list-item">
-							<a href="{{config('view_url.channel_yunda_target_url')}}warranty_list" id="warranty_target">
+							<a href="{{config('view_url.channel_yunda_target_url')}}warranty_list?token={{$_GET['token']}}" id="warranty_target">
 								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/-warranty.png" alt="" /></div>
 								<div class="item-content">
 									<p class="title">我的保单</p>
@@ -53,7 +53,7 @@
 							</a>
 						</li>
 						<li class="list-item">
-							<a   href="{{config('view_url.channel_yunda_target_url')}}claim_progress" id="claim_target">
+							<a   href="{{config('view_url.channel_yunda_target_url')}}claim_progress?token={{$_GET['token']}}" id="claim_target">
 								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/icon_lp.png" alt="" /></div>
 								<div class="item-content">
 									<p class="title">我的理赔</p>
@@ -63,7 +63,7 @@
 							</a>
 						</li>
 						<li class="list-item">
-							<a  href="{{config('view_url.channel_yunda_target_url')}}insure_setup_list" id="seting_target">
+							<a  href="{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token={{$_GET['token']}}" id="seting_target">
 								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/icon_set.png" alt="" /></div>
 								<div class="item-content">
 									<p class="title">设置</p>
@@ -91,6 +91,8 @@
 		<script src="{{config('view_url.channel_url')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_url')}}js/common.js"></script>
 		<script>
+            var token = "{{$_GET['token']}}";
+            localStorage.setItem('token', token);
             Mask.loding();
             window.onload = function(){
                 $('.loading-wrapper').remove();

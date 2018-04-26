@@ -18,6 +18,7 @@ use App\Helper\RsaSignHelp;
 use App\Helper\IPHelper;
 use App\Models\Person;
 use Ixudra\Curl\Facades\Curl;
+use App\Helper\TokenHelper;
 
 class BankController
 {
@@ -26,7 +27,9 @@ class BankController
 
     protected $log_helper;
 
-    protected $person_code;
+    protected $sign_help;
+
+    protected $input;
 
     /**
      * 初始化
@@ -37,9 +40,7 @@ class BankController
         $this->request = $request;
         $this->log_helper = new LogHelper();
         $this->sign_help = new RsaSignHelp();
-        $access_token = $this->request->header('access-token');
-        $access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $this->person_code = $access_token_data['person_code'];
+		$this->input = $this->request->all();
     }
 
     /**
@@ -49,8 +50,8 @@ class BankController
      *
      */
     public function bankIndex(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
         $bank_res = Bank::where('cust_id',$cust_id)
@@ -66,8 +67,8 @@ class BankController
      *
      */
     public function bankBind(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         return view('channels.yunda.bank_bind',compact('person_code'));
     }
 
@@ -181,8 +182,8 @@ class BankController
      *
      */
     public function bankAuthorize(){
-        $person_code = $this->person_code;
-        $person_code = config('yunda.test_person_code');
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $cust_id = '';
         $cust_name = '';
         $cust_phone = '';
@@ -301,8 +302,8 @@ class BankController
      *
      */
     public function bankAuthorizeInfo(){
-        $input = $this->request->all();
-        $person_code = $this->person_code;
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
         $person_code = config('yunda.test_person_code');
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $cust_id = $user_res['id'];

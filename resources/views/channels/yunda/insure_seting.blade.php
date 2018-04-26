@@ -35,7 +35,8 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script type="text/javascript" charset="utf-8">
-			var url = "{{config('view_url.channel_yunda_target_url')}}insure_auto";
+            var token = localStorage.getItem('token');
+			var url = "{{config('view_url.channel_yunda_target_url')}}insure_auto?token="+token;
             $('#insure_setup').on('tap',function(){
                 Mask.loding();
                 window.location.href = url;

@@ -96,7 +96,8 @@ class IntersController
             $return_data['message']['details'] = 'no_bank';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
             $return_data['data']['content'] = '银行卡信息缺失，请绑定银行卡！';
-            $return_data['data']['url'] = $webapi_route.'ins_error/no_bank?token='.$token;
+            $return_data['data']['target_url'] = $webapi_route.'ins_error/no_bank?token='.$token;
+			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         //用用户身份证信息查询授权状态//todo  联合登录有两种情况；未开免密；保险生效中
@@ -109,7 +110,8 @@ class IntersController
             $return_data['message']['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
             $return_data['data']['content'] = '免密授权未开启，请授权！';
-            $return_data['data']['url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
+            $return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
+			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         if(!$user_setup_res['authorize_status']||!$user_setup_res['authorize_status']){
@@ -118,7 +120,8 @@ class IntersController
             $return_data['message']['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
             $return_data['data']['content'] = '免密授权未开启，请授权！';
-            $return_data['data']['url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
+            $return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
+			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         //todo 查询保单生效状态（连续购买的保单是否还在保障期）
@@ -167,7 +170,8 @@ class IntersController
                 $return_data['message']['details'] = 'insuring';
                 $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
                 $return_data['data']['content'] = '投保中';
-                $return_data['data']['url'] = $webapi_route.'ins_info?token='.$token;
+                $return_data['data']['target_url'] = $webapi_route.'ins_info?token='.$token;
+				$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                 return json_encode($return_data,JSON_UNESCAPED_UNICODE);
             }else{
                 //查询投保状态
@@ -181,7 +185,8 @@ class IntersController
                     $return_data['message']['details'] = 'insured';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
                     $return_data['data']['content'] = '保障中';
-                    $return_data['data']['url'] = $webapi_route.'ins_center?token='.$token;
+                    $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
+					$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
                 }else{
                     $return_data['code'] = '205';
@@ -189,7 +194,8 @@ class IntersController
                     $return_data['message']['details'] = 'isured_fail';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
                     $return_data['data']['content'] = '投保失败！';
-                    $return_data['data']['url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
+                    $return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
+					$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
                 }
             }
@@ -199,7 +205,8 @@ class IntersController
         $return_data['message']['details'] = 'insured';
         $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
         $return_data['data']['content'] = '保障中';
-        $return_data['data']['url'] = $webapi_route.'ins_center?token='.$token;
+        $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
+        $return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
         return json_encode($return_data,JSON_UNESCAPED_UNICODE);
     }
 

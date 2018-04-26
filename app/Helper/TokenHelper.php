@@ -1,12 +1,14 @@
 <?php
-namespace App\Helper;
 /**
  * Created by PhpStorm.
  * User: wangsl
  * Date: 2018/4/26
  * Time: 14:27
  */
+namespace App\Helper;
+
 use App\Helper\RsaSignHelp;
+use \Illuminate\Support\Facades\Redis;
 
 class TokenHelper
 {
@@ -43,7 +45,9 @@ class TokenHelper
 		];
 		$sign_help = new RsaSignHelp();
 		$token = $sign_help->base64url_encode(json_encode($data));
-		return  (['status'=>'200','msg'=>'','token'=>$token]);
+		$key = sha1(md5($params['insured_code']));
+		Redis::set($key,$token);
+		return  (['status'=>'200','msg'=>'','token'=>$key]);
     }
 	/**
 	 * 生成token
@@ -53,9 +57,10 @@ class TokenHelper
 	 * TODO 有效期没做
 	 * @return token
 	 */
-    static public function getData($token)
+    static public function getData($key)
 	{
 		$sign_help = new RsaSignHelp();
+		$token = Redis::get($key);
 		$data = json_decode($sign_help->base64url_decode($token),true);
 		//判断token是否失效
 		if($data['time']+$data['expiry_date']>time()){

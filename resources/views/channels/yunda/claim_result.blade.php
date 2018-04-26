@@ -82,7 +82,7 @@
 				<div class="btn-wrapper">
 					<button class="btn" id="home">返回首页</button>
 					@if($email != true)
-						<a href="{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id={{$claim_id}}" class="btn">提交资料</a>
+						<a href="{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id={{$claim_id}}&token={{$_GET['token']}}" class="btn">提交资料</a>
 					@endif
 				</div>
 			</div>
