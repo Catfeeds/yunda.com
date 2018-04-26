@@ -114,7 +114,7 @@ class IntersController
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
-        if(!$user_setup_res['authorize_status']||!$user_setup_res['authorize_status']){
+        if($user_setup_res['authorize_status']=="0"){
             $return_data['code'] = '204';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
@@ -128,10 +128,14 @@ class IntersController
         if(empty($user_setup_res['warranty_id'])){//没有保单
             $insure_status = false;
         }
-        if($user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600<time()){//保单过期
+        if(empty($user_setup_res['insure_start'])||$user_setup_res['insure_days']){
             $insure_status = false;
-        }else{//保单在保
-            $insure_status = true;
+        }else{
+            if($user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600<time()){//保单过期
+                $insure_status = false;
+            }else{//保单在保
+                $insure_status = true;
+            }
         }
         if(!$insure_status){//需要购买新保单
             //todo 当前投保状态，今天有没有进行投保操作????
