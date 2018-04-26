@@ -118,13 +118,12 @@
 							<a href="{{config('view_url.channel_yunda_target_url')}}insure_tk_notice" class="ins_clause">《投保须知》</a>
 						</p >
 						</div>
-
 				</div>
 			</div>
+		</div>
 			<div class="buttons-wrapper">
 				<button type="button" class="btn btn-right" id="do_insured">立即投保</button>
 			</div>
-		</div>
 		</div>
 		<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
