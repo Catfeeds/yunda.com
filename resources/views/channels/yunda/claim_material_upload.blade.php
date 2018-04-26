@@ -195,7 +195,8 @@
                     $targetEle.val(file_name);
                     $('#next').prop('disabled',false);
                 }else{
-                    alert(JSON.stringify(evt.data));
+                    console.log(JSON.stringify(evt.data));
+                    alert('文件上传失败,请重新上传');
                 }
                 worker.terminate();
             }
