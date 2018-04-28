@@ -148,13 +148,13 @@ class IntersController
                ->first();
             if(empty($cust_warranty_res)){
                 $current_insurance_status = false;
-            }
-            if($cust_warranty_res['created_at']>strtotime(date('Y-m-d', time()))){
-                $current_insurance_status = false;
             }else{
-                $current_insurance_status = true;
-            }
-            dd($current_insurance_status);
+				if($cust_warranty_res['created_at']>strtotime(date('Y-m-d', time()))){
+					$current_insurance_status = false;
+				}else{
+					$current_insurance_status = true;
+				}
+			}
             if(!$current_insurance_status){//没有进行过投保操作
                 $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
                 $biz_content['price'] = '2';
