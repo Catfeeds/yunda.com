@@ -114,7 +114,7 @@ class IntersController
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
-        if($user_setup_res['authorize_status']=="0"){
+        if(!$user_setup_res['authorize_status']||!$user_setup_res['authorize_status']){
             $return_data['code'] = '204';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
@@ -124,37 +124,38 @@ class IntersController
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
-        //todo 查询保单生效状态（连续购买的保单是否还在保障期）
-        if(empty($user_setup_res['warranty_id'])){//没有保单
-            $insure_status = false;
-        }
-        if(empty($user_setup_res['insure_start'])||$user_setup_res['insure_days']){
-            $insure_status = false;
-        }else{
-            if($user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600<time()){//保单过期
-                $insure_status = false;
-            }else{//保单在保
-                $insure_status = true;
-            }
-        }
+		//todo 查询保单生效状态（连续购买的保单是否还在保障期）
+		if(empty($user_setup_res['warranty_id'])){//没有保单
+			$insure_status = false;
+		}
+		if(empty($user_setup_res['insure_start'])||$user_setup_res['insure_days']){
+			$insure_status = false;
+		}else{
+			if($user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600<time()){//保单过期
+				$insure_status = false;
+			}else{//保单在保
+				$insure_status = true;
+			}
+		}
         if(!$insure_status){//需要购买新保单
             //todo 当前投保状态，今天有没有进行投保操作????
            $cust_res = Person::where('papers_code',$insured_code)->select('id')->first();
            if(empty($cust_res)){
                $current_insurance_status = false;
-           }
-           $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
-               ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
-               ->first();
-            if(empty($cust_warranty_res)){
-                $current_insurance_status = false;
-            }
-            if($cust_warranty_res['created_at']>strtotime(date('Y-m-d', time()))){
-                $current_insurance_status = false;
-            }else{
-                $current_insurance_status = true;
-            }
-            dd($current_insurance_status);
+           }else{
+			   $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
+				   ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
+				   ->first();
+			   if(empty($cust_warranty_res)){
+				   $current_insurance_status = false;
+			   }else{
+				   if($cust_warranty_res['created_at']>strtotime(date('Y-m-d', time()))){
+					   $current_insurance_status = false;
+				   }else{
+					   $current_insurance_status = true;
+				   }
+			   }
+		   }
             if(!$current_insurance_status){//没有进行过投保操作
                 $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
                 $biz_content['price'] = '2';
