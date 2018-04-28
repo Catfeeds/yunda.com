@@ -146,7 +146,6 @@ class IntersController
            $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
                ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
                ->first();
-           dd($cust_warranty_res);
             if(empty($cust_warranty_res)){
                 $current_insurance_status = false;
             }
@@ -155,6 +154,7 @@ class IntersController
             }else{
                 $current_insurance_status = true;
             }
+            dd($current_insurance_status);
             if(!$current_insurance_status){//没有进行过投保操作
                 $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
                 $biz_content['price'] = '2';
