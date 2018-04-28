@@ -157,7 +157,7 @@ class IntersController
 			   }
 		   }
             if(!$current_insurance_status){//没有进行过投保操作
-                $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
+                $biz_content['insured_days'] = empty($user_setup_res['auto_insure_type'])?'1':$user_setup_res['auto_insure_type'];
                 $biz_content['price'] = '2';
                 switch ($biz_content['insured_days']){
                     case '1':
