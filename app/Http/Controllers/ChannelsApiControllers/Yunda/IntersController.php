@@ -157,21 +157,20 @@ class IntersController
 			   }
 		   }
             if(!$current_insurance_status){//没有进行过投保操作
-                $biz_content['insured_days'] = empty($user_setup_res['auto_insure_type'])?'1':$user_setup_res['auto_insure_type'];
-                $biz_content['price'] = '2';
-                switch ($biz_content['insured_days']){
+				$input['insured_days'] = empty($user_setup_res['auto_insure_type'])?'1':$user_setup_res['auto_insure_type'];
+				$input['price'] = '2';
+                switch ($input['insured_days']){
                     case '1':
-                        $biz_content['price'] = $user_setup_res['auto_insure_price'];
+						$input['price'] = $user_setup_res['auto_insure_price'];
                         break;
                     case '3':
-                        $biz_content['price'] = $user_setup_res['auto_insure_price'];
+						$input['price'] = $user_setup_res['auto_insure_price'];
                         break;
                     case '10':
-                        $biz_content['price'] = $user_setup_res['auto_insure_price'];
+                        $input['price'] = $user_setup_res['auto_insure_price'];
                         break;
                 }
-                dd($biz_content);
-                dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
+                dispatch(new YunDaPayInsure($input));//TODO 投保操作（异步队列）
                 $return_data['code'] = '200';
                 $return_data['message']['digest'] = 'default';
                 $return_data['message']['details'] = 'insuring';
