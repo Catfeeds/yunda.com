@@ -307,11 +307,11 @@ class BankController
         $person_code = config('yunda.test_person_code');
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $cust_id = $user_res['id'];
-        $insured_name = $input['insured_name']??"王石磊";
-        $insured_code = $input['insured_code']??"410881199406053515";
-        $insured_phone = $input['insured_phone']??"15701681524";
-        $bank_name = $input['bank_name']??"工商银行";
-        $bank_code = $input['bank_code']??"6815464654654654654654";
+        $insured_name = $input['insured_name']??"";
+        $insured_code = $input['insured_code']??"";
+        $insured_phone = $input['insured_phone']??"";
+        $bank_name = $input['bank_name']??"";
+        $bank_code = $input['bank_code']??"";
         $repeat_res = ChannelInsureSeting::where('cust_id',$cust_id)
             ->select('id')->first();
         $authorize_status = true;//授权按钮显示状态
