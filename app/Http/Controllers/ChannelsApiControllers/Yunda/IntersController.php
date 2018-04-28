@@ -146,6 +146,7 @@ class IntersController
            $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
                ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
                ->first();
+           dd($cust_warranty_res);
             if(empty($cust_warranty_res)){
                 $current_insurance_status = false;
             }
