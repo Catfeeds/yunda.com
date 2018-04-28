@@ -304,14 +304,18 @@ class BankController
     public function bankAuthorizeInfo(){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-        $person_code = config('yunda.test_person_code');
+		$person_name = $token_data['insured_name'];
+		$person_phone = $token_data['insured_phone'];
         $user_res = Person::where('papers_code',$person_code)->select('id')->first();
         $cust_id = $user_res['id'];
-        $insured_name = $input['insured_name']??"";
-        $insured_code = $input['insured_code']??"";
-        $insured_phone = $input['insured_phone']??"";
-        $bank_name = $input['bank_name']??"";
-        $bank_code = $input['bank_code']??"";
+		$bank_res = Bank::where('cust_id',$cust_id)
+			->select('bank','bank_code','bank_city','phone','bank_deal_type')
+			->first();
+        $insured_name = $user_res['name']??$person_name;
+        $insured_code = $user_res['papers_code']??$person_code;
+        $insured_phone = $user_res['phone']??$person_phone;
+        $bank_name = $bank_res['bank']??"";
+        $bank_code = $bank_res['bank_code']??"";
         $repeat_res = ChannelInsureSeting::where('cust_id',$cust_id)
             ->select('id')->first();
         $authorize_status = true;//授权按钮显示状态
