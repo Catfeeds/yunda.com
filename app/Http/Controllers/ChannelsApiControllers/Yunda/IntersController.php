@@ -170,6 +170,7 @@ class IntersController
                         $input['price'] = $user_setup_res['auto_insure_price'];
                         break;
                 }
+                LogHelper::logSuccess($input,'YD_prepare_params');
                 dispatch(new YunDaPayInsure($input));//TODO 投保操作（异步队列）
                 $return_data['code'] = '200';
                 $return_data['message']['digest'] = 'default';
