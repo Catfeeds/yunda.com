@@ -41,10 +41,13 @@
 			</div>
 		</div>
 		<div class="popups-footer">
+
 			<div class="label-wrapper">
 				<label><input id="agree" checked type="checkbox" />我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}insure_authorize_info?token={{$_GET['token']}}" style="color: #00A2FF;" id="insure_authorize_info">《转账授权书》</a></label>
 			</div>
+			@if(!$authorize_status)
 			<button disabled id="confirm" type="button" class="btn btn-default">已阅读并开通</button>
+			@endif
 			@if($wechat_status)
 				<form action="{{$wechat_url}}" method="post" id="do_insure_sign">
 				</form>

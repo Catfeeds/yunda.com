@@ -198,9 +198,11 @@ class BankController
         $insure_seting = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('authorize_bank')
             ->first();
+        $authorize_status = false;
         $bank = [];
         if(!empty($insure_seting)){
             $bank['code'] = $insure_seting['authorize_bank'];
+			$authorize_status = true;
         }
         $bank_res = Bank::where('cust_id',$cust_id)
             ->select('bank','bank_code','bank_city','phone','bank_deal_type')
@@ -228,7 +230,7 @@ class BankController
             $wechat_url = '';//签约URL
         }
         //签约页面上会显示签约人的相关信息
-        return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','cust_phone','person_code','wechat_status','wechat_url'));
+        return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','cust_phone','person_code','authorize_status','wechat_status','wechat_url'));
     }
 
     /**
