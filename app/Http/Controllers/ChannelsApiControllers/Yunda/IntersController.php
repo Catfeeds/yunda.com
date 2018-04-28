@@ -142,19 +142,20 @@ class IntersController
            $cust_res = Person::where('papers_code',$insured_code)->select('id')->first();
            if(empty($cust_res)){
                $current_insurance_status = false;
-           }
-           $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
-               ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
-               ->first();
-            if(empty($cust_warranty_res)){
-                $current_insurance_status = false;
-            }else{
-				if($cust_warranty_res['created_at']>strtotime(date('Y-m-d', time()))){
-					$current_insurance_status = false;
-				}else{
-					$current_insurance_status = true;
-				}
-			}
+           }else{
+			   $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
+				   ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
+				   ->first();
+			   if(empty($cust_warranty_res)){
+				   $current_insurance_status = false;
+			   }else{
+				   if($cust_warranty_res['created_at']>strtotime(date('Y-m-d', time()))){
+					   $current_insurance_status = false;
+				   }else{
+					   $current_insurance_status = true;
+				   }
+			   }
+		   }
             if(!$current_insurance_status){//没有进行过投保操作
                 $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
                 $biz_content['price'] = '2';
