@@ -170,6 +170,7 @@ class IntersController
                         $biz_content['price'] = $user_setup_res['auto_insure_price'];
                         break;
                 }
+                dd($biz_content);
                 dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
                 $return_data['code'] = '200';
                 $return_data['message']['digest'] = 'default';
