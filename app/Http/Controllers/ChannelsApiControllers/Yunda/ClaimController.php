@@ -124,6 +124,7 @@ class ClaimController
     public function claimMaterialUpload(){
 
         $input = $this->request->all();
+
         $result = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
@@ -135,7 +136,16 @@ class ClaimController
                 'cust_warranty.*',
                 'product.*')
             ->first();
-        return view('channels.yunda.claim_material_upload',compact('result'));
+
+        if($result){
+            return view('channels.yunda.claim_material_upload',compact('result'));
+        }else{
+            $notice = '数据获取失败！';
+            $url = 1;
+            $sec = 3;
+            return view('error.error',compact('notice', 'url', 'sec'));
+        }
+
     }
 
     /**
