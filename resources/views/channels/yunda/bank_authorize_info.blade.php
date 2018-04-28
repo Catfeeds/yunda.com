@@ -55,11 +55,11 @@
 							<h1 class="title">授权人账户信息</h1>
 						</div>
 						<ul class="list">
-							<li>开户名<span class="fr">{{$insured_name}}</span></li>
+							<li>持卡人姓名<span class="fr">{{$insured_name}}</span></li>
 							<li>持卡人联系方式<span class="fr">{{$insured_phone}}</span></li>
 							<li>持卡人身份证号<span class="fr">{{$insured_code}}</span></li>
-							<li>开户行<span class="fr">{{$bank_name}}</span></li>
-							<li>开户账号<span class="fr">{{$bank_code}}</span></li>
+							<li>银行名称<span class="fr">{{$bank_name}}</span></li>
+							<li>银行卡号<span class="fr">{{$bank_code}}</span></li>
 							<li>扣款金额<span class="fr">RMB 2元</span></li>
 						</ul>
 					</div>
