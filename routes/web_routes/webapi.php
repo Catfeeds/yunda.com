@@ -24,7 +24,8 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('bank_del', 'BankController@bankDel');//删除银行卡操作
 	//银行卡免密设置
 	Route::any('insure_authorize', 'BankController@bankAuthorize');//免密授权页面
-	Route::any('insure_authorize_info', 'BankController@bankAuthorizeInfo');//免密授权详情页面
+	Route::any('bank_authorize_info', 'BankController@bankAuthorizeInfo');//免密授权详情页面
+	Route::any('insure_authorize_info', 'BankController@insureAuthorizeInfo');//免密授权详情页面
 	Route::any('do_insure_authorize', 'BankController@doBankAuthorize');//免密授权页面
 	//保单管理
 	Route::any('warranty_list', 'WarrantyController@warrantyList');//保单列表

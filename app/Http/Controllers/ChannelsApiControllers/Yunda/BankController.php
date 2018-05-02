@@ -328,6 +328,37 @@ class BankController
         return view('channels.yunda.bank_authorize_info',compact('insured_name','insured_code','insured_phone','bank_code','bank_name','authorize_status','cust_id'));
     }
 
+	/**
+	 * 免密授权详情页面
+	 * @access public
+	 * @return view
+	 *
+	 */
+	public function insureAuthorizeInfo(){
+		$token_data = TokenHelper::getData($this->input['token']);
+		$person_code = $token_data['insured_code'];
+		$person_name = $token_data['insured_name'];
+		$person_phone = $token_data['insured_phone'];
+		$user_res = Person::where('papers_code',$person_code)->select('id')->first();
+		$cust_id = $user_res['id'];
+		$bank_res = Bank::where('cust_id',$cust_id)
+			->select('bank','bank_code','bank_city','phone','bank_deal_type')
+			->first();
+		$insured_name = $user_res['name']??$person_name;
+		$insured_code = $user_res['papers_code']??$person_code;
+		$insured_phone = $user_res['phone']??$person_phone;
+		$bank_name = $bank_res['bank']??"";
+		$bank_code = $bank_res['bank_code']??"";
+		$repeat_res = ChannelInsureSeting::where('cust_id',$cust_id)
+			->select('id')->first();
+		$authorize_status = true;//授权按钮显示状态
+		if(!empty($repeat_res)){
+			$authorize_status = false;
+		}
+		//签约页面上会显示签约人的相关信息
+		return view('channels.yunda.insure_authorize_info',compact('insured_name','insured_code','insured_phone','bank_code','bank_name','authorize_status','cust_id'));
+	}
+
     /**
      * 免密授权设置
      * @access public
