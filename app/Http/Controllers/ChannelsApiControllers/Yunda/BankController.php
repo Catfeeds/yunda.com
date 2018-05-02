@@ -403,7 +403,7 @@ class BankController
         if(empty($seting_res)){
             ChannelInsureSeting::insert([
                 'cust_id'=>$cust_id,
-                'cust_cod'=>$person_code,
+                'cust_cod'=>$person_code??"0",
                 'cust_type'=>'',
                 'authorize_bank'=>$bank_code,
                 'authorize_status'=>'1',
