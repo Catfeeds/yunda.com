@@ -24,7 +24,7 @@
 				</div>
 				<div class="tab">
 					<span class="item">姓名</span>
-					<input type="text" name="person_name" value="{{$cust_name??""}}" />
+					<input type="text" name="person_name" value="{{$cust_name??''}}" />
 				</div>
 				<div class="tab">
 					<span class="item">手机号</span>
@@ -32,7 +32,7 @@
 				</div>
 				<div class="tab">
 					<span class="item">卡号</span>
-					<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:""}}"/>
+					<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:''}}"/>
 					<input type="hidden" name="person_code" value="{{$person_code}}"/>
 				</div>
 			</div>
@@ -56,6 +56,7 @@
 			<button type="button" id="wechat_pay" class="btn btn-default" style="background: #1aad19;">开通微信免密支付</button>
 			@endif
 </div>
+	</div>
 <script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
 <script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 <script src="{{config('view_url.channel_views')}}js/lib/mui.picker.all.js"></script>
@@ -116,10 +117,11 @@
             var status = false
             var $inputs = $('.tab input')
             $inputs.each(function(index){
+                console.log($(this).val());
                 if(!$(this).val()){
                     status = true
-                    return false
                 }
+                return false
             })
             return status
         },
