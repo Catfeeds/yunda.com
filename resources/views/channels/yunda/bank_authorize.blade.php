@@ -15,7 +15,7 @@
 <div class="popups-wrapper popups-agree" style="display: block;">
 	<div class="popups-bg"></div>
 	<div class="popups">
-		<div class="popups-title"><i class="iconfont icon-guanbi"></i></div>
+		{{--<div class="popups-title"><i class="iconfont icon-guanbi"></i></div>--}}
 		<div class="popups-content">
 			<div class="top">
 				<h2 class="title">开通免密支付协议</h2>
