@@ -30,21 +30,21 @@
 		</style>
 	</head>
 	<body id="process1">
-		{{--<header class="mui-bar mui-bar-nav">--}}
-			{{--<div class="head-left">--}}
-				{{--<div class="head-img">--}}
-					{{--<img src="{{config('view_url.channel_views')}}imges/back.png">--}}
-				{{--</div>--}}
-			{{--</div>--}}
-			{{--<div class="head-right">--}}
+		<header class="mui-bar mui-bar-nav" style="background: white;">
+			<div class="head-left">
+				<div class="head-img">
+					<img src="{{config('view_url.channel_views')}}imges/back.png">
+				</div>
+			</div>
+			<div class="head-right">
 				{{--<i class="iconfont icon-close"></i>--}}
-			{{--</div>--}}
-			{{--<div class="head-title">--}}
-				{{--<span>协议扣款授权书</span>--}}
-			{{--</div>--}}
-		{{--</header>--}}
+			</div>
+			<div class="head-title">
+					<span>协议扣款授权书</span>
+			</div>
+		</header>
 		<div class="process1">
-			<div class="mui-scroll-wrapper" style="top:0;">
+			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<div class="info">
 						<ul class="list">
