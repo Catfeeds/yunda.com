@@ -95,8 +95,8 @@ class SetingController
         $user_res = Person::where('papers_code',$input['person_code'])->select('id')->first();
         if(empty($repeat_res)){
             ChannelInsureSeting::insert([
-                'cust_id'=>$user_res['id'],
-                'cust_cod'=>$cust_res['papers_code'],
+                'cust_id'=>$user_res['id']??"0",
+                'cust_cod'=>$cust_res['papers_code']??"0",
                 'cust_type'=>'user',
                 'authorize_status'=>'',
                 'authorize_start'=>'',
