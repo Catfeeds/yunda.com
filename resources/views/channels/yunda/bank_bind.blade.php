@@ -55,7 +55,7 @@
 						</div>
 							<input hidden type="text" name="person_code" value="{{$person_code}}"/>
 						<div class="agree-wrapper">
-							<label>我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}insure_authorize_info" id="insure_authorize_info?token={{$_GET['token']}}"> 《转账授权书》 </a><i class="icon-check"></i><input hidden type="checkbox" value=""/></label>
+							<label>我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}bank_authorize_info?token={{$_GET['token']}}" id="insure_authorize_info"> 《转账授权书》 </a><i class="icon-check"></i><input hidden type="checkbox" value=""/></label>
 						</div>
 						<button disabled id="save" class="btn">保存</button>
 				</div>
