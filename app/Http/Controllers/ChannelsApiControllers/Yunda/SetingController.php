@@ -96,7 +96,7 @@ class SetingController
         if(empty($repeat_res)){
             ChannelInsureSeting::insert([
                 'cust_id'=>$user_res['id'],
-                'cust_code'=>$cust_res['papers_code'],
+                'cust_cod'=>$cust_res['papers_code'],
                 'cust_type'=>'user',
                 'authorize_status'=>'',
                 'authorize_start'=>'',

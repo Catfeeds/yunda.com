@@ -12,10 +12,7 @@
 	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
 </head>
 <body id="process2">
-<div class="popups-wrapper popups-agree" style="display: block;">
-	<div class="popups-bg"></div>
 	<div class="popups">
-		{{--<div class="popups-title"><i class="iconfont icon-guanbi"></i></div>--}}
 		<div class="popups-content">
 			<div class="top">
 				<h2 class="title">开通免密支付协议</h2>
@@ -58,8 +55,6 @@
 			</div>
 			<button type="button" id="wechat_pay" class="btn btn-default" style="background: #1aad19;">开通微信免密支付</button>
 			@endif
-		</div>
-	</div>
 </div>
 <script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
 <script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
