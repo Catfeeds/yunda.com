@@ -19,7 +19,7 @@
 		<div class="popups-content">
 			<div class="top">
 				<h2 class="title">开通免密支付协议</h2>
-				<p style="margin-bottom: .16rem;">为了保障您上工的安全，需要您开通免密支付协议。开通后，可以实现每日自动投保。</p>
+				<p style="margin-bottom: .16rem;">为了保障您上工的安全，需要您开通免密支付协议。</p>
 			</div>
 			<div class="policy_list_wrapper">
 				<div class="tab" style="color: #adadad">
