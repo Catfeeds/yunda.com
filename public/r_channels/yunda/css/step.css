@@ -38,6 +38,7 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 .btn-check.active{
 	background-image: url(../imges/checked_on.png);
 }
+
 /*开关*/
 .switch{
 	position: absolute;
@@ -534,17 +535,17 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			#process1 .list li.cause a{
 				text-decoration: underline;
 			}
-#process2 .popups-agree{
-			}
 			#process2 .popups-agree .popups{
 				height: auto;
 				overflow: hidden;
 				padding-bottom: .3rem;
 			}
+			#process2 .popups{
+				background: #fff;
+			}
 			#process2 .popups-content{
 				margin: 0;
-				padding: 1.2rem 0 0;
-				/*background: #f6d85f;*/
+				padding: 0;
 			}
 			#process2 .top {
 				padding: 0 .4rem;
