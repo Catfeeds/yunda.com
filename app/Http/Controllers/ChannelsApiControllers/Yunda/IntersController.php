@@ -80,12 +80,12 @@ class IntersController
         $insured_code = $input['insured_code'];
         $bank_code = $input['bank_code']??"";
         //姓名，身份证信息，手机号判空
-        if(!$input['insured_name']||!$input['insured_code']||!$input['insured_phone']){
+        if(!$input['insured_name']||!$input['insured_code']||!$input['insured_phone']||!$input['channel_order_code']){
 			$return_data['code'] = '500';
 			$return_data['message']['digest'] = 'default';
 			$return_data['message']['details'] = 'empty';
 			$return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
-			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone is empty';
+			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone or channel_order_code is empty';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         $token = TokenHelper::getToken($input)['token'];
