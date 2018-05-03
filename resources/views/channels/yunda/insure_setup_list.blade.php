@@ -30,15 +30,15 @@
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<ul class="list-wrapper">
-						<li class="list-item">
-							<a  href="{{config('view_url.channel_yunda_target_url')}}user_info?token={{$_GET['token']}}" id="user_setup_target">
-								<div class="item-img"><i class="iconfont icon-geren"></i></div>
-								<div class="item-content">
-									<p class="title">个人信息</p>
-								</div>
-								<i class="iconfont icon-jiantou"></i>
-							</a>
-						</li>
+						{{--<li class="list-item">--}}
+							{{--<a  href="{{config('view_url.channel_yunda_target_url')}}user_info?token={{$_GET['token']}}" id="user_setup_target">--}}
+								{{--<div class="item-img"><i class="iconfont icon-geren"></i></div>--}}
+								{{--<div class="item-content">--}}
+									{{--<p class="title">个人信息</p>--}}
+								{{--</div>--}}
+								{{--<i class="iconfont icon-jiantou"></i>--}}
+							{{--</a>--}}
+						{{--</li>--}}
 						<li class="list-item">
 							<a  href="{{config('view_url.channel_yunda_target_url')}}insure_seting?token={{$_GET['token']}}" id="insure_setup_target">
 								<div class="item-img"><i class="iconfont icon-baodanyangben"></i></div>
