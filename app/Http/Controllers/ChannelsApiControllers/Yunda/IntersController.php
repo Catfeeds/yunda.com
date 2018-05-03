@@ -77,11 +77,11 @@ class IntersController
         if(!is_array($input)){
             $input = json_decode($input,true);
         }
-		$bank_code = $input['bank_code']??"";
-        $insured_name = $input['insured_name']??"";
-        $insured_code = $input['insured_code']??"";
-        $insured_phone = $input['insured_phone']??"";
-        $channel_order_code = $input['channel_order_code']??"";
+		$bank_code = isset($input['bank_code'])?empty($input['bank_code'])?"":$input['bank_code']:"";
+        $insured_name = isset($input['insured_name'])?empty($input['insured_name'])?"":$input['insured_name']:"";
+        $insured_code =isset($input['insured_code'])?empty($input['insured_code'])?"":$input['insured_code']:"";
+        $insured_phone = isset($input['insured_phone'])?empty($input['insured_phone'])?"":$input['insured_phone']:"";
+        $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
         //姓名，身份证信息，手机号判空
         if(!$insured_name||!$insured_code||!$insured_phone||!$channel_order_code){
 			$return_data['code'] = '500';
@@ -234,8 +234,6 @@ class IntersController
         $input = $this->request->all();
 //        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527"}';
         $return_data =[];
-		$token = TokenHelper::getToken($input)['token'];
-		$webapi_route = config('yunda.server_host').config('yunda.webapi_route').'insure_authorize?token='.$token;
         if(empty($input)){
             $return_data['code'] = '500';
             $return_data['message']['digest'] = 'default';
@@ -247,9 +245,18 @@ class IntersController
         if(!is_array($input)){
             $input = json_decode($input,true);
         }
-        $insured_code = $input['insured_code'];
-        $insured_name = $input['insured_name'];
-        $insured_phone = $input['insured_phone'];
+		$insured_name = isset($input['insured_name'])?empty($input['insured_name'])?"":$input['insured_name']:"";
+		$insured_code =isset($input['insured_code'])?empty($input['insured_code'])?"":$input['insured_code']:"";
+		$insured_phone = isset($input['insured_phone'])?empty($input['insured_phone'])?"":$input['insured_phone']:"";
+		//姓名，身份证信息，手机号判空
+		if(!$insured_name||!$insured_code||!$insured_phone){
+			$return_data['code'] = '500';
+			$return_data['message']['digest'] = 'default';
+			$return_data['message']['details'] = 'empty';
+			$return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
+			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone or channel_order_code is empty';
+			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+		}
         $return_data =[];
         $return_data['code'] = '200';
         $return_data['message']['digest'] = 'default';
@@ -258,6 +265,8 @@ class IntersController
             ->where('phone',$insured_phone)
             ->select('id')
             ->first();
+		$token = isset(TokenHelper::getToken($input)['token'])?TokenHelper::getToken($input)['token']:"";
+		$webapi_route = config('yunda.server_host').config('yunda.webapi_route').'insure_authorize?token='.$token;
         if(empty($person_res)){//没有此人信息，先插入信息，然后再授权
             Person::insert([
                 'name'=>$insured_name,
