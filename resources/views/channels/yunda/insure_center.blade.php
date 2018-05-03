@@ -67,7 +67,7 @@
 								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/icon_set.png" alt="" /></div>
 								<div class="item-content">
 									<p class="title">设置</p>
-									<p class="text"><span>个人信息</span><span>投保设置</span><span>银行卡设置</span></p>
+									<p class="text"><span>投保设置</span><span>银行卡设置</span></p>
 								</div>
 								<i class="iconfont icon-jiantou"></i>
 							</a>

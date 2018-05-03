@@ -98,26 +98,26 @@
 										<span>姓名</span>
 										<span>{{$user_res['name']}}</span>
 									</div>
-									<div class="line">
-										<span>证件类型</span>
-										<span>身份证</span>
-									</div>
-									<div class="line">
-										<span>证件号码</span>
-										<span>{{$user_res['papers_code']}}</span>
-									</div>
-									<div class="line">
-										<span>出生日期</span>
-										<span>{{strlen($user_res['papers_code'])==15 ? ('19' . substr($user_res['papers_code'], 6, 6)) : substr($user_res['papers_code'], 6, 8)}}</span>
-									</div>
-									<div class="line">
-										<span>性别</span>
-										<span>{{substr($user_res['papers_code'], (strlen($user_res['papers_code'])==15 ? -2 : -1), 1) % 2 ? '男' : '女'}}</span>
-									</div>
-									<div class="line">
-										<span>手机号码</span>
-										<span>{{$user_res['phone']}}</span>
-									</div>
+									{{--<div class="line">--}}
+										{{--<span>证件类型</span>--}}
+										{{--<span>身份证</span>--}}
+									{{--</div>--}}
+									{{--<div class="line">--}}
+										{{--<span>证件号码</span>--}}
+										{{--<span>{{$user_res['papers_code']}}</span>--}}
+									{{--</div>--}}
+									{{--<div class="line">--}}
+										{{--<span>出生日期</span>--}}
+										{{--<span>{{strlen($user_res['papers_code'])==15 ? ('19' . substr($user_res['papers_code'], 6, 6)) : substr($user_res['papers_code'], 6, 8)}}</span>--}}
+									{{--</div>--}}
+									{{--<div class="line">--}}
+										{{--<span>性别</span>--}}
+										{{--<span>{{substr($user_res['papers_code'], (strlen($user_res['papers_code'])==15 ? -2 : -1), 1) % 2 ? '男' : '女'}}</span>--}}
+									{{--</div>--}}
+									{{--<div class="line">--}}
+										{{--<span>手机号码</span>--}}
+										{{--<span>{{$user_res['phone']}}</span>--}}
+									{{--</div>--}}
 								</div>
 								<div class="item">
 									<div class="title">
@@ -127,22 +127,22 @@
 										<span>姓名</span>
 										<span>{{$user_res['name']}}</span>
 									</div>
-									<div class="line">
-										<span>证件类型</span>
-										<span>身份证</span>
-									</div>
-									<div class="line">
-										<span>证件号码</span>
-										<span>{{$user_res['papers_code']}}</span>
-									</div>
+									{{--<div class="line">--}}
+										{{--<span>证件类型</span>--}}
+										{{--<span>身份证</span>--}}
+									{{--</div>--}}
+									{{--<div class="line">--}}
+										{{--<span>证件号码</span>--}}
+										{{--<span>{{$user_res['papers_code']}}</span>--}}
+									{{--</div>--}}
 									<div class="line">
 										<span>与被保人关系</span>
 										<span>本人</span>
 									</div>
-									<div class="line">
-										<span>手机号码</span>
-										<span>{{$user_res['phone']}}</span>
-									</div>
+									{{--<div class="line">--}}
+										{{--<span>手机号码</span>--}}
+										{{--<span>{{$user_res['phone']}}</span>--}}
+									{{--</div>--}}
 								</div>
 									@if($warranty_res['warranty_status'] == '7')
 									<div class="btn">
