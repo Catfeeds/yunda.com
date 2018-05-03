@@ -77,10 +77,13 @@ class IntersController
         if(!is_array($input)){
             $input = json_decode($input,true);
         }
-        $insured_code = $input['insured_code'];
-        $bank_code = $input['bank_code']??"";
+		$bank_code = $input['bank_code']??"";
+        $insured_name = $input['insured_name']??"";
+        $insured_code = $input['insured_code']??"";
+        $insured_phone = $input['insured_phone']??"";
+        $channel_order_code = $input['channel_order_code']??"";
         //姓名，身份证信息，手机号判空
-        if(!$input['insured_name']||!$input['insured_code']||!$input['insured_phone']||!$input['channel_order_code']){
+        if(!$insured_name||!$insured_code||!$insured_phone||!$channel_order_code){
 			$return_data['code'] = '500';
 			$return_data['message']['digest'] = 'default';
 			$return_data['message']['details'] = 'empty';
