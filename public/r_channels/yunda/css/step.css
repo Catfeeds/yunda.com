@@ -542,6 +542,8 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			}
 			#process2 .popups{
 				background: #fff;
+				padding: 25px;
+    		border: 1px solid #adadad;
 			}
 			#process2 .popups-content{
 				margin: 0;
@@ -553,6 +555,7 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 				font-size: .26rem;
 				border-bottom: 1px solid #ddd;
 			}
+			#process2 .top p{  font-size: 18px;}
 			#process2 .top .title{
 				font-size: .3rem;
 				color: #313131;
