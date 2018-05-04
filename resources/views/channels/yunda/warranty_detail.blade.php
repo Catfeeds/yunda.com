@@ -90,14 +90,14 @@
 									</ul>
 								</div>
 
-								<div class="item">
-									<div class="title">
-										<span class="info">被保人信息</span>
-									</div>
-									<div class="line">
-										<span>姓名</span>
-										<span>{{$user_res['name']}}</span>
-									</div>
+								{{--<div class="item">--}}
+									{{--<div class="title">--}}
+										{{--<span class="info">被保人信息</span>--}}
+									{{--</div>--}}
+									{{--<div class="line">--}}
+										{{--<span>姓名</span>--}}
+										{{--<span>{{$user_res['name']}}</span>--}}
+									{{--</div>--}}
 									{{--<div class="line">--}}
 										{{--<span>证件类型</span>--}}
 										{{--<span>身份证</span>--}}
@@ -118,15 +118,15 @@
 										{{--<span>手机号码</span>--}}
 										{{--<span>{{$user_res['phone']}}</span>--}}
 									{{--</div>--}}
-								</div>
-								<div class="item">
-									<div class="title">
-										<span class="info">投保人信息</span>
-									</div>
-									<div class="line">
-										<span>姓名</span>
-										<span>{{$user_res['name']}}</span>
-									</div>
+								{{--</div>--}}
+								{{--<div class="item">--}}
+									{{--<div class="title">--}}
+										{{--<span class="info">投保人信息</span>--}}
+									{{--</div>--}}
+									{{--<div class="line">--}}
+										{{--<span>姓名</span>--}}
+										{{--<span>{{$user_res['name']}}</span>--}}
+									{{--</div>--}}
 									{{--<div class="line">--}}
 										{{--<span>证件类型</span>--}}
 										{{--<span>身份证</span>--}}
@@ -135,15 +135,15 @@
 										{{--<span>证件号码</span>--}}
 										{{--<span>{{$user_res['papers_code']}}</span>--}}
 									{{--</div>--}}
-									<div class="line">
-										<span>与被保人关系</span>
-										<span>本人</span>
-									</div>
+									{{--<div class="line">--}}
+										{{--<span>与被保人关系</span>--}}
+										{{--<span>本人</span>--}}
+									{{--</div>--}}
 									{{--<div class="line">--}}
 										{{--<span>手机号码</span>--}}
 										{{--<span>{{$user_res['phone']}}</span>--}}
 									{{--</div>--}}
-								</div>
+								{{--</div>--}}
 									@if($warranty_res['warranty_status'] == '7')
 									<div class="btn">
 										<button id="claim_target" value="{{$warranty_res['id']}}">申请理赔</button>

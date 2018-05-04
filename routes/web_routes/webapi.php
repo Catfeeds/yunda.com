@@ -36,6 +36,7 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('insure_auto', 'SetingController@insureAuto');//自动投保页面
 	Route::any('do_insure_auto', 'SetingController@doInsureAuto');//自动投保操作
 	Route::any('user_info', 'SetingController@userInfo');//用户信息
+	Route::any('reset_insure_auto', 'SetingController@resetInsureAuto');//重置自动投保设置
 	//申请理赔
 	Route::any('claim_contact', 'ClaimController@claimContact');//申请理赔
 	Route::any('claim_email', 'ClaimController@claimEmail');

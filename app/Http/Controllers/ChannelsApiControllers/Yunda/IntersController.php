@@ -60,6 +60,10 @@ class IntersController
      * @param bank_address|开户行地址
      * @return json
      * joint_status(自定义banner顶部显示状态)
+	 * 联合登录功能介绍：
+	 * 1.判断当日投保状态，未投保，去投保
+	 * 2.判断当日投保状态，已投保，查询投保状态，显示投保
+	 *
      */
     public function jointLogin(){
         $input = $this->request->all();

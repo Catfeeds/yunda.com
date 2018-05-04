@@ -34,7 +34,7 @@
 							<h1 class="title">快递保·意外险</h1>
 						</div>
 						<ul class="list">
-							<li>被保人姓名<span class="fr">{{$user_res['name']}}</span></li>
+							{{--<li>被保人姓名<span class="fr">{{$user_res['name']}}</span></li>--}}
 							{{--<li>被保人证件号<span class="fr">{{$user_res['papers_code']}}</span></li>--}}
 							<li>保障期限<span class="fr">1天</span></li>
 							<li>保费<span class="fr">2元</span></li>
@@ -94,6 +94,10 @@
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
             var token = localStorage.getItem('token');
+            var get_token = "{{$_GET['token']}}";
+            if(token==null||token==''){
+                token = get_token;
+			}
             var person_code = "{{$person_code}}";
             var warranty_code = "{{$warranty_res['warranty_code']??""}}";
             $('#warranty_info').on('click',function () {

@@ -47,7 +47,8 @@ class SetingController
     public function insureSetupList(){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-        return view('channels.yunda.insure_setup_list',compact('person_code'));
+		$person_phone = $token_data['insured_phone'];
+        return view('channels.yunda.insure_setup_list',compact('person_code','person_phone'));
     }
 
     /**
@@ -59,7 +60,8 @@ class SetingController
     public function insureSeting(){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-        return view('channels.yunda.insure_seting',compact('person_code'));
+		$person_phone = $token_data['insured_phone'];
+        return view('channels.yunda.insure_seting',compact('person_code','person_phone'));
     }
 
     /**
@@ -71,10 +73,11 @@ class SetingController
     public function insureAuto(){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
+		$person_phone = $token_data['insured_phone'];
         $auto_res = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('auto_insure_status','auto_insure_type','auto_insure_time')
             ->first();
-        return view('channels.yunda.insure_auto',compact('auto_res','person_code'));
+        return view('channels.yunda.insure_auto',compact('auto_res','person_code','person_phone'));
     }
 
     /**
@@ -126,8 +129,21 @@ class SetingController
     public function userInfo(){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-        $user_res = Person::where('papers_code',$person_code)->select('name','phone','papers_code')->first();
-        return view('channels.yunda.user_info',compact('user_res'));
+		$person_phone = $token_data['insured_phone'];
+        $user_res = Person::where('phone',$person_phone)->select('name','phone','papers_code')->first();
+        return view('channels.yunda.user_info',compact('user_res','person_phone'));
     }
+
+	/**
+	 * 还原自动投保设置-24小时
+	 */
+    public function resetInsureAuto(){
+    	//获取关闭自动投保的，auto_insure_status 默认为1开启，0关闭
+		//自动投保开通/关闭时间，自动投保只能关闭24小时,算自然天，第二天凌晨零点开启关闭的
+		$reset_res = ChannelInsureSeting::where('auto_insure_status','1')
+			->update([
+				'auto_insure_status'=>'4',
+			]);
+	}
 
 }
