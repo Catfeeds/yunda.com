@@ -83,7 +83,6 @@ class IntersController
         $insured_phone = isset($input['insured_phone'])?empty($input['insured_phone'])?"":$input['insured_phone']:"";
         $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
         //姓名，身份证信息，手机号判空
-
         if(!$insured_name||!$insured_code||!$insured_phone||!$channel_order_code){
 			$return_data['code'] = '500';
 			$return_data['message']['digest'] = 'default';
@@ -92,6 +91,32 @@ class IntersController
 			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone or channel_order_code is empty';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
+        //TODO  联合登录记录信息值
+		//先判断person表里有没有值-插入
+		$person_result = Person::where('phone',$insured_phone)->select('phone')->first();
+        if(empty($person_result)){
+			Person::insert([
+				'name'=>$insured_name,
+				'papers_type'=>'1',
+				'papers_code'=>$insured_code,
+				'phone'=>$insured_phone,
+				'cust_type'=>'1',
+				'authentication'=>'1',
+				'del'=>'0',
+				'status'=>'1',
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
+		}
+		//再判断channel_joint_login表里有没有值-插入
+		$channel_login_result = ChannelJointLogin::where('phone',$insured_phone)->select('phone')->first();
+		if(empty($channel_login_result)){
+			ChannelJointLogin::insert([
+				'phone'=>$insured_phone,
+				'login_start'=>date('H:i:s',time()),
+				'operate_time'=>date('Y-m-d',time()),
+			]);
+		}
         $token = TokenHelper::getToken($input)['token'];
         //银行卡信息判空
         if(!$bank_code){
