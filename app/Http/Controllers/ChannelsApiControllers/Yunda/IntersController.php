@@ -19,6 +19,7 @@ use App\Models\CustWarranty;
 use App\Models\CustWarrantyPerson;
 use App\Models\ChannelContract;
 use App\Models\ChannelOperate;
+use App\Models\ChannelJointLogin;
 use App\Jobs\YdWechatPay;
 use App\Helper\TokenHelper;
 
@@ -63,7 +64,6 @@ class IntersController
      */
     public function jointLogin(){
         $input = $this->request->all();
-//        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
         $return_data =[];
         $webapi_route = config('yunda.server_host').config('yunda.webapi_route');
         if(empty($input)){
@@ -83,6 +83,7 @@ class IntersController
         $insured_phone = isset($input['insured_phone'])?empty($input['insured_phone'])?"":$input['insured_phone']:"";
         $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
         //姓名，身份证信息，手机号判空
+
         if(!$insured_name||!$insured_code||!$insured_phone||!$channel_order_code){
 			$return_data['code'] = '500';
 			$return_data['message']['digest'] = 'default';
