@@ -94,6 +94,7 @@ class IntersController
         //TODO  联合登录记录信息值
 		//先判断person表里有没有值-插入
 		$person_result = Person::where('phone',$insured_phone)->select('phone')->first();
+
         if(empty($person_result)){
 			Person::insert([
 				'name'=>$insured_name,

@@ -8,8 +8,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 
-class ChannelJointLogin
+class ChannelJointLogin extends Model
 {
 	protected $table = "channel_joint_login";
 }
