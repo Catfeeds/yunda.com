@@ -30,6 +30,11 @@ class AddOrderHelper
 	 */
 	public function doAddOrder($return_data, $prepare, $policy_res,$holder_res)
 	{
+//		dump($return_data);
+//		dump($prepare);
+//		dump($policy_res);
+//		dump($holder_res);
+//		die;
 		DB::beginTransaction();//开启事务
 		try{
 			$policy_check_res  = Person::where('papers_code',$policy_res['ty_toubaoren_id_number'])
@@ -97,7 +102,7 @@ class AddOrderHelper
 				->select('id','cust_type')
 				->first();
 			$cust_warranty = new CustWarranty();
-			$cust_warranty->warranty_uuid = '';//内部保单唯一标识
+			$cust_warranty->warranty_uuid = $return_data['union_order_code'];//内部保单唯一标识  TODO  暂时先用union_order_code代替
 			$cust_warranty->pro_policy_no = $return_data['union_order_code'];//投保单号
 			$cust_warranty->warranty_code = '';//保单号
 			$cust_warranty->company_id = '';//公司id,固定值
