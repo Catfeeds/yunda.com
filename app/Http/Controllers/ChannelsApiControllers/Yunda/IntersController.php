@@ -93,7 +93,7 @@ class IntersController
         }
         //TODO  联合登录记录信息值
 		//先判断person表里有没有值-插入
-		$person_result = Person::where('phone',$insured_phone)->select('phone')->first();
+		$person_result = Person::where('phone',$insured_phone)->select('id','phone')->first();
         if(empty($person_result)){
 			Person::insert([
 				'name'=>$insured_name,
@@ -132,6 +132,18 @@ class IntersController
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
+        //银行卡入库
+		$bank_res = Bank::where('bank_code',$bank_code)->select('id')->first();
+        if(empty($bank_res)){
+			Bank::insert([
+				'cust_id'=>$person_result['id'],
+				'cust_type'=>'1',
+				'bank'=>$input['bank_name']??"",
+				'bank_code'=>$bank_code,
+				'bank_city'=>$input['bank_address']??"",
+				'phone'=>$input['bank_phone']??"",
+			]);
+		}
         //用用户身份证信息查询授权状态
 		//todo  联合登录有两种情况；未开免密；保险生效中
 		//走到这一步，基本都已经授权
