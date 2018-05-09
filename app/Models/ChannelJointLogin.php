@@ -13,4 +13,10 @@ use Illuminate\Database\Eloquent\Model;
 class ChannelJointLogin extends Model
 {
 	protected $table = "channel_joint_login";
+
+	//人员基础信息
+	public function person()
+	{
+		return $this->hasOne('App\Models\Person','phone', 'phone');
+	}
 }

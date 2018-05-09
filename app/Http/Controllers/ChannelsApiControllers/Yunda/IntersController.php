@@ -22,6 +22,7 @@ use App\Models\ChannelOperate;
 use App\Models\ChannelJointLogin;
 use App\Jobs\YdWechatPay;
 use App\Helper\TokenHelper;
+use App\Helper\IdentityCardHelp;
 
 
 class IntersController
@@ -30,7 +31,6 @@ class IntersController
     protected $request;
 
     protected $person_code;
-
 
     /**
      * 初始化
@@ -94,7 +94,6 @@ class IntersController
         //TODO  联合登录记录信息值
 		//先判断person表里有没有值-插入
 		$person_result = Person::where('phone',$insured_phone)->select('phone')->first();
-
         if(empty($person_result)){
 			Person::insert([
 				'name'=>$insured_name,
@@ -109,13 +108,16 @@ class IntersController
 				'updated_at'=>time(),
 			]);
 		}
-		//再判断channel_joint_login表里有没有值-插入
-		$channel_login_result = ChannelJointLogin::where('phone',$insured_phone)->select('phone')->first();
+		//再判断channel_joint_login表里有没有值-插入(今天的值)
+		$channel_login_result = ChannelJointLogin::where('phone',$insured_phone)
+			->where('login_start','>=',strtotime(date('Y-m-d')))
+			->where('login_start','<',strtotime(date('Y-m-d',strtotime('+1 day'))))
+			->select('phone')
+			->first();
 		if(empty($channel_login_result)){
 			ChannelJointLogin::insert([
 				'phone'=>$insured_phone,
-				'login_start'=>date('H:i:s',time()),
-				'operate_time'=>date('Y-m-d',time()),
+				'login_start'=>time(),
 			]);
 		}
         $token = TokenHelper::getToken($input)['token'];
@@ -130,7 +132,9 @@ class IntersController
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
-        //用用户身份证信息查询授权状态//todo  联合登录有两种情况；未开免密；保险生效中
+        //用用户身份证信息查询授权状态
+		//todo  联合登录有两种情况；未开免密；保险生效中
+		//走到这一步，基本都已经授权
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
             ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time','warranty_id','insure_days','insure_start')
             ->first();

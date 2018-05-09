@@ -17,8 +17,7 @@ class CreateChannelJointLoginTable extends Migration
 		Schema::create('channel_joint_login', function (Blueprint $table) {
 			$table->increments('id')->comment('主键id');
 			$table->string('phone',11)->comment('手机号');
-			$table->string('login_start',20)->comment('联合登录时间(第一次)');
-			$table->string('operate_time',20)->comment('当日时间，方便查询某一天的联合登录人数');
+			$table->bigInteger('login_start',20)->comment('联合登录时间(第一次)');
 			$table->engine = 'InnoDB';
 		});
     }
