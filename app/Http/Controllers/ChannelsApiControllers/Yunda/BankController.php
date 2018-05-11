@@ -79,17 +79,17 @@ class BankController
      */
     public function doBankBind(){
         $input = $this->request->all();
-        $person_data = $input['person_data'];
+        $person_data = json_decode($input['person_data'],true);
         $bank = $input['bank_name'];
         $bank_cod = $input['bank_code'];
         $bank_city = $input['bank_city'];
-        $cust_res = Person::where('papers_code',$person_data['person_code'])->select()->first();
+        $cust_res = Person::where('papers_code',$person_data['insured_code'])->select()->first();
         if(empty($cust_res)){
 			Person::insert([
-				'name'=>$person_data['person_name'],
+				'name'=>$person_data['insured_name'],
 				'papers_type'=>'1',
-				'papers_code'=>$person_data['person_code'],
-				'phone'=>$person_data['person_phone'],
+				'papers_code'=>$person_data['insured_code'],
+				'phone'=>$person_data['insured_phone'],
 				'cust_type'=>'1',
 				'authentication'=>'1',
 				'del'=>'0',
