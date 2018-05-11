@@ -81,14 +81,14 @@ class IntersController
         $insured_name = isset($input['insured_name'])?empty($input['insured_name'])?"":$input['insured_name']:"";
         $insured_code =isset($input['insured_code'])?empty($input['insured_code'])?"":$input['insured_code']:"";
         $insured_phone = isset($input['insured_phone'])?empty($input['insured_phone'])?"":$input['insured_phone']:"";
-        $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
+//        $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
         //姓名，身份证信息，手机号判空
-        if(!$insured_name||!$insured_code||!$insured_phone||!$channel_order_code){
+        if(!$insured_name||!$insured_code||!$insured_phone){
 			$return_data['code'] = '500';
 			$return_data['message']['digest'] = 'default';
 			$return_data['message']['details'] = 'empty';
 			$return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
-			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone or channel_order_code is empty';
+			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone  is empty';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         //TODO  联合登录记录信息值
