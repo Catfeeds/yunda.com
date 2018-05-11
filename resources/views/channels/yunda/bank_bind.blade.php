@@ -53,7 +53,7 @@
 							<span class="item">银行卡号</span>
 							<input type="text" name="bank_code"/>
 						</div>
-							<input hidden type="text" name="person_data" value="{{$token_data}}"/>
+							<input hidden type="text" name="person_data" value="{{json_encode($token_data)}}"/>
 						<div class="agree-wrapper">
 							<label>我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}bank_authorize_info?token={{$_GET['token']}}" id="insure_authorize_info"> 《转账授权书》 </a><i class="icon-check"></i><input hidden type="checkbox" value=""/></label>
 						</div>
