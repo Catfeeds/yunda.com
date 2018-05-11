@@ -108,6 +108,7 @@ class IntersController
 				'updated_at'=>time(),
 			]);
 		}
+		$person_result = Person::where('phone',$insured_phone)->select('id','phone')->first();
 		//再判断channel_joint_login表里有没有值-插入(今天的值)
 		$channel_login_result = ChannelJointLogin::where('phone',$insured_phone)
 			->where('login_start','>=',strtotime(date('Y-m-d')))
