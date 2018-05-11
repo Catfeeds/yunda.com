@@ -98,6 +98,7 @@ class BankController
 				'updated_at'=>time(),
 			]);
 		}
+		$cust_res = Person::where('papers_code',$person_data['insured_code'])->select()->first();
         $bank_repeat = Bank::where('cust_id',$cust_res['id'])
             ->where('bank',$bank)
             ->where('bank_code',$bank_cod)
