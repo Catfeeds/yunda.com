@@ -19,8 +19,10 @@ use App\Models\CustWarranty;
 use App\Models\CustWarrantyPerson;
 use App\Models\ChannelContract;
 use App\Models\ChannelOperate;
+use App\Models\ChannelJointLogin;
 use App\Jobs\YdWechatPay;
 use App\Helper\TokenHelper;
+use App\Helper\IdentityCardHelp;
 
 
 class IntersController
@@ -29,7 +31,6 @@ class IntersController
     protected $request;
 
     protected $person_code;
-
 
     /**
      * 初始化
@@ -67,7 +68,6 @@ class IntersController
      */
     public function jointLogin(){
         $input = $this->request->all();
-//        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527","insured_email":"wangs@inschos.com","insured_province":"北京市","insured_city":"北京市","insured_county":"东城区","insured_address":"夕照寺中街19号","bank_name":"工商银行","bank_code":"6222022002006651860 ","bank_phone":"15701681527","bank_address":"北京市东城区广渠门内广渠路支行"}';
         $return_data =[];
         $webapi_route = config('yunda.server_host').config('yunda.webapi_route');
         if(empty($input)){
@@ -85,16 +85,45 @@ class IntersController
         $insured_name = isset($input['insured_name'])?empty($input['insured_name'])?"":$input['insured_name']:"";
         $insured_code =isset($input['insured_code'])?empty($input['insured_code'])?"":$input['insured_code']:"";
         $insured_phone = isset($input['insured_phone'])?empty($input['insured_phone'])?"":$input['insured_phone']:"";
-        $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
+//        $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
         //姓名，身份证信息，手机号判空
-        if(!$insured_name||!$insured_code||!$insured_phone||!$channel_order_code){
+        if(!$insured_name||!$insured_code||!$insured_phone){
 			$return_data['code'] = '500';
 			$return_data['message']['digest'] = 'default';
 			$return_data['message']['details'] = 'empty';
 			$return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
-			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone or channel_order_code is empty';
+			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone  is empty';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
+        //TODO  联合登录记录信息值
+		//先判断person表里有没有值-插入
+		$person_result = Person::where('phone',$insured_phone)->select('id','phone')->first();
+        if(empty($person_result)){
+			Person::insert([
+				'name'=>$insured_name,
+				'papers_type'=>'1',
+				'papers_code'=>$insured_code,
+				'phone'=>$insured_phone,
+				'cust_type'=>'1',
+				'authentication'=>'1',
+				'del'=>'0',
+				'status'=>'1',
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
+		}
+		//再判断channel_joint_login表里有没有值-插入(今天的值)
+		$channel_login_result = ChannelJointLogin::where('phone',$insured_phone)
+			->where('login_start','>=',strtotime(date('Y-m-d')))
+			->where('login_start','<',strtotime(date('Y-m-d',strtotime('+1 day'))))
+			->select('phone')
+			->first();
+		if(empty($channel_login_result)){
+			ChannelJointLogin::insert([
+				'phone'=>$insured_phone,
+				'login_start'=>time(),
+			]);
+		}
         $token = TokenHelper::getToken($input)['token'];
         //银行卡信息判空
         if(!$bank_code){
@@ -107,7 +136,21 @@ class IntersController
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
-        //用用户身份证信息查询授权状态//todo  联合登录有两种情况；未开免密；保险生效中
+        //银行卡入库
+		$bank_res = Bank::where('bank_code',$bank_code)->select('id')->first();
+        if(empty($bank_res)){
+			Bank::insert([
+				'cust_id'=>$person_result['id'],
+				'cust_type'=>'1',
+				'bank'=>$input['bank_name']??"",
+				'bank_code'=>$bank_code,
+				'bank_city'=>$input['bank_address']??"",
+				'phone'=>$input['bank_phone']??"",
+			]);
+		}
+        //用用户身份证信息查询授权状态
+		//todo  联合登录有两种情况；未开免密；保险生效中
+		//走到这一步，基本都已经授权
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
             ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time','warranty_id','insure_days','insure_start')
             ->first();

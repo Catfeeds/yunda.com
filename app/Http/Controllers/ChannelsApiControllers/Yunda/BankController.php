@@ -69,9 +69,7 @@ class BankController
      */
     public function bankBind(){
 		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
-		$person_phone = $token_data['insured_phone'];
-        return view('channels.yunda.bank_bind',compact('person_code','person_phone'));
+        return view('channels.yunda.bank_bind',compact('token_data'));
     }
 
     /**
@@ -82,11 +80,25 @@ class BankController
      */
     public function doBankBind(){
         $input = $this->request->all();
-        $person_code = $input['person_code'];
+        $person_data = $input['person_data'];
         $bank = $input['bank_name'];
         $bank_cod = $input['bank_code'];
         $bank_city = $input['bank_city'];
-        $cust_res = Person::where('papers_code',$person_code)->select()->first();
+        $cust_res = Person::where('papers_code',$person_data['person_code'])->select()->first();
+        if(empty($cust_res)){
+			Person::insert([
+				'name'=>$person_data['person_name'],
+				'papers_type'=>'1',
+				'papers_code'=>$person_data['person_code'],
+				'phone'=>$person_data['person_phone'],
+				'cust_type'=>'1',
+				'authentication'=>'1',
+				'del'=>'0',
+				'status'=>'1',
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
+		}
         $bank_repeat = Bank::where('cust_id',$cust_res['id'])
             ->where('bank',$bank)
             ->where('bank_code',$bank_cod)

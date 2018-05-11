@@ -6,6 +6,7 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('joint_login', 'IntersController@jointLogin');//联合登录
 	Route::any('authorization_query', 'IntersController@authorizationQuery');//授权查询
 	Route::any('do_wechat_pay', 'IntersController@doWechatpay');//微信支付接口
+	Route::any('do_wechat_pre', 'PrepareController@doWechatPrepare');//测试预投保接口
 	//投保流程
 	Route::any('ins_info', 'IndexController@insInfo');//投保详情页面
 	Route::any('ins_center', 'IndexController@insureCenter');//我的保险页面

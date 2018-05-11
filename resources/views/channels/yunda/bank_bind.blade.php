@@ -53,7 +53,7 @@
 							<span class="item">银行卡号</span>
 							<input type="text" name="bank_code"/>
 						</div>
-							<input hidden type="text" name="person_code" value="{{$person_code}}"/>
+							<input hidden type="text" name="person_data" value="{{$token_data}}"/>
 						<div class="agree-wrapper">
 							<label>我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}bank_authorize_info?token={{$_GET['token']}}" id="insure_authorize_info"> 《转账授权书》 </a><i class="icon-check"></i><input hidden type="checkbox" value=""/></label>
 						</div>
@@ -175,14 +175,14 @@
                 var bank_name = $("input[name='bank_name']").val();
                 var bank_city = $("input[name='bank_city']").val();
                 var bank_code = $("input[name='bank_code']").val();
-                var person_code = $("input[name='person_code']").val();
+                var person_data = $("input[name='person_data']").val();
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     url: "{{config('view_url.channel_yunda_target_url')}}do_bank_bind",
                     type: "post",
-                    data: {'bank_name':bank_name,'bank_city':bank_city,'bank_code':bank_code,'person_code':person_code},
+                    data: {'bank_name':bank_name,'bank_city':bank_city,'bank_code':bank_code,'person_data':person_data},
                     dataType: "json",
                     success: function (data) {
                         Mask.alert(data.msg,3);
