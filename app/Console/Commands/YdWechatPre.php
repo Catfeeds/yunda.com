@@ -98,13 +98,13 @@ class YdWechatPre extends Command
 			if($card_info['status']!=2){
 				return false;
 			}
-//			//查询签约状态
-//			$contract_res = ChannelContract::where('channel_user_code',$value['person']['papers_code'])
-//				->select('is_auto_pay','openid','contract_id','contract_expired_time')
-//				->first();
-//			if(empty($contract_res)){
-//				return 'end';
-//			}
+			//查询签约状态
+			$contract_res = ChannelContract::where('channel_user_code',$value['person']['papers_code'])
+				->select('is_auto_pay','openid','contract_id','contract_expired_time')
+				->first();
+			if(empty($contract_res)){
+				return 'end';
+			}
 			$value['person']['operate_time'] = date('Y-m-d',time());
 			$value['person']['sex'] = $card_info['sex'];
 			$value['person']['birthday'] = $card_info['birthday'];

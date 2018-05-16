@@ -640,23 +640,6 @@ class ChannelInfosController extends BaseController
         dump($res);
     }
 
-    /**
-     *
-     * 定时出单
-     *
-     */
-    public function issueAuto(){
-        //        保单入库
-        $data = Order::join('warranty_rule', 'order.id', 'warranty_rule.order_id')
-            ->where('order.status', 1)
-            ->where('warranty_rule.warranty_id', null)
-            ->select('warranty_rule.*')
-            ->get();
-        foreach ($data as $v) {
-            $insure = new Issue();
-            $res = $insure->issue($v);
-        }
-    }
 
     /**
      *
@@ -999,6 +982,116 @@ class ChannelInfosController extends BaseController
 			LogHelper::logChannelError([$return_data, $prepare], $e->getMessage(), 'addOrder');
 			return false;
 		}
+	}
+
+
+	/**
+	 *
+	 * 定时出单
+	 *
+	 */
+	public function issueAuto(){
+		set_time_limit(0);
+		//        保单入库
+		$data = Order::join('warranty_rule', 'order.id', 'warranty_rule.order_id')
+			->where('order.status', 1)
+			->where('warranty_rule.warranty_id', null)
+			->select('warranty_rule.*')
+			->limit(10)
+			->get();
+		foreach ($data as $v) {
+			$insure = new Issue();
+			$res = $insure->issue($v);
+			dump($res);
+		}
+	}
+
+
+
+	/**
+	 * 微信代扣支付
+	 * 定时任务，跑支付
+	 */
+	public function wechatPayAuto()
+	{
+		set_time_limit(0);//永不超时
+		LogHelper::logPay(date('Y-m-d H:i:s',time()), 'YD_pay_start');
+		$channel_operate_info = ChannelOperate::where('prepare_status','200')//预投保成功
+		->where('pay_status','<>','200')//预投保成功
+		->where('operate_time',date('Y-m-d',time()-24*3600))//前一天的订单
+		->where('is_work','1')//已上工
+		->select('proposal_num','channel_user_code')
+			->get();
+		if(count($channel_operate_info)=='0'){
+			LogHelper::logPay(date('Y-m-d H:i:s',time()), 'YD_pay_die');
+			die;
+		}
+		//循环请求，免密支付
+		foreach ($channel_operate_info as $value){
+			$person_code  = $value['channel_user_code'];
+			$union_order_code = $value['proposal_num'];
+			$channel_contract_info = ChannelContract::where('channel_user_code',$person_code)
+				->select('openid','contract_id','contract_expired_time','channel_user_code')
+				->first();
+			if(empty($channel_contract_info)){
+				die;
+			}
+			$data = [];
+			$data['price'] = '2';
+			$data['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
+			$data['quote_selected'] = '';
+			$data['insurance_attributes'] = '';
+			$data['union_order_code'] = $union_order_code;
+			$data['pay_account'] = $channel_contract_info['openid'];
+			$data['contract_id'] = $channel_contract_info['contract_id'];
+			$data = $this->signhelp->tySign($data);
+			//发送请求
+			$response = Curl::to(env('TY_API_SERVICE_URL') . '/ins_curl/wechat_pay_ins')
+				->returnResponseObject()
+				->withData($data)
+				->withTimeout(60)
+				->post();
+			// print_r($response);die;
+			LogHelper::logPay($response->content, 'YD_pay_return_data_'.$union_order_code);
+			if($response->status != 200){
+				LogHelper::logPay($person_code,$response->content??"",'YD_pay_fail');
+				ChannelOperate::where('channel_user_code',$person_code)
+					->where('proposal_num',$union_order_code)
+					->update(['pay_status'=>'500','pay_content'=>$response->content]);
+			}
+			LogHelper::logPay($person_code, 'YD_pay_ok_'.$union_order_code);
+			DB::beginTransaction();
+			try{
+				$return_data =  json_decode($response->content,true);//返回数据
+				//TODO  可以改变订单表的状态
+				ChannelOperate::where('channel_user_code',$person_code)
+					->where('proposal_num',$union_order_code)
+					->update(['pay_status'=>'200']);
+				WarrantyRule::where('union_order_code',$union_order_code)
+					->update(['status'=>'1']);
+				Order::where('order_code',$union_order_code)
+					->update(['status'=>'1']);
+				DB::commit();
+				LogHelper::logPay(date('Y-m-d H:i:s',time()), 'YD_pay_end_'.$person_code);
+			}catch (\Exception $e){
+				DB::rollBack();
+				LogHelper::logPay(date('Y-m-d H:i:s',time()), 'YD_pay_error_'.$person_code);
+				return false;
+			}
+		}
+	}
+
+
+	/**
+	 * 测试已经签约的预投保
+	 */
+	public function wechatPrepare(){
+		//查询所有的已签约用户
+		$channel_contract_info = ChannelContract::where('is_valid','0')//有效签约
+		->where('is_auto_pay','0')
+			->select('openid','contract_id','contract_expired_time','channel_user_code')
+			//openid,签约协议号,签约过期时间,签约人身份证号
+			->get();
 	}
 }
 
