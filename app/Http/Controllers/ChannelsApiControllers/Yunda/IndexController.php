@@ -315,7 +315,7 @@ class IndexController
         }
         $ins_status = '500';
         $warranty_res = [];
-        $user_res = Person::where('papers_phone',$person_phone)->select('name','papers_type','papers_code','phone','address')->first();
+        $user_res = Person::where('phone',$person_phone)->select('name','papers_type','papers_code','phone','address')->first();
         return view('channels.yunda.insure_result',compact('person_code','ins_status','ins_msg','target_url','warranty_res','user_res'));
     }
 

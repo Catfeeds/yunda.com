@@ -81,7 +81,6 @@ class IntersController
         if(!is_array($input)){
             $input = json_decode($input,true);
         }
-		$bank_code = isset($input['bank_code'])?empty($input['bank_code'])?"":$input['bank_code']:"";
         $insured_name = isset($input['insured_name'])?empty($input['insured_name'])?"":$input['insured_name']:"";
         $insured_code =isset($input['insured_code'])?empty($input['insured_code'])?"":$input['insured_code']:"";
         $insured_phone = isset($input['insured_phone'])?empty($input['insured_phone'])?"":$input['insured_phone']:"";
@@ -125,6 +124,12 @@ class IntersController
 				'login_start'=>time(),
 			]);
 		}
+		 //LogHelper::logSuccess($input,'YD_joint_login_params');
+        $bank_local = Bank::where('cust_id',$person_result['id'])->select('bank_code')->first();
+        if(empty($bank_local)){
+        	$bank_code = '';
+        }
+		$bank_code = isset($input['bank_code'])?empty($input['bank_code'])?$bank_local['bank_code']:$input['bank_code']:$bank_local['bank_code'];
         $token = TokenHelper::getToken($input)['token'];
         //银行卡信息判空
         if(!$bank_code){
