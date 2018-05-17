@@ -233,7 +233,7 @@ class IntersController
                 $return_data['message']['details'] = 'insuring';
                 $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
                 $return_data['data']['content'] = '投保中';
-                $return_data['data']['target_url'] = $webapi_route.'ins_info?token='.$token;
+                $return_data['data']['target_url'] = $webapi_route.'do_insured?token='.$token;
 				$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                 return json_encode($return_data,JSON_UNESCAPED_UNICODE);
             }else{
