@@ -21,8 +21,8 @@ class VerifyCsrfToken extends BaseVerifier
         '/backend/set_brokerage/set_brokerage_post',
         '/backend/setting/*',
         '/backend/ajax/uploadImage',
-		'/yunda/*',
-		'/api/*',
-		'/webapi/*',
+	'/yunda/*',
+        '/api/*',
+	'/webapi/*',
     ];
 }

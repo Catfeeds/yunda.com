@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         Commands\YunDaPay::class,
         Commands\YunDaIssue::class,
         Commands\YunDaPre::class,
+        Commands\YunResAuto::class,
     ];
 
     /**
@@ -34,6 +35,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('yunda_pay')->everyMinute()->between('00:00', '23:59')->runInBackground();
         $schedule->command('yunda_issue')->everyMinute()->between('00:00', '23:59')->runInBackground();
         $schedule->command('yunda_pre')->everyMinute()->between('00:00', '23:59')->runInBackground();
+        $schedule->command('yunda_reset_auto')->daily()->runInBackground();
+		//
         // $schedule->command('yundacallback')->everyMinute()->between('21:30', '23:59');//晚上下班之后
         //$schedule->command('yunda')->dailyAt('23:59');//指定时间执行
         //$schedule->command('baidu')->everyMinute();//每分钟

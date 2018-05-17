@@ -95,7 +95,8 @@ class ClaimController
         $data = array_merge($json, $input);
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
+		$person_phone = $token_data['insured_phone'];
+        $user_res = Person::where('phone',$person_phone)->select('id')->first();
         $claim_yunda = new ClaimYunda();
         $claim_yunda->user_id = $user_res['id'];    //所属用户id
         $claim_yunda->warranty_id = $data['warranty_id']; //保单号
@@ -124,6 +125,7 @@ class ClaimController
     public function claimMaterialUpload(){
 
         $input = $this->request->all();
+
         $result = DB::table('claim_yunda')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
@@ -135,7 +137,16 @@ class ClaimController
                 'cust_warranty.*',
                 'product.*')
             ->first();
-        return view('channels.yunda.claim_material_upload',compact('result'));
+
+        if($result){
+            return view('channels.yunda.claim_material_upload',compact('result'));
+        }else{
+            $notice = '数据获取失败！';
+            $url = 1;
+            $sec = 3;
+            return view('error.error',compact('notice', 'url', 'sec'));
+        }
+
     }
 
     /**
@@ -314,7 +325,8 @@ class ClaimController
         $type = $input['type'] ?? '0';
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-        $users = Person::where('papers_code',$person_code)->first();
+		$person_phone = $token_data['insured_phone'];
+        $users = Person::where('phone',$person_phone)->select('id')->first();
         $where = [1,2,3];
         if($type != '0') $where = [-1,4];
         $list = DB::table('claim_yunda')

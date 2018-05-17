@@ -1,7 +1,7 @@
 <?php
 //TODO 2018-04-08韵达快递保  新接口,新路由
 Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda'],function (){
-	Route::get('/', function() { return 'Hello webapi'; });
+	Route::any('/', function() { return 'Hello webapi'; });
 	//对外接口
 	Route::any('joint_login', 'IntersController@jointLogin');//联合登录
 	Route::any('authorization_query', 'IntersController@authorizationQuery');//授权查询
@@ -37,6 +37,7 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('insure_auto', 'SetingController@insureAuto');//自动投保页面
 	Route::any('do_insure_auto', 'SetingController@doInsureAuto');//自动投保操作
 	Route::any('user_info', 'SetingController@userInfo');//用户信息
+	Route::any('reset_insure_auto', 'SetingController@resetInsureAuto');//重置自动投保设置
 	//申请理赔
 	Route::any('claim_contact', 'ClaimController@claimContact');//申请理赔
 	Route::any('claim_email', 'ClaimController@claimEmail');

@@ -52,7 +52,8 @@ class BankController
     public function bankIndex(){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-        $user_res = Person::where('papers_code',$person_code)->select('id','name','papers_type','papers_code','phone','address')->first();
+		$person_phone = $token_data['insured_phone'];
+        $user_res = Person::where('phone',$person_phone)->select('id','name','papers_type','papers_code','phone','address')->first();
         $cust_id = $user_res['id'];
         $bank_res = Bank::where('cust_id',$cust_id)
             ->select('id','bank','bank_code','bank_city','phone')
@@ -198,11 +199,12 @@ class BankController
     public function bankAuthorize(){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
+		$person_phone = $token_data['insured_phone'];
         $cust_id = '';
         $cust_name = '';
         $cust_phone = '';
-        $user_res = Person::where('papers_code',$person_code)
-            ->select('id','name','phone')
+        $user_res = Person::where('phone',$person_phone)
+            ->select('id','name','phone','papers_code')
             ->first();
         if(!empty($user_res)){
             $cust_id = $user_res['id'];
@@ -322,7 +324,7 @@ class BankController
 		$person_code = $token_data['insured_code'];
 		$person_name = $token_data['insured_name'];
 		$person_phone = $token_data['insured_phone'];
-        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
+        $user_res = Person::where('phone',$person_phone)->select('id')->first();
         $cust_id = $user_res['id'];
 		$bank_res = Bank::where('cust_id',$cust_id)
 			->select('bank','bank_code','bank_city','phone','bank_deal_type')
@@ -353,7 +355,7 @@ class BankController
 		$person_code = $token_data['insured_code'];
 		$person_name = $token_data['insured_name'];
 		$person_phone = $token_data['insured_phone'];
-		$user_res = Person::where('papers_code',$person_code)->select('id')->first();
+		$user_res = Person::where('phone',$person_phone)->select('id')->first();
 		$cust_id = $user_res['id'];
 		$bank_res = Bank::where('cust_id',$cust_id)
 			->select('bank','bank_code','bank_city','phone','bank_deal_type')

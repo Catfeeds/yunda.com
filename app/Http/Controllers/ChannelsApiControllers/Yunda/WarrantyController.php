@@ -44,8 +44,8 @@ class WarrantyController
      */
     public function warrantyList(){
 		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
-        $user_res = Person::where('papers_code',$person_code)->select('id')->first();
+		$person_phone = $token_data['insured_phone'];
+        $user_res = Person::where('phone',$person_phone)->select('id')->first();
         $warranty_ok_res = CustWarranty::where('user_id',$user_res['id'])
             ->where('warranty_status','7')//保障中
             ->select('id')
@@ -75,8 +75,8 @@ class WarrantyController
      */
     public function warrantyDetail($warranty_id){
 		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
-        $user_res = Person::where('papers_code',$person_code)
+		$person_phone = $token_data['insured_phone'];
+        $user_res = Person::where('phone',$person_phone)
             ->select('id','papers_code','papers_type','name','phone')
             ->first();
         $warranty_res = CustWarranty::where('id',$warranty_id)

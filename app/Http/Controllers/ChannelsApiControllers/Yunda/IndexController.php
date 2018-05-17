@@ -54,6 +54,7 @@ class IndexController
     public function InsInfo(){
     	$token_data = TokenHelper::getData($this->input['token']);
         $person_code = $token_data['insured_code'];
+        $person_phone = $token_data['insured_phone'];
         $user_seting = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('cust_id','authorize_status','authorize_start')
             ->first();
@@ -63,7 +64,7 @@ class IndexController
 			$cust_id = '';
 			$cust_name = '';
 			$cust_phone = '';
-			$user_res = Person::where('papers_code',$person_code)
+			$user_res = Person::where('phone',$person_phone)
 				->select('id','name','phone')
 				->first();
 			if(!empty($user_res)){
@@ -152,7 +153,8 @@ class IndexController
     public function doInsured(){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-        $user_res = Person::where('papers_code',$person_code)
+		$person_phone = $token_data['insured_phone'];
+        $user_res = Person::where('phone',$person_phone)
             ->select('id','name','papers_type','papers_code','phone','email','address','address_detail')
             ->first();
         //姓名，身份证信息，手机号判空
@@ -289,11 +291,12 @@ class IndexController
     public function insError($error_type){
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
+		$person_phone = $token_data['insured_phone'];
         switch ($error_type){
-            case 'empty'://投保参数不完善
-                $ins_msg = '用户信息不完善，请完善用户信息';//备注信息
-                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'ins_info';//跳转URL
-                break;
+//            case 'empty'://投保参数不完善
+//                $ins_msg = '用户信息不完善，请完善用户信息';//备注信息
+//                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'ins_info';//跳转URL
+//                break;
             case 'no_bank'://没有绑定银行卡
                 $ins_msg = '没有银行卡信息，请绑定银行卡';//备注信息
                 $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'bank_index';//跳转URL
@@ -312,7 +315,7 @@ class IndexController
         }
         $ins_status = '500';
         $warranty_res = [];
-        $user_res = Person::where('papers_code',$person_code)->select('name','papers_type','papers_code','phone','address')->first();
+        $user_res = Person::where('phone',$person_phone)->select('name','papers_type','papers_code','phone','address')->first();
         return view('channels.yunda.insure_result',compact('person_code','ins_status','ins_msg','target_url','warranty_res','user_res'));
     }
 
