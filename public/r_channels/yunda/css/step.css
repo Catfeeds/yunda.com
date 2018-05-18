@@ -223,7 +223,11 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 	color: #fff;
 	background: #00a2ff;
 }
-
+.popups-footer .confirm{
+	width: 2.6rem;
+	background: #00a2ff;
+	color: #fff;
+}
 .buttons-wrapper{
 	position: fixed;
 	left: 0;
@@ -259,6 +263,12 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 .wraning{
 	margin-bottom: .2rem;
 	font-size: .34rem;
+	color: #ff6c30;
+	font-weight: bold;
+	text-align: center;
+}
+.shop{
+	font-size: .30rem;
 	color: #ff6c30;
 	font-weight: bold;
 	text-align: center;

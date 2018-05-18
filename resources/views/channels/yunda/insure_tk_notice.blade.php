@@ -5,11 +5,11 @@
 		<meta charset="utf-8">
 		<title>投保须知</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/mui.min.css">
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/iconfont.css" />
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/common.css" />
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/index.css" />
-		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/mui.min.css">
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/iconfont.css" />
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
+		<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 		<style type="text/css">
 			.header{
 				height: 1.25rem;
@@ -59,7 +59,7 @@
 				<header class="mui-bar mui-bar-nav">
 					<div class="head-left">
 						<div class="head-img">
-							<img src="{{config('view_url.channel_url')}}imges/back.png"/>
+							<img src="{{config('view_url.channel_views')}}imges/back.png"/>
 						</div>
 					</div>
 					<div class="head-right">
@@ -91,9 +91,9 @@
 				</div>
 			</div>
 		</div>
-		<script src="{{config('view_url.channel_url')}}js/lib/jquery-1.11.3.min.js"></script>
-		<script src="{{config('view_url.channel_url')}}js/lib/mui.min.js"></script>
-		<script src="{{config('view_url.channel_url')}}js/common.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
             $('.head-right').on('tap',function () {
                 Mask.loding();

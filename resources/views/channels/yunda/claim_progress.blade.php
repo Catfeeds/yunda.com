@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
 	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
 	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
-	<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+	<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 	<style>
 		.tab{margin-bottom: .2rem;height: 1rem;line-height: 1rem;background: #fff;text-align: center;}
 		.tab .tab-item{display: inline-block;width: 40%;}

@@ -4,19 +4,19 @@
 		<meta charset="utf-8">
 		<title>设置列表</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/mui.min.css">
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/iconfont.css">
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/common.css" />
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/index.css" />
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/step.css" />
-		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/mui.min.css">
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/iconfont.css">
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
+		<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<img src="{{config('view_url.channel_url')}}imges/back.png">
+					<img src="{{config('view_url.channel_views')}}imges/back.png">
 				</div>
 			</div>
 			<div class="head-right">
@@ -50,7 +50,7 @@
 						</li>
 						<li class="list-item">
 							<a  href="{{config('view_url.channel_yunda_target_url')}}bank_index?token={{$_GET['token']}}" id="bank_setup_target">
-								<div class="item-img">	<img src="{{config('view_url.channel_url')}}imges/icon_set.png" alt="" /></div>
+								<div class="item-img">	<img src="{{config('view_url.channel_views')}}imges/icon_set.png" alt="" /></div>
 
 								<div class="item-content">
 									<p class="title">银行卡设置</p>
@@ -63,9 +63,9 @@
 			</div>
 		</div>
 
-		<script src="{{config('view_url.channel_url')}}js/lib/jquery-1.11.3.min.js"></script>
-		<script src="{{config('view_url.channel_url')}}js/lib/mui.min.js"></script>
-		<script src="{{config('view_url.channel_url')}}js/common.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
             $('.head-right').on('tap',function(){
                 Mask.loding();

@@ -4,7 +4,7 @@
 		<meta charset="UTF-8">
 		<title>理赔审核</title>
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/email.css" />
-		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 	</head>
 	<body>
 	<style>

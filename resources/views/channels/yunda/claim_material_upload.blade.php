@@ -9,7 +9,7 @@
 	<link href="{{config('view_url.channel_views')}}css/service.css" rel="stylesheet"/>
 	<link href="{{config('view_url.channel_views')}}css/claim.css" rel="stylesheet"/>
 	<link href="{{config('view_url.channel_views')}}css/step.css" rel="stylesheet"/>
-	<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+	<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 </head>
 <body id="process8">
 <div style="width:100%;height:100%;" id="defuTimes">

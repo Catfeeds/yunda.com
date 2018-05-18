@@ -5,12 +5,12 @@
 	<meta charset="utf-8">
 	<title>保险条款</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-	<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/mui.min.css">
-	<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/iconfont.css" />
-	<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/swiper-3.4.2.min.css" />
-	<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/common.css" />
-	<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/index.css" />
-	<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/mui.min.css">
+	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/iconfont.css" />
+	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/swiper-3.4.2.min.css" />
+	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
+	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
+	<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 	<style type="text/css">
 		.header{
 			height: 1.25rem;
@@ -62,7 +62,7 @@
 	<div class="mui-inner-wrap">
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-img">
-				<img src="{{config('view_url.channel_url')}}imges/back.png"/>
+				<img src="{{config('view_url.channel_views')}}imges/back.png"/>
 			</div>
 			<div class="head-right">
 				<i class="iconfont icon-close"></i>
@@ -140,12 +140,12 @@
 	</div>
 </div>
 
-<script src="{{config('view_url.channel_url')}}js/lib/jquery-1.11.3.min.js"></script>
-<script src="{{config('view_url.channel_url')}}js/lib/mui.min.js"></script>
-<script src="{{config('view_url.channel_url')}}js/lib/swiper-3.4.2.min.js"></script>
-<script src="{{config('view_url.channel_url')}}js/common.js"></script>
-<script src="{{config('view_url.channel_url')}}js/lib/touchslider.js"></script>
-<script src="{{config('view_url.channel_url')}}js/index.js"></script>
+<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
+<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
+<script src="{{config('view_url.channel_views')}}js/lib/swiper-3.4.2.min.js"></script>
+<script src="{{config('view_url.channel_views')}}js/common.js"></script>
+<script src="{{config('view_url.channel_views')}}js/lib/touchslider.js"></script>
+<script src="{{config('view_url.channel_views')}}js/index.js"></script>
 <script>
 
     $('.head-right').on('tap',function () {

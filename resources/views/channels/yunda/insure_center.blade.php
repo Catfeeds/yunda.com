@@ -4,18 +4,18 @@
 		<meta charset="utf-8">
 		<title>我的保险</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/mui.min.css">
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/lib/iconfont.css">
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/common.css" />
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/index.css" />
-		<link rel="stylesheet" href="{{config('view_url.channel_url')}}css/step.css" />
-		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/mui.min.css">
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/iconfont.css">
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
+		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
+		<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 	</head>
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<a href="bmapp:homepage"><img src="{{config('view_url.channel_url')}}imges/back.png"></a>
+					<a href="bmapp:homepage"><img src="{{config('view_url.channel_views')}}imges/back.png"></a>
 				</div>
 			</div>
 			<div class="head-right">
@@ -44,7 +44,7 @@
 					<ul class="list-wrapper">
 						<li class="list-item">
 							<a href="{{config('view_url.channel_yunda_target_url')}}warranty_list?token={{$_GET['token']}}" id="warranty_target">
-								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/-warranty.png" alt="" /></div>
+								<div class="item-img"><img src="{{config('view_url.channel_views')}}imges/-warranty.png" alt="" /></div>
 								<div class="item-content">
 									<p class="title">我的保单</p>
 									<p class="text"><span>保单列表</span><span>查看保障</span><span>发起理赔</span></p>
@@ -54,7 +54,7 @@
 						</li>
 						<li class="list-item">
 							<a   href="{{config('view_url.channel_yunda_target_url')}}claim_progress?token={{$_GET['token']}}" id="claim_target">
-								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/icon_lp.png" alt="" /></div>
+								<div class="item-img"><img src="{{config('view_url.channel_views')}}imges/icon_lp.png" alt="" /></div>
 								<div class="item-content">
 									<p class="title">我的理赔</p>
 									<p class="text"><span>理赔列表</span><span>查看进度</span></p>
@@ -64,7 +64,7 @@
 						</li>
 						<li class="list-item">
 							<a  href="{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token={{$_GET['token']}}" id="seting_target">
-								<div class="item-img"><img src="{{config('view_url.channel_url')}}imges/icon_set.png" alt="" /></div>
+								<div class="item-img"><img src="{{config('view_url.channel_views')}}imges/icon_set.png" alt="" /></div>
 								<div class="item-content">
 									<p class="title">设置</p>
 									<p class="text"><span>投保设置</span><span>银行卡设置</span></p>
@@ -87,9 +87,22 @@
 				</div>
 			</div>
 		</div>
-		<script src="{{config('view_url.channel_url')}}js/lib/jquery-1.11.3.min.js"></script>
-		<script src="{{config('view_url.channel_url')}}js/lib/mui.min.js"></script>
-		<script src="{{config('view_url.channel_url')}}js/common.js"></script>
+		<!--弹窗-->
+		<div class="popups-wrapper popups-ask">
+			<div class="popups-bg"></div>
+			<div class="popups">
+				<div class="popups-title"><i class="iconfont icon-guanbi"></i></div>
+				<div class="popups-content">
+					<p class="shop">为实现自动购保，给您的生活和工作带来各种保障，请开通免密支付功能</p>
+				</div>
+				<div class="popups-footer">
+					<button id="confirm" type="button" class="btn btn-default confirm">去开通</button>
+				</div>
+			</div>
+		</div>
+		<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
             var token = "{{$_GET['token']}}";
             localStorage.setItem('token', token);
@@ -122,6 +135,55 @@
             });
             $('#insure_set_target').on('tap',function(){
                 Mask.loding();
+            });
+            $(function(){
+                var hide = $('.hide');
+                var btn_agree = $('#agree');
+                var step = {
+                    init: function(){
+                        var _this = this;
+                        $('.btn-unfold').click(function(){
+                            hide.toggleClass('hide');
+                            if(hide.hasClass('hide')){
+                                $(this).find('.iconfont').removeClass('icon-xiangshangjiantou1').addClass('icon-xiajiantou');
+                            }else{
+                                $(this).find('.iconfont').removeClass('icon-xiajiantou').addClass('icon-xiangshangjiantou1');
+                            }
+                        });
+
+                        $('#open').click(function(){
+                            if($(this).hasClass('disabled')){
+                                btn_agree.trigger('click');
+                            }
+                        });
+                        _this.isAgree();
+//						_this.getStatus();
+                        Popups.open('.popups-ask');
+                        $('#confirm').click(function(){
+                            Popups.close('.popups-ask');
+                        });
+                        $('#cancel').click(function(){
+                            Popups.close('.popups-ask');
+                        });
+                    },
+                    isAgree: function(){
+                        btn_agree.click(function(){
+                            var _that = $(this);
+                            _that.toggleClass('active');
+                            var status = _that.hasClass('active') == true ? 1 : 0;
+                            _that.prev().val(status);
+                            $('#open').toggleClass('disabled');
+//							$('#open').prop('disabled',!_that.hasClass('active'));
+                        });
+                    },
+                    getStatus: function(){
+                        var sign_status = "0";
+                        if(!parseInt(sign_status)){
+                            $(".mui-scroll-wrapper").css("cssText", "bottom:0!important;");
+                        }
+                    }
+                }
+                step.init();
             });
 		</script>
 	</body>
