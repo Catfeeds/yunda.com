@@ -13,7 +13,7 @@ use App\Models\Bank;
 use Illuminate\Http\Request;
 use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
-use App\Jobs\YunDaPay;
+use App\Jobs\YunDaPayInsure;
 use App\Models\Person;
 use App\Models\ChannelInsureSeting;
 use App\Models\ChannelContract;
@@ -179,29 +179,28 @@ class IndexController
             ->where('bank_code',$user_setup_res['authorize_bank'])
             ->select('bank','bank_code','bank_city','phone')
             ->first();
-        $biz_content['operate_code'] = '';
+
         $biz_content['channel_code'] = 'YD';
         $biz_content['courier_state'] = '';
         $biz_content['courier_start_time'] = '';
         $biz_content['p_code'] = '';
         $biz_content['is_insure'] = '';
-        $biz_content['channel_back_url'] = '';
 
-        $biz_content['channel_user_name'] = $user_res['name'];
-        $biz_content['channel_user_code'] = $user_res['papers_code'];
-        $biz_content['channel_user_phone'] = $user_res['phone'];
-        $biz_content['channel_user_email'] = $user_res['email'];
-        $biz_content['channel_user_address'] = $user_res['address_detail'];
+        $biz_content['insured_name'] = $user_res['name'];
+        $biz_content['insured_code'] = $user_res['papers_code'];
+        $biz_content['insured_phone'] = $user_res['phone'];
+        $biz_content['insured_email'] = $user_res['email'];
+        $biz_content['insured_province'] = $user_res['address_detail'];
+        $biz_content['insured_city'] = $user_res['address_detail'];
+        $biz_content['insured_county'] = $user_res['address_detail'];
+        $biz_content['insured_address'] = $user_res['address_detail'];
 
-        $biz_content['channel_bank_code'] = $bank_res['bank_code'];
-        $biz_content['channel_bank_name'] = $bank_res['bank'];
-        $biz_content['channel_bank_address'] = $bank_res['bank_city'];
-        $biz_content['channel_bank_phone'] = $bank_res['phone'];
+        $biz_content['bank_code'] = $bank_res['authorize_bank'];
+        $biz_content['bank_name'] = $bank_res['bank'];
+        $biz_content['bank_address'] = $bank_res['bank_city'];
+        $biz_content['bank_phone'] = $bank_res['phone'];
 
-        $biz_content['channel_provinces'] = $user_res['address'];
-        $biz_content['channel_city'] = $user_res['address'];
-        $biz_content['channel_county'] = $user_res['address'];
-
+        $biz_content['channel_order_code'] = $user_setup_res['address'];
         $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
         $biz_content['price'] = '2';
         switch ($biz_content['insured_days']){
@@ -215,7 +214,8 @@ class IndexController
                 $biz_content['price'] = $user_setup_res['auto_insure_price'];
                 break;
         }
-        dispatch(new YunDaPay($biz_content));//TODO 投保操作（异步队列）
+        LogHelper::logSuccess($biz_content,'YD_pay_insure2_params');
+        dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
         $ins_status = '100';//投保状态：成功200/失败500/投保中100
         $ins_msg = '投保中，请稍等~';//备注信息
         $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'warranty_list';//跳转URL

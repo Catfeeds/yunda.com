@@ -182,6 +182,7 @@ class IntersController
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         $input['bank_code'] =  $user_setup_res['authorize_bank']; 
+        $input['bank_phone'] =  $person_result['phone'];
 		//todo 查询保单生效状态（连续购买的保单是否还在保障期）
 		if(empty($user_setup_res['warranty_id'])){//没有保单
 			$insure_status = false;
@@ -228,7 +229,7 @@ class IntersController
                         $input['price'] = $user_setup_res['auto_insure_price'];
                         break;
                 }
-               // LogHelper::logSuccess($input,'YD_prepare_params');
+                LogHelper::logSuccess($input,'YD_pay_insure1_params');
                 dispatch(new YunDaPayInsure($input));//TODO 投保操作（异步队列）
                 $return_data['code'] = '200';
                 $return_data['message']['digest'] = 'default';
