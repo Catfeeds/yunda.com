@@ -160,7 +160,7 @@ class IntersController
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
             ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time','warranty_id','insure_days','insure_start')
             ->first();
-        if(empty($user_setup_res)){//未授权(首次购买)
+        if(!empty($user_setup_res)){//未授权(首次购买)
             $return_data['code'] = '203';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
@@ -180,6 +180,7 @@ class IntersController
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
+        $input['bank_code'] =  $user_setup_res['authorize_bank']; 
 		//todo 查询保单生效状态（连续购买的保单是否还在保障期）
 		if(empty($user_setup_res['warranty_id'])){//没有保单
 			$insure_status = false;

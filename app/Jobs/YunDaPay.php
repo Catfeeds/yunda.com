@@ -80,6 +80,11 @@ class YunDaPay implements ShouldQueue
     {
         //用户身份信息
         $input = $this->param;
+        LogHelper::logChannelSuccess(gettype($input), 'YD_request_params_type');
+         if(is_array($input)){
+        	$input = json_encode($input);
+		}
+		LogHelper::logChannelSuccess(gettype($input), 'YD_request_params_str');
 		LogHelper::logChannelSuccess($input, 'YD_request_params');
         $requset_url = config('yunda.request_url');
         LogHelper::logChannelSuccess($requset_url, 'YD_request_url');

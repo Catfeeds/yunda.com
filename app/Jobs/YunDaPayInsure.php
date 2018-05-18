@@ -80,9 +80,10 @@ class YunDaPayInsure implements ShouldQueue
     {
         //用户身份信息
         $input = $this->param;
-		LogHelper::logChannelSuccess($input, 'YD_request_params');
+         if(is_array($input)){
+            $input = json_encode($input);
+        }
         $requset_url = config('yunda.request_url');
-        LogHelper::logChannelSuccess($requset_url, 'YD_request_url');
         $response = Curl::to($requset_url)
             ->returnResponseObject()
             ->withData($input)
