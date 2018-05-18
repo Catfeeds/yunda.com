@@ -173,19 +173,17 @@ class IndexController
             $ins_msg = '请授权银行卡免密支付';//备注信息
             $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'insure_authorize';//跳转URL
             $warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
-//            return $this->insResult($person_code,$ins_status,$ins_msg,$target_url,$warranty_res);
+            return $this->insResult($person_code,$ins_status,$ins_msg,$target_url,$warranty_res);
         }
         $bank_res = Bank::where('cust_id',$user_res['id'])
             ->where('bank_code',$user_setup_res['authorize_bank'])
             ->select('bank','bank_code','bank_city','phone')
             ->first();
-
-        $biz_content['channel_code'] = 'YD';
+		$biz_content['channel_code'] = 'YD';
         $biz_content['courier_state'] = '';
         $biz_content['courier_start_time'] = '';
         $biz_content['p_code'] = '';
         $biz_content['is_insure'] = '';
-
         $biz_content['insured_name'] = $user_res['name'];
         $biz_content['insured_code'] = $user_res['papers_code'];
         $biz_content['insured_phone'] = $user_res['phone'];
@@ -194,14 +192,12 @@ class IndexController
         $biz_content['insured_city'] = $user_res['address_detail'];
         $biz_content['insured_county'] = $user_res['address_detail'];
         $biz_content['insured_address'] = $user_res['address_detail'];
-
         $biz_content['bank_code'] = $bank_res['authorize_bank'];
         $biz_content['bank_name'] = $bank_res['bank'];
         $biz_content['bank_address'] = $bank_res['bank_city'];
         $biz_content['bank_phone'] = $bank_res['phone'];
-
-        $biz_content['channel_order_code'] = $user_setup_res['address'];
-        $biz_content['insured_days'] = $user_setup_res['auto_insure_type'];
+        $biz_content['channel_order_code'] = "";
+        $biz_content['insured_days'] = $user_setup_res['auto_insure_type']??"1";
         $biz_content['price'] = '2';
         switch ($biz_content['insured_days']){
             case '1':
