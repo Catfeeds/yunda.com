@@ -148,7 +148,7 @@
 										{{--<span>{{$user_res['phone']}}</span>--}}
 									{{--</div>--}}
 								{{--</div>--}}
-									@if($warranty_res['warranty_status'] == '7')
+									@if($warranty_res['warranty_status'] == '4')
 									<div class="btn">
 										<button id="claim_target" value="{{$warranty_res['id']}}">申请理赔</button>
 									</div>

@@ -34,7 +34,7 @@ return [
     ],
     //邮件路径
     'email_url'=>'/api/channels/yunda',
-    'file_url'=>'http://59.110.136.249:9200/file/',
+    'file_url'=>'http://122.14.202.233:9200/file/file/upFile',
     //产品ID对应邮箱地址
     'product_id_email'=>[
         '1'=>'taomy@inschos.com',

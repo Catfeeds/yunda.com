@@ -83,7 +83,8 @@ class WarrantyController
             ->select('id','warranty_code','warranty_uuid','start_time','end_time','warranty_status')
             ->first();
         $cust_policy_res = CustWarrantyPerson::where('warranty_uuid',$warranty_res['warranty_uuid'])
-            ->get();
+            ->select('out_order_no','type','relation_name','name','card_type','card_code','phone','occupation','birthday','sex','age','email','nationality','annual_income','height','weight','area','address','start_time','end_time')
+			->get();
         $policy_res = [];
         $inusred_res = [];
         foreach ($cust_policy_res as $value){
