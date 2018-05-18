@@ -68,6 +68,7 @@ class IntersController
      */
     public function jointLogin(){
         $input = $this->request->all();
+        LogHelper::logChannelSuccess($input, 'YD_joint_login_params');
         $return_data =[];
         $webapi_route = config('yunda.server_host').config('yunda.webapi_route');
         if(empty($input)){
@@ -160,7 +161,7 @@ class IntersController
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
             ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time','warranty_id','insure_days','insure_start')
             ->first();
-        if(!empty($user_setup_res)){//未授权(首次购买)
+        if(empty($user_setup_res)){//未授权(首次购买)
             $return_data['code'] = '203';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
