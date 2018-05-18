@@ -51,7 +51,11 @@
 									</div>
 									<div class="line">
 										<span>保障时间</span>
-										<span>{{$warranty_res['start_time']}}-{{$warranty_res['end_time']}}</span>
+										<span>
+											{{date('Y-m-d',substr($warranty_res['start_time'],0,strlen($warranty_res['start_time'])-3)).' '.'上工时间'}}
+											到
+											{{date('Y-m-d',substr($warranty_res['start_time'],0,strlen($warranty_res['end_time'])-3)).' '.'23:59:59'}}
+										</span>
 									</div>
 									<div class="line">
 										<span>份数</span>
