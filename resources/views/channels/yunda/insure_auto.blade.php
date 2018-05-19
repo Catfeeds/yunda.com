@@ -32,10 +32,9 @@
 					<div class="section section-first">
 						<div class="section-content">
 							<span class="title">自动投保</span>
-
-							<i class="tip"  @if(!$auto_res['auto_insure_status']) style="visibility: visible;" @endif>
-								开关将于{{date('Y-m-d H:i:s',$auto_res['auto_insure_time']+3600*24)}}自动开启
-							</i>
+							{{--<i class="tip"  @if(!$auto_res['auto_insure_status']) style="visibility: visible;" @endif>--}}
+								{{--开关将于{{date('Y-m-d H:i:s',$auto_res['auto_insure_time']+3600*24)}}自动开启--}}
+							{{--</i>--}}
 								<div class="switch @if($auto_res['auto_insure_status']) active @endif">
 									<div class="switch-handle"></div>
 								</div>

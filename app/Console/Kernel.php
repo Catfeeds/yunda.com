@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         Commands\YunDaIssue::class,
         Commands\YunDaPre::class,
         Commands\YunResAuto::class,
+        Commands\YdWechatPre::class,
     ];
 
     /**
@@ -31,19 +32,19 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('yunda_prepare')->everyMinute()->between('00:00', '10:00')->runInBackground();
-        $schedule->command('yunda_pay')->everyMinute()->between('00:00', '23:59')->runInBackground();
-        $schedule->command('yunda_issue')->everyMinute()->between('00:00', '23:59')->runInBackground();
-        $schedule->command('yunda_pre')->everyMinute()->between('00:00', '23:59')->runInBackground();
-        $schedule->command('yunda_reset_auto')->daily()->runInBackground();
-		//
-        // $schedule->command('yundacallback')->everyMinute()->between('21:30', '23:59');//晚上下班之后
+        //$schedule->command('yunda_prepare')->everyMinute()->between('00:00', '10:00')->runInBackground();
+        //$schedule->command('yunda_pay')->everyMinute()->between('00:00', '23:59')->runInBackground();
+        //$schedule->command('yunda_issue')->everyMinute()->between('00:00', '23:59')->runInBackground();
+        //$schedule->command('yunda_pre')->everyMinute()->between('00:00', '23:59')->runInBackground();
+        //$schedule->command('yunda_reset_auto')->daily()->runInBackground();
+        //$schedule->command('yundacallback')->everyMinute()->between('21:30', '23:59');//晚上下班之后
         //$schedule->command('yunda')->dailyAt('23:59');//指定时间执行
         //$schedule->command('baidu')->everyMinute();//每分钟
         //$schedule->command('baidu_work_clear')->everyMinute()->runInBackground(); //并行执行
         //$schedule->command('reminders:send')->hourly()->between('7:00', '22:00');//在指定时间内每小时执行一次
         //$schedule->command('reminders:send')->hourly()->unlessBetween('23:00', '4:00');//在指定时间外每小时执行一次
         //$schedule->command('emails:send')->withoutOverlapping();//避免任务重叠
+		$schedule->command('yunda_wechat_prepare')->everyMinute()->between('00:00', '10:00')->runInBackground();
     }
 
     /**
