@@ -507,6 +507,7 @@ class BankController
 				'authorize_status' => '1',
 				'authorize_start' => time(),
 				'authorize_bank' => $bank_code,
+				'auto_insure_status'=>'1',
 			]);
 		}
 		return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
