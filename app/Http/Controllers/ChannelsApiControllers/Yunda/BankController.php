@@ -309,7 +309,7 @@ class BankController
 			ChannelOperate::where('channel_user_code', $person_code)
 				->where('proposal_num', $union_order_code)
 				->update(['pay_status' => '500', 'pay_content' => $response->content]);
-			LogHelper::logError($response->content, 'YD_pay_order_' . $union_order_code);
+			//LogHelper::logError($response->content, 'YD_pay_order_' . $union_order_code);
 			$return_data['status'] = false;
 			$return_data['message'] = '用户获取签约链接失败';
 			return $return_data;

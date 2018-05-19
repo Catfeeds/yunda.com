@@ -324,7 +324,7 @@ class PrepareController
 //		}catch (\Exception $e)
 //		{
 //			DB::rollBack();
-//			LogHelper::logChannelError([$return_data, $prepare], $e->getMessage(), 'addOrder');
+//			//LogHelper::logChannelError([$return_data, $prepare], $e->getMessage(), 'addOrder');
 //			return false;
 //		}
 //	}
@@ -506,7 +506,7 @@ class PrepareController
 //		}catch (\Exception $e)
 //		{
 //			DB::rollBack();
-//			LogHelper::logChannelError([$return_data, $prepare], $e->getMessage(), 'addOrder');
+//			//LogHelper::logChannelError([$return_data, $prepare], $e->getMessage(), 'addOrder');
 //			return false;
 //		}
 //	}

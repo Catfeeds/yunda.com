@@ -137,9 +137,9 @@ class TkClaimController
 //                dump($user_info);
 //                die;
         if(empty($address)&&empty($member)&&empty($user_info)){
-            // LogHelper::logChannelError($member, 'YD_TK_get_init_member');
-            // LogHelper::logChannelError($address, 'YD_TK_get_init_area');
-            // LogHelper::logChannelError($address, 'YD_TK_get_init_user_info');
+            // //LogHelper::logChannelError($member, 'YD_TK_get_init_member');
+            // //LogHelper::logChannelError($address, 'YD_TK_get_init_area');
+            // //LogHelper::logChannelError($address, 'YD_TK_get_init_user_info');
             $result =  json_encode(['status'=>'501','content'=>'初始化出错'],JSON_UNESCAPED_UNICODE);
             return $result;
         }
@@ -160,11 +160,11 @@ class TkClaimController
             ->withData($datas)
             ->withTimeout(60)
             ->post();
-        LogHelper::logChannelError($response, 'YD_TK_sms');
+        //LogHelper::logChannelError($response, 'YD_TK_sms');
 //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_claim_step1');
+            //LogHelper::logChannelError($content, 'YD_TK_claim_step1');
             $respose =  json_encode(['status'=>'501','content'=>'出险人信息提交失败'],JSON_UNESCAPED_UNICODE);
             print_r($respose);
             return back()->with('status','出险人信息提交失败');
@@ -477,7 +477,7 @@ class TkClaimController
 //            print_r($response);die;
             if($response->status != 200){
                 $content = $response->content;
-                LogHelper::logChannelError($content, 'YD_TK_claim_upload_metarial');
+                //LogHelper::logChannelError($content, 'YD_TK_claim_upload_metarial');
                 $respose =  json_encode(['status'=>'501','content'=>'理赔资料提交失败'],JSON_UNESCAPED_UNICODE);
                 print_r($respose);
                 return back()->with('status','理赔资料提交失败');
@@ -504,7 +504,7 @@ class TkClaimController
         //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_sms_send');
+            //LogHelper::logChannelError($content, 'YD_TK_sms_send');
             $result =  json_encode(['status'=>'501','content'=>$response->content],JSON_UNESCAPED_UNICODE);
             return $result;
         }
@@ -546,7 +546,7 @@ class TkClaimController
             ->post();
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_email_send');
+            //LogHelper::logChannelError($content, 'YD_TK_email_send');
             $respose =  json_encode(['status'=>'501','content'=>'邮件发送出错'],JSON_UNESCAPED_UNICODE);
             return $respose;
         }
@@ -615,10 +615,10 @@ class TkClaimController
             ->post();
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_Claim_Info_error');
+            //LogHelper::logChannelError($content, 'YD_TK_Claim_Info_error');
             return back()->with('status','获取理赔详情出错');
         }
-        LogHelper::logChannelError($response->content, 'YD_TK_Claim_Info');
+        //LogHelper::logChannelError($response->content, 'YD_TK_Claim_Info');
         $apply_res = ChannelClaimApply::where('warranty_code',$warranty_code)
             ->where('claim_start_status','200')
             ->with('warrantyRule','warrantyRule.warranty_product','warrantyRule.warranty_rule_order.warranty_recognizee')
@@ -696,7 +696,7 @@ class TkClaimController
             ->post();
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_claim_del_metarial');
+            //LogHelper::logChannelError($content, 'YD_TK_claim_del_metarial');
             $respose =  json_encode(['status'=>'501','content'=>'理赔资料删除失败'],JSON_UNESCAPED_UNICODE);
             return $respose;
         }
@@ -738,7 +738,7 @@ class TkClaimController
 //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_claim_submit_metarial');
+            //LogHelper::logChannelError($content, 'YD_TK_claim_submit_metarial');
             $respose =  json_encode(['status'=>'501','content'=>'理赔资料提交失败'],JSON_UNESCAPED_UNICODE);
             print_r($respose);
             return back()->with('status','理赔资料提交失败');
@@ -776,7 +776,7 @@ class TkClaimController
 
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_Claim_Info_error');
+            //LogHelper::logChannelError($content, 'YD_TK_Claim_Info_error');
             return back()->with('status','获取理赔详情出错');
         }
         $data['claim_flag'] = $claim_save_info['bank_flag'];
@@ -795,7 +795,7 @@ class TkClaimController
 //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_claim_append_metarial');
+            //LogHelper::logChannelError($content, 'YD_TK_claim_append_metarial');
             $respose =  json_encode(['status'=>'501','content'=>'理赔资料提交失败'],JSON_UNESCAPED_UNICODE);
             print_r($respose);
             return back()->with('status','理赔资料提交失败');
@@ -864,7 +864,7 @@ class TkClaimController
 //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_Claim_Info');
+            //LogHelper::logChannelError($content, 'YD_TK_Claim_Info');
             return back()->with('status','获取会员信息出错');
         }
         $return_data =  is_array($response->content)? json_encode($response->content) :$response->content;
@@ -887,7 +887,7 @@ class TkClaimController
         //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_Get_Area');
+            //LogHelper::logChannelError($content, 'YD_TK_Get_Area');
             return back()->with('status','获取地区初始化信息失败');
         }
         $return_data =  is_array($response->content)? json_encode($response->content) :$response->content;
@@ -921,7 +921,7 @@ class TkClaimController
 //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_get_insurant_info');
+            //LogHelper::logChannelError($content, 'YD_TK_get_insurant_info');
             return back()->with('status','获取投保人信息失败');
         }
         $return_data =  is_array($response->content)? json_encode($response->content) :$response->content;
@@ -955,7 +955,7 @@ class TkClaimController
 //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_Claim_Progress');
+            //LogHelper::logChannelError($content, 'YD_TK_Claim_Progress');
             return back()->with('status',$content);
         }
         $return_data =  is_array($response->content)? json_encode($response->content) :$response->content;
@@ -999,7 +999,7 @@ class TkClaimController
 //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_Claim_tkc_doc_type');
+            //LogHelper::logChannelError($content, 'YD_TK_Claim_tkc_doc_type');
             return back()->with('status','获取信息出错');
         }
         $return_data = $response->content;
@@ -1021,7 +1021,7 @@ class TkClaimController
             ->post();
         if($response->status != 200){
             $content = $response->content;
-            LogHelper::logChannelError($content, 'YD_TK_Claim_tka_doc_type');
+            //LogHelper::logChannelError($content, 'YD_TK_Claim_tka_doc_type');
             return back()->with('status','获取信息出错');
         }
         $return_data = $response->content;

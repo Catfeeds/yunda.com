@@ -214,7 +214,7 @@ class IndexController
                 $biz_content['price'] = $user_setup_res['auto_insure_price'];
                 break;
         }
-        LogHelper::logSuccess($biz_content,'YD_pay_insure2_params');
+        //LogHelper::logSuccess($biz_content,'YD_pay_insure2_params');
         dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
         $ins_status = '100';//投保状态：成功200/失败500/投保中100
         $ins_msg = '投保中，请稍等~';//备注信息
@@ -371,7 +371,7 @@ class IndexController
 			ChannelOperate::where('channel_user_code',$person_code)
 				->where('proposal_num',$union_order_code)
 				->update(['pay_status'=>'500','pay_content'=>$response->content]);
-			LogHelper::logError($response->content, 'YD_pay_order_'.$union_order_code);
+			//LogHelper::logError($response->content, 'YD_pay_order_'.$union_order_code);
 			$return_data['status'] = false;
 			$return_data['message'] = '用户获取签约链接失败';
 			return $return_data;
