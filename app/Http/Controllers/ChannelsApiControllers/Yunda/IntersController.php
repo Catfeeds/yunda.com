@@ -243,7 +243,7 @@ class IntersController
                 //查询投保状态
                 $check_status = $cust_warranty_res['check_status'];//核保状态（默认0,1核保中, 2核保失败，3核保成功）
                 $pay_status = $cust_warranty_res['pay_status'];//支付状态 （默认0，1支付中,2支付失败,3支付成功）
-                $warranty_status = $cust_warranty_res['warranty_status'];//保单状态 （1待处理, 2待支付,3待生效, 4保障中,5可续保，6已失效，7已退保  8已过保）
+                $warranty_status = $cust_warranty_res['warranty_status'];//保单状态 1待处理, 2待支付,3待生效, 4保障中,5可续保，6已失效，7已退保  8已过保
                 //TODO  匹配状态,组合查状态
                 if($warranty_status=='3'||$warranty_status=='4'){
                     $return_data['code'] = '200';
