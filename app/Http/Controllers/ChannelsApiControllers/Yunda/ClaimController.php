@@ -395,8 +395,8 @@ class ClaimController
     {
         $input = $this->request->all();
 
-        LogHelper::logSuccess($input,   'img', 'Yunda_response');
-        LogHelper::logSuccess($_FILES,   'img', 'Yunda_response');
+        ////LogHelper::logSuccess($input,   'img', 'Yunda_response');
+        ////LogHelper::logSuccess($_FILES,   'img', 'Yunda_response');
         return json_encode(['code'=>500,'msg'=>$input]);
         die;
 
@@ -416,7 +416,7 @@ class ClaimController
             $data['fileKey'] = md5('Yunda_'.$input['name'].$input['claim_id']);
             $data['fileName'] = 'yunda.'.$result[2]; //接口只使用后缀
 
-            LogHelper::logSuccess($data,   'img', 'Yunda_data');
+            //LogHelper::logSuccess($data,   'img', 'Yunda_data');
             $response = Curl::to(config('yunda.file_url').'file/upBase')
                 ->returnResponseObject()
                 ->withData(json_encode($data))
@@ -428,12 +428,12 @@ class ClaimController
             $content = json_decode($response->content, true);
             $content['time'] = date('Y-m-d H:i:s', time());
 
-            LogHelper::logSuccess($content,   'img', 'Yunda_response');
+            //LogHelper::logSuccess($content,   'img', 'Yunda_response');
 
             if($content['code'] == 200){
                 return json_encode(['code'=>200,'url_key'=>$data['fileKey']]);
             }else{
-                LogHelper::logError(json_encode($data), json_encode($content),  'img', 'return');
+                //LogHelper::logError(json_encode($data), json_encode($content),  'img', 'return');
                 return json_encode(['code'=>500,'msg'=>'文件上传失败！']);
             }
         }else{
