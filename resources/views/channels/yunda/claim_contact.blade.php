@@ -69,6 +69,24 @@
 			  	}
 			  })
 			});
+            $('#next').on('click', function () {
+                var name = $("input[name='contact_name']").val();
+                var phone = $("input[name='phone']").val();
+                var email = $("input[name='email']").val();
+                if (name.length <= 1) {
+                    Mask.alert('姓名不合法', 3);
+                    return false;
+                }
+				if(!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(phone))){
+                    Mask.alert('请输入正确的手机号', 3);
+                    return false;
+				}
+                if(!(/^([0-9A-Za-z\-_\.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/.test(email))){
+                    Mask.alert('请输入正确的邮箱地址', 3);
+                    return false;
+                }
+            });
+
             $('.head-right').on('tap',function () {
                 Mask.loding();
                 location.href="bmapp:homepage";
