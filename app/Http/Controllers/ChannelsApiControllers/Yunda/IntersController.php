@@ -23,7 +23,7 @@ use App\Models\ChannelJointLogin;
 use App\Jobs\YdWechatPay;
 use App\Helper\TokenHelper;
 use App\Helper\IdentityCardHelp;
-
+use DateTime;
 
 class IntersController
 {
@@ -85,7 +85,7 @@ class IntersController
         $insured_name = isset($input['insured_name'])?empty($input['insured_name'])?"":$input['insured_name']:"";
         $insured_code =isset($input['insured_code'])?empty($input['insured_code'])?"":$input['insured_code']:"";
         $insured_phone = isset($input['insured_phone'])?empty($input['insured_phone'])?"":$input['insured_phone']:"";
-//        $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
+        $channel_order_code = isset($input['channel_order_code'])?empty($input['channel_order_code'])?"":$input['channel_order_code']:"";
         //姓名，身份证信息，手机号判空
         if(!$insured_name||!$insured_code||!$insured_phone){
 			$return_data['code'] = '500';
@@ -125,12 +125,13 @@ class IntersController
 				'login_start'=>time(),
 			]);
 		}
-		 //LogHelper::logSuccess($input,'YD_joint_login_params');
         $bank_local = Bank::where('cust_id',$person_result['id'])->select('bank_code')->first();
         if(empty($bank_local)){
         	$bank_code = '';
-        }
-		$bank_code = isset($input['bank_code'])?empty($input['bank_code'])?$bank_local['bank_code']:$input['bank_code']:$bank_local['bank_code'];
+        }else{
+			$bank_code = $bank_local['bank_code'];
+		}
+		$bank_code = isset($input['bank_code'])?empty($input['bank_code'])?$bank_code:$input['bank_code']:$bank_code;
         $token = TokenHelper::getToken($input)['token'];
         //银行卡信息判空
         if(!$bank_code){
@@ -183,36 +184,35 @@ class IntersController
         }
         $input['bank_code'] =  $user_setup_res['authorize_bank']; 
         $input['bank_phone'] =  $person_result['phone'];
+        $input['channel_order_code'] =  $channel_order_code;
 		//todo 查询保单生效状态（连续购买的保单是否还在保障期）
 		if(empty($user_setup_res['warranty_id'])){//没有保单
 			$insure_status = false;
-		}
-		if(empty($user_setup_res['insure_start'])||$user_setup_res['insure_days']){
-			$insure_status = false;
 		}else{
-			if($user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600<time()){//保单过期
+			if(empty($user_setup_res['insure_start'])||$user_setup_res['insure_days']){
 				$insure_status = false;
-			}else{//保单在保
-				$insure_status = true;
+			}else{
+				if($user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600<time()){//保单过期
+					$insure_status = false;
+				}else{//保单在保
+					$insure_status = true;
+				}
 			}
 		}
         if(!$insure_status){//需要购买新保单
-            //todo 当前投保状态，今天有没有进行投保操作????
+            //todo 当前投保状态，今天有没有进行投保操作
            $cust_res = Person::where('papers_code',$insured_code)->select('id')->first();
            if(empty($cust_res)){
                $current_insurance_status = false;
            }else{
 			   $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
+				   ->where('created_at','>',strtotime(date('Y-m-d')).'000')//今天凌晨的时间戳
 				   ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
 				   ->first();
 			   if(empty($cust_warranty_res)){
-				   $current_insurance_status = false;
+			   	 $current_insurance_status = false;
 			   }else{
-				   if($cust_warranty_res['created_at']>strtotime(date('Y-m-d', time()))){
-					   $current_insurance_status = false;
-				   }else{
-					   $current_insurance_status = true;
-				   }
+			   	 $current_insurance_status = true;
 			   }
 		   }
             if(!$current_insurance_status){//没有进行过投保操作
@@ -288,7 +288,6 @@ class IntersController
      */
     public function authorizationQuery(){
         $input = $this->request->all();
-//        $input = '{"channel_code":"YD","insured_name":"王磊","insured_code":"4108811994060565141234","insured_phone":"15701681527"}';
         $return_data =[];
         if(empty($input)){
             $return_data['code'] = '500';
