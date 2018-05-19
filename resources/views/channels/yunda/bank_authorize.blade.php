@@ -43,9 +43,8 @@
 			<div class="label-wrapper">
 				<label><input id="agree" checked type="checkbox" />我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}insure_authorize_info?token={{$_GET['token']}}" style="color: #00A2FF;" id="insure_authorize_info">《转账授权书》</a></label>
 			</div>
-			@if(isset($authorize_status)&&!$authorize_status)
+			
 			<button  id="confirm" type="button" class="btn">已阅读并开通</button>
-			@endif
 			@if(isset($wechat_status)&&$wechat_status)
 				<form action="{{$wechat_url}}" method="post" id="do_insure_sign">
 				</form>
@@ -142,6 +141,10 @@
         var bank_code = $("input[name='bank_code']").val();
         var person_name = $("input[name='person_name']").val();
         var person_code = $("input[name='person_code']").val();
+         if(bank_code.length == 0||person_name.length == 0||person_code.length == 0){
+            Mask.alert('姓名，手机号，银行卡不能为空', 3);
+            return false;
+		}
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
