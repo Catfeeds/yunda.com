@@ -172,7 +172,7 @@ class IndexController
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$person_code)
             ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time')
             ->first();
-        if(!$user_setup_res||$user_setup_res['authorize_bank']){
+        if(!$user_setup_res||!$user_setup_res['authorize_bank']){
             $ins_status = '500';//投保状态：成功200/失败500/投保中100
             $ins_msg = '请授权银行卡免密支付';//备注信息
             $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'insure_authorize';//跳转URL
