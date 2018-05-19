@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
-		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 	</head>
 
 	<body id="process14">
@@ -51,7 +51,11 @@
 									</div>
 									<div class="line">
 										<span>保障时间</span>
-										<span>{{$warranty_res['start_time']}}-{{$warranty_res['end_time']}}</span>
+										<span>
+											{{date('Y-m-d',substr($warranty_res['start_time'],0,strlen($warranty_res['start_time'])-3)).' '.'上工时间'}}
+											到
+											{{date('Y-m-d',substr($warranty_res['start_time'],0,strlen($warranty_res['end_time'])-3)).' '.'23:59:59'}}
+										</span>
 									</div>
 									<div class="line">
 										<span>份数</span>
@@ -144,7 +148,7 @@
 										{{--<span>{{$user_res['phone']}}</span>--}}
 									{{--</div>--}}
 								{{--</div>--}}
-									@if($warranty_res['warranty_status'] == '7')
+									@if($warranty_res['warranty_status'] == '4')
 									<div class="btn">
 										<button id="claim_target" value="{{$warranty_res['id']}}">申请理赔</button>
 									</div>

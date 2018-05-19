@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
-		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 	</head>
 
 	<body id="process13">
@@ -26,9 +26,9 @@
 						<div class="mui-scroll">
 							<div class="policy_list_wrapper">
 								<ul class="tab">
-									<li class="item @if(isset($_GET['status'])&&$_GET['status']=='3') active @endif" data-id="3">待支付（{{count($warranty_paying_res)}}）</li>
-									<li class="item @if(!isset($_GET['status'])||isset($_GET['status'])&&$_GET['status']=='7') active @endif" data-id="7">保障中（{{count($warranty_ok_res)}}）</li>
-									<li class="item @if(isset($_GET['status'])&&$_GET['status']=='10') active @endif" data-id="10">已失效（{{count($warranty_timeout_res)}}）</li>
+									<li class="item @if(isset($_GET['status'])&&$_GET['status']=='2') active @endif" data-id="2">待支付（{{count($warranty_paying_res)}}）</li>
+									<li class="item @if(!isset($_GET['status'])||isset($_GET['status'])&&$_GET['status']=='4') active @endif" data-id="4">保障中（{{count($warranty_ok_res)}}）</li>
+									<li class="item @if(isset($_GET['status'])&&$_GET['status']=='6') active @endif" data-id="6">已失效（{{count($warranty_timeout_res)}}）</li>
 								</ul>
 								@if(count($warranty_res)==0)
 									<ul class="content">
@@ -64,6 +64,7 @@
 												<span>{{$value['start_time']}}-{{$value['end_time']}}</span>
 											</li>
 										</ul>
+										<br/>
 									@endforeach
 								@endif
 							</div>

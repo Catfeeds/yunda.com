@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/swiper-3.4.2.min.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
-		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 		<style type="text/css">
 			.header{
 				height: 1.25rem;

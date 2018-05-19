@@ -47,20 +47,20 @@ class WarrantyController
 		$person_phone = $token_data['insured_phone'];
         $user_res = Person::where('phone',$person_phone)->select('id')->first();
         $warranty_ok_res = CustWarranty::where('user_id',$user_res['id'])
-            ->where('warranty_status','7')//保障中
+            ->where('warranty_status','4')//保障中
             ->select('id')
             ->get();
         $warranty_paying_res = CustWarranty::where('user_id',$user_res['id'])
-            ->where('warranty_status','3')//待支付
+            ->where('warranty_status','2')//待支付
             ->select('id')
             ->get();
         $warranty_timeout_res = CustWarranty::where('user_id',$user_res['id'])
-            ->where('warranty_status','10')//已失效
+            ->where('warranty_status','6')//已失效
             ->select('id')
             ->get();
         $input = $this->request->all();
-        $status = $input['status']??"7";//默认保障中
-        //保单状态（ 1待核保，2核保失败，3未支付-核保成功，4支付中,5支付失败,6支付成功，7保障中,8待生效,9待续保，10已失效，11已退保）',
+        $status = $input['status']??"4";//默认保障中
+        //保单状态 1待处理, 2待支付,3待生效, 4保障中,5可续保，6已失效，7已退保  8已过保
         $warranty_res = CustWarranty::where('user_id',$user_res['id'])
             ->where('warranty_status',$status)//已失效
             ->select('id','warranty_code','warranty_uuid','start_time','end_time','warranty_status')
@@ -83,7 +83,8 @@ class WarrantyController
             ->select('id','warranty_code','warranty_uuid','start_time','end_time','warranty_status')
             ->first();
         $cust_policy_res = CustWarrantyPerson::where('warranty_uuid',$warranty_res['warranty_uuid'])
-            ->get();
+            ->select('out_order_no','type','relation_name','name','card_type','card_code','phone','occupation','birthday','sex','age','email','nationality','annual_income','height','weight','area','address','start_time','end_time')
+			->get();
         $policy_res = [];
         $inusred_res = [];
         foreach ($cust_policy_res as $value){

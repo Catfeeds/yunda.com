@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
-		<script src="{{config('view_url.channel_url')}}js/baidu.statistics.js"></script>
+		<script src="{{config('view_url.channel_views')}}js/baidu.statistics.js"></script>
 		<style>
 			.btn-next{display: block;margin: .4rem auto;width: 90%;color: #744c22;background: #f6d85f;}
 			.icon-check{float: right;margin-top: .24rem;width: .5rem;height: .5rem;background: url({{config('view_url.channel_views')}}imges/no_checked.png) no-repeat;background-size: 100% 100%;}
