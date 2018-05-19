@@ -105,7 +105,7 @@ class IndexController
 				$wechat_url = '';//签约URL
 			}
 			//签约页面上会显示签约人的相关信息
-			return view('channels.yunda.bank_authorize',compact('bank','cust_id','cust_name','cust_phone','person_code','wechat_status','wechat_url'));
+			return view('channels.yunda.insure_authorize',compact('bank','cust_id','cust_name','cust_phone','person_code','wechat_status','wechat_url'));
         }
         return view('channels.yunda.insure_info',compact('person_code'));
     }
