@@ -138,9 +138,10 @@
     });
     $('#confirm').on('click', function () {
         var bank_code = $("input[name='bank_code']").val();
+        var person_phone = $("input[name='person_phone']").val();
         var person_name = $("input[name='person_name']").val();
         var person_code = $("input[name='person_code']").val();
-        if (bank_code.length == 0 || person_name.length == 0 || person_code.length == 0) {
+        if (bank_code.length == 0 || person_name.length == 0 || person_phone.length == 0) {
             Mask.alert('姓名，手机号，银行卡不能为空', 3);
             return false;
         }
@@ -150,7 +151,7 @@
             },
             url: "{{config('view_url.channel_yunda_target_url')}}do_insure_authorize",
             type: "post",
-            data: {'person_name': person_name, 'person_code': person_code, 'bank_code': bank_code},
+            data: {'person_name': person_name,'person_phone':person_phone, 'person_code': person_code, 'bank_code': bank_code},
             dataType: "json",
             success: function (data) {
                 Mask.alert(data.msg, 3);

@@ -96,7 +96,7 @@
 					<p class="shop">为实现自动购保，给您的生活和工作带来各种保障，请开通免密支付功能</p>
 				</div>
 				<div class="popups-footer">
-					<button id="confirm" type="button" class="btn btn-default confirm">去开通</button>
+					<button id="do_authorize" type="button" class="btn btn-default confirm">去开通</button>
 				</div>
 			</div>
 		</div>
@@ -105,6 +105,7 @@
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
             var token = "{{$_GET['token']}}";
+            var authorize_status = "{{$auto_insure_status?true:false}}";
             localStorage.setItem('token', token);
             Mask.loding();
             window.onload = function(){
@@ -136,6 +137,10 @@
             $('#insure_set_target').on('tap',function(){
                 Mask.loding();
             });
+            $('#do_authorize').on('tap',function(){
+                Mask.loding();
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}insure_authorize?token="+token;
+            });
             $(function(){
                 var hide = $('.hide');
                 var btn_agree = $('#agree');
@@ -158,7 +163,9 @@
                         });
                         _this.isAgree();
 //						_this.getStatus();
-                        Popups.open('.popups-ask');
+						if(!authorize_status){
+                            Popups.open('.popups-ask');
+						}
                         $('#confirm').click(function(){
                             Popups.close('.popups-ask');
                         });

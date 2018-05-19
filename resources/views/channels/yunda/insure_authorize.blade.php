@@ -85,8 +85,6 @@
             var app = {
                 init: function () {
                     var _this = this;
-                    _this.bankPicker()
-                    _this.areaPicker()
                     $('.icon-guanbi').click(function () {
                         location.href = "bmapp:homepage";
                     });
@@ -98,33 +96,6 @@
                     })
                     _this.isDisabled()
                 },
-                bankPicker: function () {
-                    var bankPicker = new mui.PopPicker();
-                    bankPicker.setData([{value: 'ywj', text: '工商银行'}, {value: 'aaa', text: '民生银行'}]);
-                    $('.choose-bank').click(function () {
-                        var _this = $(this)
-                        $('input').blur();
-                        bankPicker.show(function (items) {
-                            _this.next().val(items[0].value)
-                            _this.text(items[0].text).css({'color': '#303030'})
-                            app.isDisabled()
-                        });
-                    })
-                },
-                areaPicker: function () {
-                    var cityPicker = new mui.PopPicker({layer: 3});
-                    $('.choose-area').on('tap', function () {
-                        var _this = $(this)
-                        $('input').blur();
-                        var _this = $(this);
-                        cityPicker.setData(changeCityData(areaData));
-                        cityPicker.show(function (items) {
-                            _this.text(items[0].text + "-" + items[1].text + "-" + items[2].text).css({'color': '#303030'});
-                            _this.next().val(items[0].value + "-" + items[1].value + "-" + items[2].value);
-                            app.isDisabled()
-                        });
-                    })
-                },
                 isDisabled: function () {
                     var $confirm = $('.btn-default');
                     var status = this.checkInput() || this.isAgree()
@@ -134,7 +105,6 @@
                     var status = false
                     var $inputs = $('.tab input')
                     $inputs.each(function (index) {
-                        console.log($(this).val());
                         if (!$(this).val()) {
                             status = true
                         }
@@ -156,9 +126,10 @@
             });
             $('#confirm').on('click', function () {
                 var bank_code = $("input[name='bank_code']").val();
+                var person_phone = $("input[name='person_phone']").val();
                 var person_name = $("input[name='person_name']").val();
                 var person_code = $("input[name='person_code']").val();
-                if (bank_code.length == 0 || person_name.length == 0 || person_code.length == 0) {
+                if (bank_code.length == 0 || person_name.length == 0 || person_phone.length == 0) {
                     Mask.alert('姓名，手机号，银行卡不能为空', 3);
                     return false;
                 }
@@ -168,7 +139,7 @@
                     },
                     url: "{{config('view_url.channel_yunda_target_url')}}do_insure_authorize",
                     type: "post",
-                    data: {'person_name': person_name, 'person_code': person_code, 'bank_code': bank_code},
+                    data: {'person_name': person_name,'person_phone':person_phone, 'person_code': person_code, 'bank_code': bank_code},
                     dataType: "json",
                     success: function (data) {
                         Mask.alert(data.msg, 3);

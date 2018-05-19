@@ -141,7 +141,11 @@ class IndexController
             $insured_status = '0';//保障状态
             $auto_insure_status = '0';//自动投保状态
         }
-        return view('channels.yunda.insure_center',compact('person_code','insured_status','auto_insure_status'));
+		$user_seting = ChannelInsureSeting::where('cust_cod',$person_code)
+			->select('cust_id','authorize_status','authorize_start')
+			->first();
+		$authorize_status  = $user_seting['authorize_status'];//免密授权开通状态
+        return view('channels.yunda.insure_center',compact('person_code','insured_status','auto_insure_status','authorize_status'));
     }
 
     /**
