@@ -53,7 +53,7 @@
 							</ul>
 							<ul class="form-wrapper">
 								<li style="font-weight: bold;">出险经过描述</li>
-								<li style="height: 2rem;"><textarea placeholder="请填写事故的原因和现状" name="ins_desc"></textarea></li>
+								<li style="height: 2rem;"><textarea placeholder="请填写事故的原因和现状" id="ins_desc" name="ins_desc"></textarea></li>
 							</ul>
 							<button disabled id="next" class="btn btn-next">下一步</button>
 						</div>
@@ -113,6 +113,18 @@
 					return isDisabled
 				}
 			}
+            $('#next').on('click', function () {
+                var ins_address = $("input[name='ins_address']").val();
+                var ins_desc = $("#ins_desc").val();
+                if (ins_address.length < 5) {
+                    Mask.alert('请输入正确的地址', 3);
+                    return false;
+                }
+                if (ins_desc.length == 0) {
+                    Mask.alert('出险描述不可为空', 3);
+                    return false;
+                }
+            });
 			app.init();
             $('.head-right').on('tap',function () {
                 Mask.loding();

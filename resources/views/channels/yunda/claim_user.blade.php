@@ -59,7 +59,7 @@
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
 			var $inputs = $('input'),$next = $('#next');
-			$inputs.bind('input propertychange', function() {  
+			$inputs.bind('input propertychange', function() {
 			  $inputs.each(function(index){
 			  	if(!$(this).val()){
 			  		$next.prop('disabled',true)
@@ -70,6 +70,25 @@
 			  	}
 			  })
 			});
+
+            $('#next').on('click', function () {
+                var name = $("input[name='name']").val();
+                var papers_code = $("input[name='papers_code']").val();
+                var address = $("input[name='address']").val();
+                if (name.length <= 1) {
+                    Mask.alert('姓名不合法', 3);
+                    return false;
+                }
+                if(!(/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(papers_code))){
+                    Mask.alert('请输入正确的身份证', 3);
+                    return false;
+                }
+                if (address.length < 5) {
+                    Mask.alert('请输入正确的地址', 3);
+                    return false;
+                }
+            });
+
             $('.head-right').on('tap',function () {
                 Mask.loding();
                 location.href="bmapp:homepage";
