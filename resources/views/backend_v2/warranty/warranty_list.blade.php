@@ -86,7 +86,7 @@
 											@endforeach
 										@endif
 									</div>
-									<div class="col-md-2">英大非机动车驾驶员意外险</div>
+									<div class="col-md-2">快递保.意外险</div>
 									{{--@if(isset($value['warrantyPerson'])&&!empty($value['warrantyPerson']))--}}
 										{{--@foreach($value['warrantyPerson'] as $va)--}}
 											{{--@if($va['type'] == '1')--}}
@@ -95,21 +95,12 @@
 												{{--<div class="col-md-1">{{$va['phone']}}</div>--}}
 											{{--@endif--}}
 										{{--@endforeach--}}
-									{{--@else--}}
-										{{--<div class="col-md-1">王石磊</div>--}}
-										{{--<div class="col-md-1">410881199406056514</div>--}}
-										{{--<div class="col-md-1">15701681524</div>--}}
-									{{--@endif--}}
+
 									@if(isset($value['person'])&&!empty($value['person']))
 										<div class="col-md-1">{{$value['person']['name']}}</div>
 										<div class="col-md-1">{{$value['person']['papers_code']}}</div>
 										<div class="col-md-1">{{$value['person']['phone']}}</div>
-									@else
-										<div class="col-md-1">王石磊</div>
-										<div class="col-md-1">410881199406056514</div>
-										<div class="col-md-1">15701681524</div>
 									@endif
-
 									<div class="col-md-1">2</div>
 									<div class="col-md-1">1</div>
 									<div class="col-md-1"></div>
