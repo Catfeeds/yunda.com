@@ -80,7 +80,6 @@ class YdWechatPre extends Command
 	 * 第二天联合登陆后进行投保操作（代扣，异步操作）
 	 */
 	public function handle(){
-
 //		存入缓存，减少数据库查询次数
 //		存值取值
 //		Redis::exists('key') //redis是否存在这个键

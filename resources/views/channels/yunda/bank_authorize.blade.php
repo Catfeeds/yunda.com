@@ -141,6 +141,10 @@
         var person_phone = $("input[name='person_phone']").val();
         var person_name = $("input[name='person_name']").val();
         var person_code = $("input[name='person_code']").val();
+         if(bank_code.length == 0||person_name.length == 0||person_code.length == 0){
+            Mask.alert('姓名，手机号，银行卡不能为空', 3);
+            return false;
+		}
         if (bank_code.length == 0 || person_name.length == 0 || person_phone.length == 0) {
             Mask.alert('姓名，手机号，银行卡不能为空', 3);
             return false;
