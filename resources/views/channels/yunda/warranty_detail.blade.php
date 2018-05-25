@@ -167,7 +167,7 @@
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-img').on('tap',function(){
-                window.history.go(-1);return false;
+                history.go(-1);return false;
             });
             $('#claim_target').on('click',function () {
                 var id = $('#claim_target').val();

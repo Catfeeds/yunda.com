@@ -53,7 +53,7 @@ class GroupInsApiMobileController extends BaseController{
         //判断是否有预存的信息
         $prepare = OrderPrepareParameter::where('identification', $identification)->first();
         if(!$prepare)
-            return "<script>alert('订单不存在或已被删除'); window.history.go(-1);</script>";
+            return "<script>alert('订单不存在或已被删除'); history.go(-1);</script>";
         $api_info = ApiInfo::where('private_p_code', $prepare->private_p_code)->first()->toArray();
         $ins = json_decode($api_info['json'], true);
         $insurance_attributes = [];
@@ -115,7 +115,7 @@ class GroupInsApiMobileController extends BaseController{
         //判断是否有预存的信息
         $prepare = OrderPrepareParameter::where('identification', $identification)->first();
         if(!$prepare)
-            return "<script>alert('订单不存在或已被删除'); window.history.go(-1);</script>";
+            return "<script>alert('订单不存在或已被删除'); history.go(-1);</script>";
         if(!file_exists(public_path('qrcodes'))){
             mkdir('qrcodes');
             chmod('qrcodes',0777);

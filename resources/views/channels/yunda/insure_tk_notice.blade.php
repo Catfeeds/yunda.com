@@ -99,7 +99,7 @@
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                window.history.go(-1);return false;
+                history.go(-1);return false;
             });
 		</script>
 	</body>

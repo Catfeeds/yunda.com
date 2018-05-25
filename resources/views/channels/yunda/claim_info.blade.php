@@ -79,7 +79,7 @@
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-img').on('tap',function(){
-                window.history.go(-1);return false;
+                history.go(-1);return false;
             });
             //上传资料
             function uploadInfo(id){

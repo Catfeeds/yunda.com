@@ -25,7 +25,7 @@
             success:function(msg){
                 if(msg.status == 0){
 //                    alert(msg.message);
-//                    window.history.go(-1);return false;;  //返回发短信的一页
+//                    history.go(-1);return false;;  //返回发短信的一页
 //                    location.reload();
                     window.location.href="http://www.product.com/backend/dopay?type=sms&id="+company;
 //                    window.history.back();

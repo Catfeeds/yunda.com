@@ -216,7 +216,7 @@
                     window.location.href="/product/order_pay_success";
                 }else{
 //                    alert('支付失败');
-//                    window.history.go(-1);return false;
+//                    history.go(-1);return false;
                 }
             }
         });

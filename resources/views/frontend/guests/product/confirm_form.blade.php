@@ -236,7 +236,7 @@
                             </div>
                         @endif
                     @endforeach
-                    <div class="buttonbox"><button class="btn btn-a4d790" onclick="window.history.go(-1);return false;">修改信息</button><button class="btn btn-f18164" onclick="insureSubmit()">提交订单</button></div>
+                    <div class="buttonbox"><button class="btn btn-a4d790" onclick="history.go(-1);return false;">修改信息</button><button class="btn btn-f18164" onclick="insureSubmit()">提交订单</button></div>
                 </div>
             </div>
             @include('frontend.guests.product.product_notice')
