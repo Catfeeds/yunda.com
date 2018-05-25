@@ -28,8 +28,10 @@
 
 <body id="process10">
 <header class="mui-bar mui-bar-nav">
-	<div class="head-img">
-		<img src="{{config('view_url.channel_views')}}imges/back.png" />
+	<div class="head-left">
+		<div class="head-img">
+			<i class="iconfont icon-fanhui"></i>
+		</div>
 	</div>
 	<div class="head-title">
 		<span>银行卡信息</span>
@@ -94,17 +96,10 @@
     var app = {
         init: function() {
             var _this = this;
-            _this.bankPicker()
-            _this.areaPicker()
-            $('input').bind('input propertychange', function() {
-            
-            })
             $('.agree-wrapper input').click(function(){
                 var status = $(this).prop('checked')
                 $(this).prev().toggleClass('active')
-                
             })
-            _this.isDisabled()
             if($('#btn-remove').length){
                 _this.remove()
             }
@@ -151,6 +146,15 @@
         var bank_city = $("input[name='bank_city']").val();
         var bank_code = $("input[name='bank_code']").val();
         var person_data = $("input[name='person_data']").val();
+
+        if (bank_code.length == 0) {
+            Mask.alert('银行卡不能为空', 3);
+            return false;
+        }
+        if(!isRealNum(bank_code)){
+            Mask.alert('银行卡必须是数字', 3);
+            return false;
+        }
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -165,6 +169,17 @@
             }
         });
     });
+    function isRealNum(val){
+        // isNaN()函数 把空串 空格 以及NUll 按照0来处理 所以先去除
+        if(val === "" || val ==null){
+            return false;
+        }
+        if(!isNaN(val)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 </script>
 </body>
 </html>

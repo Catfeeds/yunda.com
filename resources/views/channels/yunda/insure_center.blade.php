@@ -15,7 +15,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<a href="bmapp:homepage"><img src="{{config('view_url.channel_views')}}imges/back.png"></a>
+					<a href="bmapp:homepage"><i class="iconfont icon-fanhui"></i></a>
 				</div>
 			</div>
 			<div class="head-right">

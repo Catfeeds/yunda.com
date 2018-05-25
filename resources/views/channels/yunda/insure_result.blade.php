@@ -16,7 +16,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<img src="{{config('view_url.channel_views')}}imges/back.png">
+					<i class="iconfont icon-fanhui"></i>
 				</div>
 			</div>
 			<div class="head-right">

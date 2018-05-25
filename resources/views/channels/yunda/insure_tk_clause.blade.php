@@ -61,8 +61,10 @@
 <div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-slide-in mui-draggable">
 	<div class="mui-inner-wrap">
 		<header class="mui-bar mui-bar-nav">
-			<div class="head-img">
-				<img src="{{config('view_url.channel_views')}}imges/back.png"/>
+			<div class="head-left">
+				<div class="head-img">
+					<i class="iconfont icon-fanhui"></i>
+				</div>
 			</div>
 			<div class="head-right">
 				<i class="iconfont icon-close"></i>

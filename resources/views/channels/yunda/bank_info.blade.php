@@ -15,8 +15,10 @@
 
 	<body id="process10">
 		<header class="mui-bar mui-bar-nav">
-			<div class="head-img">
-				<img src="{{config('view_url.channel_views')}}imges/back.png" />
+			<div class="head-left">
+				<div class="head-img">
+					<i class="iconfont icon-fanhui"></i>
+				</div>
 			</div>
 			<div class="head-title">
 				<span>银行卡信息</span>

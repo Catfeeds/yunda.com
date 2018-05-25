@@ -85,9 +85,9 @@ class BankController
 	{
 		$input = $this->request->all();
 		$person_data = json_decode($input['person_data'], true);
-		$bank = $input['bank_name'];
+		$bank = $input['bank_name']??" ";
 		$bank_cod = $input['bank_code'];
-		$bank_city = $input['bank_city'];
+		$bank_city = $input['bank_city']??" ";
 		$cust_res = Person::where('papers_code', $person_data['insured_code'])->select()->first();
 		if (empty($cust_res)) {
 			Person::insert([
