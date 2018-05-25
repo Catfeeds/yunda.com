@@ -83,12 +83,10 @@
 <script src="{{config('view_url.channel_views')}}js/common.js"></script>
 <script>
     $('.head-right').on('tap',function () {
-        Mask.loding();
         location.href = "bmapp:homepage";return false;
         return false;
     });
     $('.head-img').on('tap',function(){
-        Mask.loding();
         window.history.go(-1);return false;
         return false;
     });
