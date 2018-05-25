@@ -96,9 +96,12 @@
     var app = {
         init: function() {
             var _this = this;
+            _this.bankPicker()
+            _this.areaPicker()
             $('.agree-wrapper input').click(function(){
                 var status = $(this).prop('checked')
                 $(this).prev().toggleClass('active')
+
             })
             if($('#btn-remove').length){
                 _this.remove()
