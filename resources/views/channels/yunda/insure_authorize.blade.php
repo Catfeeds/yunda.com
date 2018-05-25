@@ -80,6 +80,12 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+            $('.head-right').on('tap',function () {
+                location.href = "bmapp:homepage";return false;
+            });
+            $('.head-img').on('tap',function(){
+                window.history.go(-1);return false;
+            });
             var token = "{{$_GET['token']}}";
             localStorage.setItem('token', token);
             var app = {
