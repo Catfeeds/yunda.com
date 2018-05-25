@@ -334,15 +334,15 @@ $res = json_decode($res,true)[0];
 @include('frontend.channels.insure_alert')
 <script>
     $('.head-right').on('tap',function () {
-        Mask.loding();
+
         location.href="bmapp:homepage";
     });
     $('.head-left').on('tap',function(){
-        Mask.loding();
+
         window.location.go(-1);
     });
     $('#claim_target').on('tap',function(){
-        Mask.loding();
+
     });
 
 </script>

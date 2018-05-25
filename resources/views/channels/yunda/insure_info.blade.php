@@ -133,7 +133,7 @@
             localStorage.setItem('token', token);
 			$('#do_insured').on('click',function () {
 			    var person_code = "{{$person_code}}";
-                Mask.loding();
+
 				window.location.href = "{{config('view_url.channel_yunda_target_url')}}do_insured?token="+token;
             });
             $('.head-right').on('tap',function () {
@@ -143,7 +143,7 @@
                 history.back(-1);return false;
             });
             $('.ins_clause').on('tap',function(){
-                Mask.loding();
+
             });
 		</script>
 	</body>

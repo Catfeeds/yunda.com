@@ -128,7 +128,7 @@
             }
             app.init();
             $('#insure_authorize_info').on('tap', function () {
-                Mask.loding();
+
             });
             $('#confirm').on('click', function () {
                 var bank_code = $("input[name='bank_code']").val();
@@ -166,7 +166,7 @@
                 });
             });
             $('#wechat_pay').on('tap', function () {
-                Mask.loding();
+
                 $('#do_insure_sign').submit();
             });
             function isRealNum(val){

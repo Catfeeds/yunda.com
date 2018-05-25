@@ -51,17 +51,17 @@
                 var token = localStorage.getItem('token');
 				var cust_id = '1';
                 $('#add').click(function(){
-                    Mask.loding();
+
                     location.href = '{{config('view_url.channel_yunda_target_url')}}bank_bind?token='+token;
                 });
                 $('#add2').click(function(){
-                    Mask.loding();
+
                     location.href = '{{config('view_url.channel_yunda_target_url')}}bank_bind?token='+token;
                 });
                 $('.tablist').click(function(){
                     var bank_id = $(this).data('id');
                     if(bank_id){
-                        Mask.loding();
+
                         location.href = '{{config('view_url.channel_yunda_target_url')}}bank_info/'+bank_id+'?token='+token;
 					}
                 });

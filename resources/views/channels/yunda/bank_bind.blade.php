@@ -89,7 +89,7 @@
         history.back(-1);return false;
     });
     $('#insure_authorize_info').on('tap',function(){
-        Mask.loding();
+
     });
     var app = {
         init: function() {

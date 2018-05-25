@@ -74,13 +74,13 @@
                 history.back(-1);return false;
             });
             $('#user_setup_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#insure_setup_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#bank_setup_target').on('tap',function(){
-                Mask.loding();
+
             });
 		</script>
 	</body>

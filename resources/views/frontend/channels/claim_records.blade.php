@@ -157,24 +157,24 @@
 @include('frontend.channels.insure_alert')
 <script>
     $('.head-right').on('tap',function () {
-        Mask.loding();
+
         location.href="bmapp:homepage";
     });
     $('.head-left').on('tap',function(){
-        Mask.loding();
+
         window.location.go(-1);
     });
     $('#warranty_info_y').on('tap',function(){
-        Mask.loding();
+
     });
     $('#warranty_info_n').on('tap',function(){
-        Mask.loding();
+
     });
     $('#warranty_info_y2').on('tap',function(){
-        Mask.loding();
+
     });
     $('#warranty_info_n2').on('tap',function(){
-        Mask.loding();
+
     });
     //				mui.init();
     mui('.mui-scroll-wrapper').scroll({

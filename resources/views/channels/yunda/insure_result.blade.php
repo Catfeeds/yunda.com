@@ -101,15 +101,15 @@
             var person_code = "{{$person_code}}";
             var warranty_code = "{{$warranty_res['warranty_code']??""}}";
             $('#warranty_info').on('click',function () {
-                Mask.loding();
+
                 window.location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_info/'+warranty_code+'?token='+token;
             });
             $('#insure_seting').on('click',function () {
-                Mask.loding();
+
                 window.location.href = '{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token='+token;
             });
             $('#do_insure').on('click',function () {
-                Mask.loding();
+
                 window.location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+token;
             });
             $('.head-right').on('tap',function () {

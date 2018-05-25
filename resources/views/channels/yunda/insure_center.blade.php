@@ -107,38 +107,38 @@
             var token = "{{$_GET['token']}}";
             var authorize_status = "{{$auto_insure_status?true:false}}";
             localStorage.setItem('token', token);
-            Mask.loding();
+
             window.onload = function(){
                 $('.loading-wrapper').remove();
             };
             $('.head-right').on('tap',function () {
-                Mask.loding();
+
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                Mask.loding();
+
                 location.href = "bmapp:homepage";return false;
             });
             $('#claim_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#warranty_target').on('tap',function(){
-                Mask.loding();
+
             });
 			$('#seting_target').on('tap',function(){
-				Mask.loding();
+
 			});
             $('#insure_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#insure_no_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#insure_set_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#do_authorize').on('tap',function(){
-                Mask.loding();
+
                 window.location.href = "{{config('view_url.channel_yunda_target_url')}}insure_authorize?token="+token;
             });
             $(function(){
