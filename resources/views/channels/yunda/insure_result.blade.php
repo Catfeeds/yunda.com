@@ -113,12 +113,11 @@
                 window.location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+token;
             });
             $('.head-right').on('tap',function () {
-                Mask.loding();
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                Mask.loding();
-                window.history.go(-1);return false;
+                window.history.go(-1);
+                return false;
             });
 		</script>
 	</body>
