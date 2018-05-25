@@ -165,11 +165,11 @@
             var token = localStorage.getItem('token');
             $('.head-right').on('tap',function () {
                 Mask.loding();
-                location.href="bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
             $('.head-img').on('tap',function(){
                 Mask.loding();
-                window.history.go(-1);
+                window.history.go(-1);return false;
             });
             $('#claim_target').on('click',function () {
                 var id = $('#claim_target').val();

@@ -101,6 +101,7 @@ class WarrantyController
                 $inusred_res['phone'] = $value['phone'];
             }
         }
+        //sleep(25);
         $warranty_status = config('status_setup.warranty');//保单状态
         return view('channels.yunda.warranty_detail',compact('warranty_status','warranty_res','user_res','policy_res','inusred_res'));
     }

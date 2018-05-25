@@ -86,7 +86,7 @@
                 init: function () {
                     var _this = this;
                     $('.icon-guanbi').click(function () {
-                        location.href = "bmapp:homepage";
+                        location.href = "bmapp:homepage";return false;
                     });
                     $('input').bind('input propertychange', function () {
                         _this.isDisabled()

@@ -70,7 +70,7 @@
             _this.bankPicker()
             _this.areaPicker()
             $('.icon-guanbi').click(function () {
-                location.href = "bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
             $('input').bind('input propertychange', function () {
                 _this.isDisabled()

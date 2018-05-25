@@ -67,11 +67,11 @@
                 });
                 $('.head-right').on('tap',function () {
                     Mask.loding();
-                    location.href="bmapp:homepage";
+                    location.href = "bmapp:homepage";return false;
                 });
                 $('.head-img').on('tap',function(){
                     Mask.loding();
-                    window.history.go(-1);
+                    window.history.go(-1);return false;
                 });
 			</script>
 	</body>

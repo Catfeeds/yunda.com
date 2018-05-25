@@ -57,7 +57,7 @@
 				<div class="agree-wrapper">
 					<label>我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}bank_authorize_info?token={{$_GET['token']}}" id="insure_authorize_info"> 《转账授权书》 </a><i class="icon-check"></i><input hidden type="checkbox" value=""/></label>
 				</div>
-				<button disabled id="save" class="btn">保存</button>
+				<button id="save" class="btn">保存</button>
 			</div>
 		</div>
 		<div class="popups-wrapper popups-ask">
@@ -84,11 +84,13 @@
 <script>
     $('.head-right').on('tap',function () {
         Mask.loding();
-        location.href="bmapp:homepage";
+        location.href = "bmapp:homepage";return false;
+        return false;
     });
     $('.head-img').on('tap',function(){
         Mask.loding();
-        window.history.go(-1);
+        window.history.go(-1);return false;
+        return false;
     });
     $('#insure_authorize_info').on('tap',function(){
         Mask.loding();
@@ -99,12 +101,12 @@
             _this.bankPicker()
             _this.areaPicker()
             $('input').bind('input propertychange', function() {
-                _this.isDisabled()
+            
             })
             $('.agree-wrapper input').click(function(){
                 var status = $(this).prop('checked')
                 $(this).prev().toggleClass('active')
-                _this.isDisabled()
+                
             })
             _this.isDisabled()
             if($('#btn-remove').length){
@@ -128,7 +130,7 @@
                 bankPicker.show(function(items) {
                     _this.next().val(items[0].text)
                     _this.text(items[0].text).css({'color':'#303030'})
-                    app.isDisabled()
+                   
                 });
             })
         },
@@ -142,33 +144,10 @@
                 cityPicker.show(function(items) {
                     _this.text(items[0].text+"-"+items[1].text+"-"+items[2].text).css({'color':'#303030'});
                     _this.next().val(items[0].text+"-"+items[1].text+"-"+items[2].text);
-                    app.isDisabled()
+                    
                 });
             })
         },
-        isDisabled: function() {
-            var $save = $('#save')
-            var status = this.checkInput() || this.isAgree()
-            $save.prop('disabled',status)
-        },
-        checkInput: function() {
-            var status = false
-            var $inputs = $('.banktab input')
-            $inputs.each(function(index){
-                if(!$(this).val()){
-                    status = true
-                    return false
-                }
-            })
-            return status
-        },
-        isAgree: function() {
-            if($('.icon-check.active').length){
-                return false;
-            }else{
-                return true;
-            }
-        }
     }
     app.init();
     $('#save').click(function(){
