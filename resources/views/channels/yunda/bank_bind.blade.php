@@ -49,7 +49,7 @@
 					<span class="choose choose-bank">选择</span>
 					<input hidden type="text" name="bank_name" />
 				</div>
-				<div class="tab">
+				<div class="tab banktab">
 					<span class="item"><b>银行卡号<span style="color: red">*</span></b></span>
 					<input type="text" name="bank_code"/>
 				</div>
@@ -153,7 +153,7 @@
         },
         checkInput: function() {
             var status = false
-            var $inputs = $('.tab input')
+            var $inputs = $('.banktab input')
             $inputs.each(function(index){
                 if(!$(this).val()){
                     status = true
