@@ -16,11 +16,11 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<i class="iconfont icon-fanhui"></i>
+					<a href="bmapp:homepage"><i class="iconfont icon-fanhui"></i></a>
 				</div>
 			</div>
 			<div class="head-right">
-				<i class="iconfont icon-close"></i>
+				<a href="bmapp:homepage"><i class="iconfont icon-close"></i></a>
 			</div>
 			<div class="head-title">
 				<span>购买结果</span>
