@@ -78,7 +78,7 @@
             $('.head-right').on('tap',function () {
                 location.href = "bmapp:homepage";return false;
             });
-            $('.head-img').on('tap',function(){
+            $('.head-left').on('tap',function(){
                 history.back(-1);return false;
             });
             //上传资料

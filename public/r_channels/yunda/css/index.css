@@ -431,7 +431,7 @@
 }
 .head-img{
 	width: 1rem;
-	height: 1rem;
+	height: .75rem;
 	margin-left: .20rem;
 	margin-top: .22rem;
 	float: left;
@@ -440,6 +440,9 @@
 	float: right;
 	margin-right: .20rem;
 	margin-top: .3rem;
+}
+.head-left{
+	float: left;
 }
 .head-title{
 	font-family: "PingFang-SC-Medium";
