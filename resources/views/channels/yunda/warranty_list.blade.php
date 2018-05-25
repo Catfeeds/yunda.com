@@ -63,7 +63,11 @@
 											</li>
 											<li class="item">
 												<span>生效时间</span>
-												<span>{{$value['start_time']}}-{{$value['end_time']}}</span>
+												<span>
+													{{date('Y-m-d',substr($value['start_time'],0,strlen($value['start_time'])-3)).' '.'上工时间'}}
+													到
+													{{date('Y-m-d',substr($value['start_time'],0,strlen($value['end_time'])-3)).' '.'23:59:59'}}
+												</span>
 											</li>
 										</ul>
 										<br/>
