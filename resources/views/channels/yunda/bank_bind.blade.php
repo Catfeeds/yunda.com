@@ -84,11 +84,9 @@
 <script>
     $('.head-right').on('tap',function () {
         location.href = "bmapp:homepage";return false;
-        return false;
     });
     $('.head-img').on('tap',function(){
         window.history.go(-1);return false;
-        return false;
     });
     $('#insure_authorize_info').on('tap',function(){
         Mask.loding();

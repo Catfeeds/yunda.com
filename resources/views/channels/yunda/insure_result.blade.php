@@ -116,8 +116,7 @@
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-img').on('tap',function(){
-                window.history.go(-1);
-                return false;
+                window.history.go(-1);return false;
             });
 		</script>
 	</body>

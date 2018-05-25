@@ -152,8 +152,7 @@
         location.href = "bmapp:homepage";return false;
     });
     $('.head-left').on('tap',function(){
-        window.history.go(-1);
-        return false;
+        window.history.go(-1);return false;
     });
     $('.product-price').on('tap',function(){
         $('.logo-wrapper').hide();
