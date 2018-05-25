@@ -83,7 +83,10 @@ Mask.prototype.alert = function(msg, time, callback) {
 //}
 Mask.prototype.loding = function(msg){
     var _this = this;
-    var html = '<div class="test loading-wrapper"><a onclick="window.history.go(-1)"><i class="iconfont icon-fanhui"></i></a><a href="bmapp:homepage"><i class="iconfont icon-close"></i></a><div class="loading">正在加载...</div></div>';
+    var html = '<div class="toast_loading"><img src="/r_channels/yunda/imges/loadinig.png" class="aniLoad"> <p style="line-height:1;">正在加载中…</p ></div>';
+    setTimeout(function (){
+    		$('.toast_loading').hide();
+    	},1000);
     _this.open(html);
 }
 Mask.prototype.img = function(url){
