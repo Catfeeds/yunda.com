@@ -162,7 +162,7 @@
             location.href = "bmapp:homepage";return false;
         });
         $('.head-img').on('tap',function(){
-            history.go(-1);return false;
+            history.back(-1);return false;
         });
 
         function auditSubmit(status){

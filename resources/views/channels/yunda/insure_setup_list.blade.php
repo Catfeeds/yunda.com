@@ -71,7 +71,7 @@
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                history.go(-1);return false;
+                history.back(-1);return false;
             });
             $('#user_setup_target').on('tap',function(){
                 Mask.loding();

@@ -59,8 +59,7 @@
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-img').on('tap',function(){
-                alert(12);
-                history.go(-1);return false;
+                history.back(-1);return false;
             });
             $('#del').click(function(){
                 var bank_code = $("input[name='bank_code']").val();
