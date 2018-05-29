@@ -20,6 +20,7 @@ use App\Helper\IPHelper;
 use App\Models\Person;
 use Ixudra\Curl\Facades\Curl;
 use App\Helper\TokenHelper;
+use Illuminate\Support\Facades\DB;
 
 class BankController
 {
@@ -108,6 +109,8 @@ class BankController
 		$bank_cod = $input['bank_code'];
 		$bank_city = $input['bank_city']??" ";
 		$cust_res = Person::where('papers_code', $person_data['insured_code'])->select()->first();
+		DB::beginTransaction();
+		try{
 		if (empty($cust_res)) {
 			Person::insert([
 				'name' => $person_data['insured_name'],
@@ -141,6 +144,11 @@ class BankController
 			'created_at'=>time(),
 			'updated_at'=>time(),
 		]);
+			DB::commit();
+		}catch (\Exception $e){
+			DB::rollBack();
+			return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
+		}
 		if ($insert_res) {
 			return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
 		} else {
@@ -206,6 +214,8 @@ class BankController
 //		if ($bank_res['bank_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
 //			return json_encode(['status' => '500', 'msg' => '系统银行卡数据，不能删除']);
 //		}
+		DB::beginTransaction();
+		try{
 		$del_res = Bank::where('cust_id', $cust_id)
 			->where('bank_code', $bank_cod)
 			->update([
@@ -216,6 +226,11 @@ class BankController
 				->update([
 					'authorize_bank'=>$bank_num[0]['bank_code']
 				]);
+		}
+		DB::commit();
+		}catch (\Exception $e){
+			DB::rollBack();
+			return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
 		}
 		if ($del_res) {
 			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
@@ -490,6 +505,8 @@ class BankController
 		$person_name = $input['person_name'];
 		$bank_code = $input['bank_code'];
 		$user_res = Person::where('papers_code', $person_code)->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')->first();
+		DB::beginTransaction();
+		try{
 		if (empty($user_res)) {
 			$user_res['id'] = Person::insertGetId([
 				'name' => $person_name,
@@ -542,6 +559,11 @@ class BankController
 				'auto_insure_status'=>'1',
 			]);
 		}
-		return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
+			DB::commit();
+			return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
+		}catch (\Exception $e){
+			DB::rollBack();
+			return json_encode(['status' => '500', 'msg' => '开通免密支付成功']);
+		}
 	}
 }
