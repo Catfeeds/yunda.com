@@ -196,7 +196,7 @@ class IndexController
         $biz_content['insured_city'] = $user_res['address_detail'];
         $biz_content['insured_county'] = $user_res['address_detail'];
         $biz_content['insured_address'] = $user_res['address_detail'];
-        $biz_content['bank_code'] = $bank_res['authorize_bank'];
+        $biz_content['bank_code'] = $user_setup_res['authorize_bank'];
         $biz_content['bank_name'] = $bank_res['bank'];
         $biz_content['bank_address'] = $bank_res['bank_city'];
         $biz_content['bank_phone'] = $bank_res['phone'];
