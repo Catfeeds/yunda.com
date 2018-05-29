@@ -148,6 +148,7 @@ class BankController
 			->first();
 		$cust_id = $bank_res['cust_id'];
 		$bank_num = Bank::where('cust_id', $cust_id)
+			->where('state','<>','1')
 			->select('bank_code')
 			->get();
 		$bank_del_status = true;//删除按钮显示状态，默认显示
@@ -175,6 +176,7 @@ class BankController
 		$cust_id = $input['cust_id'];
 		$bank_cod = $input['bank_code'];
 		$bank_num = Bank::where('cust_id', $cust_id)
+			->where('state','<>','1')
 			->select('bank_code')
 			->get();
 		$bank_res = Bank::where('cust_id', $cust_id)
