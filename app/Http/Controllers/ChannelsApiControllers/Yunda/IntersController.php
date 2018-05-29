@@ -321,7 +321,7 @@ class IntersController
             ->select('id')
             ->first();
 		$token = isset(TokenHelper::getToken($input)['token'])?TokenHelper::getToken($input)['token']:"";
-		$webapi_route = config('yunda.server_host').config('yunda.webapi_route').'insure_authorize?token='.$token;
+		$webapi_route = config('yunda.server_host').config('yunda.webapi_route').'bank_authorize?token='.$token;
         if(empty($person_res)){//没有此人信息，先插入信息，然后再授权
             Person::insert([
                 'name'=>$insured_name,
