@@ -59,6 +59,22 @@ class BankController
 			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')
 			->first();
 		$cust_id = $user_res['id'];
+		$bank_authorize = ChannelInsureSeting::where('cust_cod',$person_code)
+			->with('bank')
+			->select('authorize_bank')
+			->first();
+		if(!empty($bank_authorize)&&empty($bank_authorize['bank'])){
+			Bank::insert([
+				'cust_id'=>$user_res['id'],
+				'cust_type'=>'1',
+				'bank'=>"",
+				'bank_code'=>$bank_authorize['authorize_bank'],
+				'bank_city'=>"",
+				'phone'=>"",
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
+		}
 		$bank_res = Bank::where('cust_id', $cust_id)
 			->where('state','<>','1')
 			->select('id', 'bank', 'bank_code', 'bank_city', 'phone')
@@ -122,6 +138,8 @@ class BankController
 			'bank_code' => $bank_cod,
 			'bank_city' => $bank_city,
 			'phone' => '',
+			'created_at'=>time(),
+			'updated_at'=>time(),
 		]);
 		if ($insert_res) {
 			return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
@@ -179,9 +197,8 @@ class BankController
 			->where('state','<>','1')
 			->select('bank_code')
 			->get();
-		$bank_res = Bank::where('cust_id', $cust_id)
-			->where('bank_code', $bank_cod)
-			->select('bank', 'bank_code', 'bank_city', 'bank_deal_type', 'phone')
+		$bank_authorize = ChannelInsureSeting::where('authorize_bank',$bank_cod)
+			->select('id')
 			->first();
 		if (count($bank_num) <= 1) {//只剩最后一张银行卡
 			return json_encode(['status' => '500', 'msg' => '最后一张银行卡，不能删除']);
@@ -194,6 +211,12 @@ class BankController
 			->update([
 				'state'=>'1'
 			]);
+		if(!empty($bank_authorize)){
+			ChannelInsureSeting::where('id',$bank_authorize['id'])
+				->update([
+					'authorize_bank'=>$bank_num[0]['bank_code']
+				]);
+		}
 		if ($del_res) {
 			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
 		} else {
@@ -494,6 +517,8 @@ class BankController
 				'bank_city' => '',
 				'bank_deal_type' => '1',
 				'phone' => '',
+				'created_at'=>time(),
+				'updated_at'=>time(),
 			]);
 		}
 		if (empty($seting_res)) {

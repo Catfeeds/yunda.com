@@ -154,6 +154,8 @@ class IntersController
 				'bank_code'=>$bank_code,
 				'bank_city'=>$input['bank_address']??"",
 				'phone'=>$input['bank_phone']??"",
+				'created_at'=>time(),
+				'updated_at'=>time(),
 			]);
 		}
         //用用户身份证信息查询授权状态
