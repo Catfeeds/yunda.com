@@ -58,6 +58,7 @@ class BankController
 		$user_res = Person::where('phone', $person_phone)->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')->first();
 		$cust_id = $user_res['id'];
 		$bank_res = Bank::where('cust_id', $cust_id)
+			->where('state','<>','1')
 			->select('id', 'bank', 'bank_code', 'bank_city', 'phone')
 			->get()->toArray();
 		return view('channels.yunda.bank_index', compact('bank_res'));
@@ -181,12 +182,14 @@ class BankController
 		if (count($bank_num) <= 1) {//只剩最后一张银行卡
 			return json_encode(['status' => '500', 'msg' => '最后一张银行卡，不能删除']);
 		}
-		if ($bank_res['bank_type'] == 'own') {//从韵达传递过来的数据中获取的银行卡信息
-			return json_encode(['status' => '500', 'msg' => '系统银行卡数据，不能删除']);
-		}
+//		if ($bank_res['bank_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
+//			return json_encode(['status' => '500', 'msg' => '系统银行卡数据，不能删除']);
+//		}
 		$del_res = Bank::where('cust_id', $cust_id)
 			->where('bank_code', $bank_cod)
-			->delete();
+			->update([
+				'state'=>'1'
+			]);
 		if ($del_res) {
 			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
 		} else {
