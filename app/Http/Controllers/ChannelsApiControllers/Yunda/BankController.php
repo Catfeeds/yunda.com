@@ -55,7 +55,9 @@ class BankController
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
 		$person_phone = $token_data['insured_phone'];
-		$user_res = Person::where('phone', $person_phone)->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')->first();
+		$user_res = Person::where('phone', $person_phone)
+			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')
+			->first();
 		$cust_id = $user_res['id'];
 		$bank_res = Bank::where('cust_id', $cust_id)
 			->where('state','<>','1')
