@@ -154,9 +154,9 @@ class BankController
 		if (count($bank_num) <= 1) {//只剩最后一张银行卡
 			$bank_del_status = false;
 		}
-		if ($bank_res['bank_deal_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
-			$bank_del_status = false;
-		}
+//		if ($bank_res['bank_deal_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
+//			$bank_del_status = false;
+//		}
 		return view('channels.yunda.bank_info', compact('cust_id', 'bank_res', 'bank_del_status'));
 	}
 
