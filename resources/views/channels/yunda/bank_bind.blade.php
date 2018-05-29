@@ -118,7 +118,18 @@
         },
         bankPicker: function() {
             var bankPicker = new mui.PopPicker();
-            bankPicker.setData([{text:"\u4e2d\u56fd\u5de5\u5546\u94f6\u884c ",value:"1"},{text:"\u4e2d\u56fd\u519c\u4e1a\u94f6\u884c ",value:"2"},{text:"\u4e2d\u56fd\u5efa\u8bbe\u94f6\u884c",value:"3"},{text:"\u4e2d\u56fd\u94f6\u884c",value:"4"},{text:"\u4ea4\u901a\u94f6\u884c ",value:"5"},{text:"\u62db\u5546\u94f6\u884c",value:"6"},{text:"\u4e2d\u4fe1\u5b9e\u4e1a\u94f6\u884c",value:"7"},{text:"\u4e0a\u6d77\u6d66\u4e1c\u53d1\u5c55\u94f6\u884c",value:"8"},{text:"\u6c11\u751f\u94f6\u884c",value:"9"},{text:"\u5149\u5927\u94f6\u884c",value:"10"},{text:"\u5e7f\u4e1c\u53d1\u5c55\u94f6\u884c",value:"11"},{text:"\u5174\u4e1a\u94f6\u884c",value:"12"},{text:"\u534e\u590f\u94f6\u884c",value:"13"},{text:"\u4e0a\u6d77\u94f6\u884c",value:"14"},{text:"\u5317\u4eac\u94f6\u884c",value:"15"},{text:"\u6df1\u5733\u53d1\u5c55\u94f6\u884c",value:"16"},{text:"\u6df1\u5733\u5e02\u5546\u4e1a\u94f6\u884c",value:"17"},{text:"\u5929\u6d25\u5e02\u5546\u4e1a\u94f6\u884c",value:"18"},{text:"\u5e7f\u5dde\u5e02\u5546\u4e1a\u94f6\u884c",value:"19"},{text:"\u676d\u5dde\u5e02\u5546\u4e1a\u94f6\u884c",value:"20"},{text:"\u5357\u4eac\u5e02\u5546\u4e1a\u94f6\u884c",value:"21"},{text:"\u4e1c\u839e\u5e02\u5546\u4e1a\u94f6\u884c",value:"22"},{text:"\u5b81\u6ce2\u5e02\u5546\u4e1a\u94f6\u884c",value:"23"},{text:"\u65e0\u9521\u5e02\u5546\u4e1a\u94f6\u884c",value:"24"},{text:"\u6052\u4e30\u94f6\u884c",value:"25"},{text:"\u6b66\u6c49\u5e02\u5546\u4e1a\u94f6\u884c",value:"26"},{text:"\u957f\u6c99\u5e02\u5546\u4e1a\u94f6\u884c",value:"27"},{text:"\u5927\u8fde\u5e02\u5546\u4e1a\u94f6\u884c",value:"28"},{text:"\u897f\u5b89\u5e02\u5546\u4e1a\u94f6\u884c",value:"29"},{text:"\u91cd\u5e86\u5e02\u5546\u4e1a\u94f6\u884c",value:"30"},{text:"\u6d4e\u5357\u5e02\u5546\u4e1a\u94f6\u884c",value:"31"},{text:"\u6210\u90fd\u5e02\u5546\u4e1a\u94f6\u884c",value:"32"},{text:"\u8d35\u9633\u5e02\u5546\u4e1a\u94f6\u884c",value:"33"},{text:"\u77f3\u5bb6\u5e84\u5e02\u5546\u4e1a\u94f6\u884c",value:"34"},{text:"\u6606\u660e\u5e02\u5546\u4e1a\u94f6\u884c",value:"35"},{text:"\u70df\u53f0\u5e02\u5546\u4e1a\u94f6\u884c",value:"36"},{text:"\u54c8\u5c14\u6ee8\u5e02\u5546\u4e1a\u94f6\u884c",value:"37"},{text:"\u90d1\u5dde\u5e02\u5546\u4e1a\u94f6\u884c",value:"38"},{text:"\u4e4c\u9c81\u6728\u9f50\u5e02\u5546\u4e1a\u94f6\u884c",value:"39"},{text:"\u9752\u5c9b\u5e02\u5546\u4e1a\u94f6\u884c",value:"40"},{text:"\u6e29\u5dde\u5e02\u5546\u4e1a\u94f6\u884c",value:"41"},{text:"\u5408\u80a5\u5e02\u5546\u4e1a\u94f6\u884c",value:"42"},{text:"\u6dc4\u535a\u5e02\u5546\u4e1a\u94f6\u884c",value:"43"},{text:"\u82cf\u5dde\u5e02\u5546\u4e1a\u94f6\u884c ",value:"44"},{text:"\u592a\u539f\u5e02\u5546\u4e1a\u94f6\u884c",value:"45"},{text:"\u7ecd\u5174\u5e02\u5546\u4e1a\u94f6\u884c",value:"46"},{text:"\u53f0\u5dde\u5e02\u5546\u4e1a\u94f6\u884c",value:"47"},{text:"\u6d59\u5546\u94f6\u884c",value:"48"},{text:"\u4e34\u6c82\u5e02\u5546\u4e1a\u94f6\u884c",value:"49"},{text:"\u978d\u5c71\u5e02\u5546\u4e1a\u94f6\u884c",value:"50"},{text:"\u6f4d\u574a\u5e02\u5546\u4e1a\u94f6\u884c",value:"51"}]);
+            bankPicker.setData([
+                {"text":"建设银行","value":"1"},
+                {"text":"平安银行","value":"2"},
+                {"text":"广发银行","value":"3"},
+                {"text":"中国银行","value":"4"},
+                {"text":"光大银行","value":"5"},
+                {"text":"华夏银行","value":"6"},
+                {"text":"农业银行","value":"7"},
+                {"text":"中信银行","value":"8"},
+                {"text":"工商银行","value":"9"},
+                {"text":"北京农商银行","value":"10"}
+            ]);
             $('.choose-bank').click(function(){
                 var _this = $(this)
                 $('input').blur();
