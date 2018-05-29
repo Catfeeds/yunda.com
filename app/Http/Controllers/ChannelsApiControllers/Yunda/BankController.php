@@ -61,19 +61,14 @@ class BankController
 			->first();
 		$cust_id = $user_res['id'];
 		$bank_authorize = ChannelInsureSeting::where('cust_cod',$person_code)
-			->with('bank')
+			->with(['bank'=>function ($a){
+				$a->where('state','1');
+			}])
 			->select('authorize_bank')
 			->first();
-		if(!empty($bank_authorize)&&empty($bank_authorize['bank'])){
-			Bank::insert([
-				'cust_id'=>$user_res['id'],
-				'cust_type'=>'1',
-				'bank'=>"",
-				'bank_code'=>$bank_authorize['authorize_bank'],
-				'bank_city'=>"",
-				'phone'=>"",
-				'created_at'=>time(),
-				'updated_at'=>time(),
+		if(!empty($bank_authorize)&&!empty($bank_authorize['bank'])){
+			Bank::where('bank_code',$bank_authorize['authorize_bank'])->update([
+				'state'=>'0'
 			]);
 		}
 		$bank_res = Bank::where('cust_id', $cust_id)
@@ -206,6 +201,7 @@ class BankController
 			->select('bank_code')
 			->get();
 		$bank_authorize = ChannelInsureSeting::where('authorize_bank',$bank_cod)
+			->where('cust_id', $cust_id)
 			->select('id')
 			->first();
 		if (count($bank_num) <= 1) {//只剩最后一张银行卡
@@ -216,25 +212,25 @@ class BankController
 //		}
 		DB::beginTransaction();
 		try{
-		$del_res = Bank::where('cust_id', $cust_id)
-			->where('bank_code', $bank_cod)
-			->update([
-				'state'=>'1'
-			]);
+			Bank::where('cust_id', $cust_id)
+				->where('bank_code', $bank_cod)
+				->update([
+					'state'=>'1'
+				]);
+			$bank_res = Bank::where('cust_id', $cust_id)
+				->where('state','<>','1')
+				->select('bank_code')
+				->get();
 		if(!empty($bank_authorize)){
 			ChannelInsureSeting::where('id',$bank_authorize['id'])
 				->update([
-					'authorize_bank'=>$bank_num[0]['bank_code']
+					'authorize_bank'=>$bank_res[0]['bank_code']
 				]);
 		}
-		DB::commit();
+			DB::commit();
+			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
 		}catch (\Exception $e){
 			DB::rollBack();
-			return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
-		}
-		if ($del_res) {
-			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
-		} else {
 			return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
 		}
 	}
