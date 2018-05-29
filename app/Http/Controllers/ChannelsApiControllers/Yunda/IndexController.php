@@ -199,7 +199,7 @@ class IndexController
         $biz_content['bank_code'] = $user_setup_res['authorize_bank'];
         $biz_content['bank_name'] = $bank_res['bank'];
         $biz_content['bank_address'] = $bank_res['bank_city'];
-        $biz_content['bank_phone'] = $bank_res['phone'];
+        $biz_content['bank_phone'] = $user_res['phone'];
         $biz_content['channel_order_code'] = "";
         $biz_content['insured_days'] = $user_setup_res['auto_insure_type']??"1";
         $biz_content['price'] = '2';
