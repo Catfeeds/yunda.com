@@ -48,7 +48,7 @@
 							<li class="title">快递保.意外险<i class="iconfont icon-jiantou"></i></li>
 							<li class="item">
 								<span>保单号</span>
-								<span>{{$value['warranty_uuid']}}</span>
+								<span>{{$value['pro_policy_no']??""}}</span>
 							</li>
 							<li class="item">
 								<span>保单状态</span>

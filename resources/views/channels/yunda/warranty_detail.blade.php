@@ -34,7 +34,7 @@
 						</div>
 						<div class="line">
 							<span>保单号</span>
-							<span>{{$warranty_res['warranty_uuid']}}</span>
+							<span>{{$warranty_res['pro_policy_no']??""}}</span>
 						</div>
 						<div class="line">
 							<span>状态</span>
