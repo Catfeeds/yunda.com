@@ -208,6 +208,7 @@ class IntersController
                $current_insurance_status = false;
            }else{
 			   $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
+				   ->orderBy('created_at','desc')
 				   ->where('created_at','>',strtotime(date('Y-m-d')).'000')//今天凌晨的时间戳
 				   ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
 				   ->first();
