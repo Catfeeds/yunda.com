@@ -93,6 +93,7 @@
     $('#insure_authorize_info').on('tap',function(){
 
     });
+    var token = localStorage.getItem('token');
     var app = {
         init: function() {
             var _this = this;
@@ -149,7 +150,6 @@
         var bank_city = $("input[name='bank_city']").val();
         var bank_code = $("input[name='bank_code']").val();
         var person_data = $("input[name='person_data']").val();
-
         if (bank_code.length == 0) {
             Mask.alert('银行卡不能为空', 3);
             return false;
@@ -167,8 +167,11 @@
             data: {'bank_name':bank_name,'bank_city':bank_city,'bank_code':bank_code,'person_data':person_data},
             dataType: "json",
             success: function (data) {
-                Mask.alert(data.msg,3);
                 $('#save').attr('style',"display:none");
+                Mask.alert(data.msg,3);
+                setTimeout(function(){//两秒后跳转
+                    window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index?token="+token;
+                },2000);
             }
         });
     });
