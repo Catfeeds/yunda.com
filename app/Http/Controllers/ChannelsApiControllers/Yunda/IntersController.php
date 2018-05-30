@@ -139,7 +139,7 @@ class IntersController
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_bank';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-            $return_data['data']['content'] = '银行卡信息缺失，请绑定银行卡！';
+            $return_data['data']['content'] = '绑定银行卡,开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_bank?token='.$token;
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -169,7 +169,7 @@ class IntersController
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-            $return_data['data']['content'] = '免密授权未开启，请授权！';
+            $return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -179,7 +179,7 @@ class IntersController
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-            $return_data['data']['content'] = '免密授权未开启，请授权！';
+            $return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -239,7 +239,7 @@ class IntersController
                 $return_data['message']['digest'] = 'default';
                 $return_data['message']['details'] = 'insuring';
                 $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-                $return_data['data']['content'] = '投保中';
+                $return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
                 $return_data['data']['target_url'] = $webapi_route.'do_insured?token='.$token;
 				$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                 return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -254,7 +254,7 @@ class IntersController
                     $return_data['message']['digest'] = 'default';
                     $return_data['message']['details'] = 'insured';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-                    $return_data['data']['content'] = '保障中';
+                    $return_data['data']['content'] = '今日快递保未生效中>>';
                     $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
 					$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -264,7 +264,7 @@ class IntersController
 						$return_data['message']['digest'] = 'default';
 						$return_data['message']['details'] = 'isured_fail';
 						$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-						$return_data['data']['content'] = '核保失败!';
+						$return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
 						$return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
 						$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
 						return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -274,7 +274,7 @@ class IntersController
 						$return_data['message']['digest'] = 'default';
 						$return_data['message']['details'] = 'isured_fail';
 						$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-						$return_data['data']['content'] = '支付失败！';
+						$return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
 						$return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
 						$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
 						return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -283,7 +283,7 @@ class IntersController
                     $return_data['message']['digest'] = 'default';
                     $return_data['message']['details'] = 'isured_fail';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-                    $return_data['data']['content'] = '投保失败！';
+                    $return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
                     $return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
 					$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -294,7 +294,7 @@ class IntersController
         $return_data['message']['digest'] = 'default';
         $return_data['message']['details'] = 'insured';
         $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-        $return_data['data']['content'] = '保障中';
+        $return_data['data']['content'] = '今日快递保未生效中>>';
         $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
         $return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
         return json_encode($return_data,JSON_UNESCAPED_UNICODE);
