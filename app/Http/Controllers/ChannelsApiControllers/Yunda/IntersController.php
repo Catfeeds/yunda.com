@@ -208,9 +208,10 @@ class IntersController
                $current_insurance_status = false;
            }else{
 			   $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
-				   ->orderBy('created_at','desc')
+				   ->where('warranty_status','<>','6')//失效的订单
 				   ->where('created_at','>',strtotime(date('Y-m-d')).'000')//今天凌晨的时间戳
 				   ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
+				   ->orderBy('created_at','desc')
 				   ->first();
 			   if(empty($cust_warranty_res)){
 			   	 $current_insurance_status = false;
@@ -218,7 +219,7 @@ class IntersController
 			   	 $current_insurance_status = true;
 			   }
 		   }
-            if(!$current_insurance_status){//没有进行过投保操作
+            if(!$current_insurance_status){//TODO 没有进行过投保操作
 				$input['insured_days'] = empty($user_setup_res['auto_insure_type'])?'1':$user_setup_res['auto_insure_type'];
 				$input['price'] = '2';
                 switch ($input['insured_days']){
@@ -258,6 +259,26 @@ class IntersController
 					$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
                 }else{
+                	if($check_status=='2'){
+						$return_data['code'] = '205';
+						$return_data['message']['digest'] = 'default';
+						$return_data['message']['details'] = 'isured_fail';
+						$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
+						$return_data['data']['content'] = '核保失败!';
+						$return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
+						$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
+						return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+					}
+					if($pay_status=='2'){
+						$return_data['code'] = '205';
+						$return_data['message']['digest'] = 'default';
+						$return_data['message']['details'] = 'isured_fail';
+						$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
+						$return_data['data']['content'] = '支付失败！';
+						$return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
+						$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
+						return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+					}
                     $return_data['code'] = '205';
                     $return_data['message']['digest'] = 'default';
                     $return_data['message']['details'] = 'isured_fail';
