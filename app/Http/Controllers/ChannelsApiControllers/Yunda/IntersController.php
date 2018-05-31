@@ -254,7 +254,7 @@ class IntersController
                     $return_data['message']['digest'] = 'default';
                     $return_data['message']['details'] = 'insured';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-                    $return_data['data']['content'] = '今日快递保未生效中>>';
+                    $return_data['data']['content'] = '今日快递保生效中>>';
                     $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
 					$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -294,7 +294,7 @@ class IntersController
         $return_data['message']['digest'] = 'default';
         $return_data['message']['details'] = 'insured';
         $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-        $return_data['data']['content'] = '今日快递保未生效中>>';
+        $return_data['data']['content'] = '今日快递保生效中>>';
         $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
         $return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
         return json_encode($return_data,JSON_UNESCAPED_UNICODE);
