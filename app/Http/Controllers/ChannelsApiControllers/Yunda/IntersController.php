@@ -174,7 +174,7 @@ class IntersController
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
-        if(!$user_setup_res['authorize_status']||!$user_setup_res['authorize_status']){
+        if(!$user_setup_res['authorize_status']||!$user_setup_res['auto_insure_status']){
             $return_data['code'] = '204';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
