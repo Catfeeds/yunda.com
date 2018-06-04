@@ -89,7 +89,7 @@ class Handler extends ExceptionHandler
     {
         $e = FlattenException::create($e);
         if (!config('app.debug')) {
-            return response()->view('errors.500', ['exception' => $e], $e->getStatusCode(), $e->getHeaders());
+            return response()->view('error.500', ['exception' => $e], $e->getStatusCode(), $e->getHeaders());
         }
 
         $handler = new SymfonyExceptionHandler(config('app.debug', false));
