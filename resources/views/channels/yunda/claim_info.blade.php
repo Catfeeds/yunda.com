@@ -34,6 +34,7 @@
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<div>
+						@if(!empty($result))
 						<ul class="form-wrapper">
 							<li style="font-weight: bold;">快递保.意外险</li>
 							<li>理赔状态<input style="color: #267cfc;" @if($result->claim_status == 2)onclick="uploadInfo({{$result->claim_id}})"@endif  type="text" value="{{$status['claim_status'][$result->status]}}"/></li>
@@ -66,7 +67,9 @@
 								@endif
 							</ul>
 						</div>
+						@endif
 					</div>
+
 				</div>
 			</div>
 		</div>

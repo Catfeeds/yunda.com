@@ -103,7 +103,7 @@ class WarrantyController
                 $inusred_res['phone'] = $value['phone'];
             }
         }
-        //sleep(25);
+        sleep(30);
 		$warranty_status = config('status_setup.warranty_status');//保单状态
 		$pay_status = config('status_setup.pay_status');//支付状态
 		$check_status = config('status_setup.check_status');//核保状态
