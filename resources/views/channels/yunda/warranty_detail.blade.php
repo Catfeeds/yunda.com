@@ -173,7 +173,8 @@
         return false;
     });
     $('.head-left').on('tap',function(){
-        history.back(-1);
+        //history.back(-1);
+        window.location.href = "{{config('view_url.channel_yunda_target_url')}}warranty_list?token=" + token;
         return false;
     });
     $('#claim_target').on('click', function () {

@@ -66,7 +66,9 @@
         location.href = "bmapp:homepage";return false;
     });
     $('.head-left').on('tap',function(){
-        history.back(-1);return false;
+        window.location.href = "{{config('view_url.channel_yunda_target_url')}}ins_center?token=" + token;
+        // history.back(-1);
+        return false;
     });
     $('#underway').click(function(){
         location.href = '{{config('view_url.channel_yunda_target_url')}}claim_progress?type=0&token='+token;

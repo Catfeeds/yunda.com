@@ -79,7 +79,9 @@
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                history.back(-1);return false;
+                // history.back(-1);
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_progress?token=" + token;
+                return false;
             });
             //上传资料
             function uploadInfo(id){

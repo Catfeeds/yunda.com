@@ -100,7 +100,7 @@
     $('.content').click(function () {
         var warranty_id = $(this).data('id');
         if (warranty_id) {
-            Mask.loding();
+            // Mask.loding();
             location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_detail/' + warranty_id + '?token=' + token;
         }
     });
@@ -109,7 +109,8 @@
         return false;
     });
     $('.head-left').on('tap',function(){
-        history.back(-1);
+        //history.back(-1);
+        window.location.href = "{{config('view_url.channel_yunda_target_url')}}ins_center?token=" + token;
         return false;
     });
 </script>
