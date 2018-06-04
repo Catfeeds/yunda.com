@@ -166,7 +166,7 @@
 <script type="text/javascript">
     $('body').on('click','.formW2 img',function(){
         $(this).parent().find('input').eq(0).click();
-    })
+    });
     // 上传照片
     var upLoadImg = function(e){
         var _this = $(e).parent();
