@@ -65,11 +65,11 @@
 		<script src="{{config('view_url.channel_url')}}js/common.js"></script>
 		<script>
             $('.head-right').on('tap',function () {
-                Mask.loding();
+
                 location.href="bmapp:homepage";
             });
             $('.head-left').on('tap',function(){
-                Mask.loding();
+
                 window.location.go(-1);
             });
 			$(function(){
@@ -122,13 +122,13 @@
 				step3.init();
 			});
             $('#insure_info').on('tap',function(){
-                Mask.loding();
+
             });
             $('#clause_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#notice_target').on('tap',function(){
-                Mask.loding();
+
             });
 		</script>
 	</body>

@@ -40,7 +40,6 @@ use App\Models\CustWarrantyPerson;
 use App\Models\ChannelJointLogin;
 use App\Jobs\YdWechatPay;
 use App\Helper\TokenHelper;
-;
 
 class YdWechatPre extends Command
 {
@@ -81,13 +80,27 @@ class YdWechatPre extends Command
 	 * 第二天联合登陆后进行投保操作（代扣，异步操作）
 	 */
 	public function handle(){
-		$login_person = ChannelJointLogin::where('login_start','>=',strtotime(date('Y-m-d',strtotime('-1 day'))))
-			->where('login_start','<',strtotime(date('Y-m-d')))
-			->with(['person'=>function($a){
-				$a->select('name','papers_type','papers_code','phone','email','address','address_detail');
-			}])
-			->select('phone','login_start')
-			->get();
+//		存入缓存，减少数据库查询次数
+//		存值取值
+//		Redis::exists('key') //redis是否存在这个键
+//		Redis::set('key','value'); //存入redis
+//		Redis::get('key'); //获取redis中的值
+//      队列操作
+//		Redis::rPush("prepare_info",$biz_content);//入队操作
+//		Redis::lpop('prepare_info')//出队操作
+//		Redis::lLen('key'); //队列的长度
+//		Redis::rpop('key'); //右侧出队列
+		if(!Redis::exits('login_person')){
+			$login_person = ChannelJointLogin::where('login_start','>=',strtotime(date('Y-m-d',strtotime('-1 day'))))
+				->where('login_start','<',strtotime(date('Y-m-d')))
+				->with(['person'=>function($a){
+					$a->select('name','papers_type','papers_code','phone','email','address','address_detail');
+				}])
+				->select('phone','login_start')
+				->get();
+		}else{
+			$login_person = Redis::get('login_person');
+		}
 		foreach ($login_person as $value){
 			if(!isset($value['person'])&&empty($value['person'])){
 				return false;

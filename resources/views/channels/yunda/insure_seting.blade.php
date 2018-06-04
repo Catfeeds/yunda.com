@@ -13,8 +13,10 @@
 	</head>
 	<body id="process12">
 				<header class="mui-bar mui-bar-nav">
-					<div class="head-img">
-						<img src="{{config('view_url.channel_views')}}imges/back.png" />
+					<div class="head-left">
+						<div class="head-img">
+							<i class="iconfont icon-fanhui"></i>
+						</div>
 					</div>
 					<div class="head-title">
 						<span>自动投保设置</span>
@@ -38,16 +40,14 @@
             var token = localStorage.getItem('token');
 			var url = "{{config('view_url.channel_yunda_target_url')}}insure_auto?token="+token;
             $('#insure_setup').on('tap',function(){
-                Mask.loding();
+
                 window.location.href = url;
             });
             $('.head-right').on('tap',function(){
-                Mask.loding();
-                location.href="bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
-            $('.head-img').on('tap',function(){
-                Mask.loding();
-                window.history.go(-1);
+            $('.head-left').on('tap',function(){
+                history.back(-1);return false;
             });
 		</script>
 	</body>

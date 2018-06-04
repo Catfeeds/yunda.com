@@ -19,6 +19,11 @@
 	color: #fff;
 }
 
+.mui-bar .iconfont {
+	color: #744c22;
+	font-size: .46rem;
+}
+
 .mui-control-item {
 	font-size: .32rem!important;
 }
@@ -276,7 +281,6 @@
 	text-align: center;
 }
 
-
 .sidebar-header-img {
 	margin: 0 auto;
 	width: 1rem;
@@ -299,14 +303,14 @@
 
 .sidebar-header-certification span {
 	display: inline-block;
-    font-size: .2rem;
-    color: #000;
-    background: #efe946;
-    border-radius: 15px;
-    width: 1.2rem;
-    height: .5rem;
-    line-height: .5rem;
-    text-align: center;
+	font-size: .2rem;
+	color: #000;
+	background: #efe946;
+	border-radius: 15px;
+	width: 1.2rem;
+	height: .5rem;
+	line-height: .5rem;
+	text-align: center;
 }
 
 .sidebar-content {
@@ -316,12 +320,12 @@
 }
 
 .sidebar-content>a {
-    display: block;
-    height: .9rem;
-    line-height: .9rem;
-    margin: 0 .3rem;
-    border-bottom: 1px solid #dcdcdc;
-    font-size: .28rem;
+	display: block;
+	height: .9rem;
+	line-height: .9rem;
+	margin: 0 .3rem;
+	border-bottom: 1px solid #dcdcdc;
+	font-size: .28rem;
 }
 
 .sidebar-content>a:active {
@@ -334,9 +338,11 @@
 	color: #00A2FF;
 	vertical-align: inherit;
 }
-.sidebar-content .icon-shimingrenzheng{
+
+.sidebar-content .icon-shimingrenzheng {
 	font-size: .28rem;
 }
+
 .btn-exit {
 	width: .98rem;
 	height: .48rem;
@@ -352,7 +358,10 @@
 	border: 2px solid #fff;
 	border-radius: 4px;
 }
+
+
 /*导航*/
+
 .find_nav {
 	width: 100%;
 	height: .8rem;
@@ -397,7 +406,7 @@
 	height: .8rem;
 	line-height: .8rem;
 	/*font-size: .28rem;*/
-	font-size: 14px ;
+	font-size: 14px;
 	text-align: center;
 	color: #666;
 }
@@ -426,400 +435,521 @@
 	overflow-y: auto;
 	display: table;
 }
-.head-img{
-	width: .26rem;
-	height: .46rem;
+
+.head-img {
+	width: 1rem;
+	height: .75rem;
 	margin-left: .20rem;
 	margin-top: .22rem;
 	float: left;
 }
-.head-right{
+
+.head-right {
 	float: right;
 	margin-right: .20rem;
 	margin-top: .3rem;
 }
-.head-right .iconfont{
-	color: #744c22;
-	font-size: .4rem;
+
+.head-left {
+	float: left;
 }
-.head-title{
+
+.head-title {
 	font-family: "PingFang-SC-Medium";
 	font-size: .38rem;
 	color: #744c22;
 	text-align: center;
 	line-height: .90rem;
-	
 }
-.head-title span:nth-child(2){
+
+.head-title span:nth-child(2) {
 	float: right;
 }
-.head-hint{
+
+.head-hint {
 	width: 100%;
 	font-family: "PingFang-SC-Medium";
 	font-size: .2rem;
-	color: #ff8a00;	
+	color: #ff8a00;
 	line-height: .4rem;
 	text-align: center;
 }
-.center-img{
+
+.center-img {
 	height: 3.2rem;
 }
-.center-agree{
+
+.center-agree {
 	height: 1.1rem;
 	overflow: hidden;
 	background-color: #fff;
 }
-.center-left{
+
+.center-left {
 	float: left;
 	font-size: .34rem;
 	color: #333333;
 	margin-left: .3rem;
 	margin-top: .39rem;
 }
-.center-right{
+
+.center-right {
 	float: right;
 	margin-right: .3rem;
 	width: 1rem;
 	height: .5rem;
 	margin-top: .3rem;
 }
-.center-below{
+
+.center-below {
 	height: 1.98rem;
 	background-color: #fff;
 	border-bottom: 1px solid #dddddd;
 	border-top: 1px solid #dddddd;
 }
-.below-left{
+
+.below-left {
 	float: left;
 	width: 49%;
 	text-align: center;
 }
-.below-right{
+
+.below-right {
 	float: right;
 	width: 49%;
 	text-align: center;
 }
-.below-left-img{
+
+.below-left-img {
 	width: 1rem;
 	height: 1rem;
 	margin-top: .3rem;
 }
-.below-left-desc{
+
+.below-left-desc {
 	margin-top: .1rem;
 	font-size: .28rem;
 	color: #6e461f;
 }
-.vertical{
+
+.vertical {
 	float: left;
 	width: .02rem;
 	height: .6rem;
 	background-color: #efefee;
 	margin-top: .69rem;
 }
-.vertical1{
+
+.vertical1 {
 	float: left;
 	width: .02rem;
 	height: .46rem;
 	background-color: #efefee;
 	margin-top: .3rem;
 }
-.bottom-slip{
+
+.bottom-slip {
 	height: 1.7rem;
 	background-color: #fff;
 	border-bottom: 1px solid #dddddd;
-	overflow: hidden;	
-	
+	overflow: hidden;
 }
-.slip-left{
+
+.slip-left {
 	margin-left: .3rem;
 	float: left;
 	margin-top: .3rem;
 	overflow: hidden;
-	
 }
-.slip-img{
+
+.slip-img {
 	float: left;
 	width: .64rem;
 	height: .64rem;
 }
-.slip-manager{
+
+.slip-manager {
 	float: left;
 	margin-left: .12rem;
 }
-.slip-manager-top{
-	font-size:.29rem ;
+
+.slip-manager-top {
+	font-size: .29rem;
 	color: #333;
 }
-.slip-manager-nei{
+
+.slip-manager-nei {
 	margin-top: .2rem;
 }
-.slip-manager-bot{
-	font-size:.23rem ;
+
+.slip-manager-bot {
+	font-size: .23rem;
 	color: #999;
 	margin-right: .12rem;
-	
 }
-.size{
-	font-size:.24rem ;
+
+.size {
+	font-size: .24rem;
 }
-.slip-right{
+
+.slip-right {
 	float: right;
 	margin-right: .3rem;
 	margin-top: .48rem;
 	width: .18rem;
 	height: .34rem;
 }
-.slip-right1{
+
+.slip-right1 {
 	float: right;
 	margin-right: -2.2rem;
 	margin-top: .48rem;
 	width: .18rem;
 	height: .34rem;
 }
-.slip-manager-bot-left{
+
+.slip-manager-bot-left {
 	margin-left: .1rem;
-	
 }
-.color{
+
+.color {
 	height: .15rem;
 	background-color: #efeff4;
 }
-.test{
-				position: absolute;
-			    z-index: 998;
-			    top: 0;
-			    right: 0;
-			    bottom: 0;
-			    left: 0;
-			    display: block;
-			    transition: background 350ms cubic-bezier(.165, .84, .44, 1);
-			    background: rgba(0, 0, 0, .85)!important;
-			    box-shadow: -4px 0 4px rgba(0, 0, 0, .5), 4px 0 4px rgba(0, 0, 0, .5);
-			    -webkit-tap-highlight-color: transparent;
-			}
-			.manager {
-				position: absolute;
-			    left: 50%;
-			    width:5.64rem;
-			    height: 4rem;
-			    top: 50%;
-			    z-index:10000!important;
-			   	background-color: #fff;
-			    -webkit-overflow-scrolling: touch;
-			    -webkit-transform: translate(-50%,-50%);
-			    transform: translate(-50%,-50%);
-			    border-radius: .25rem;
-			}
-			.manager-top{
-				height: .92rem;
-				border-bottom: 1px solid #dddddd;
-				overflow: hidden;
-			}
-			.manager-top-left{
-				float: left;
-				margin-left:.3rem;
-				margin-top:.3rem;
-				border-left: 6px solid #f6b85f;
-			}
-			.manager-top-right{
-				float: right;
-				height: .45rem;
-				width: .45rem;
-				margin-right: .5rem;
-				margin-top: .22rem;
-			}
-			.manager-top-left-title{
-				font-size:.3rem;
-				color: #333;
-				margin-left: .2rem;
-				
-			}
-			.manager-center-name{
-				margin-top: .38rem;
-				margin-left: .4rem;
-				padding-bottom:.24rem ;
-			}
-			.name-size{
-				font-size: .3rem;
-				color: #999;
-			}
-			.juli{
-				margin-left: .65rem;
-			}
-			.juli1{
-				margin-left: .2rem;
-			}
-			.juli4{
-				margin-left: .45rem;
-			}
-			.input{
-				font-size:.24rem;
-				color: #999;
-			}
-			.buttom{
-				text-align: center;
-			}
-			.confirm{
-				width: 1.64rem;
-				height: .6rem;
-				border-radius: .08rem;
-				border: 1px solid #dddddd;
-				color: #744c22;
-			}
-			.img{
-				background-color: #f6d85f;
-				border: 1px solid #f6d85f;
-			}
-			.slip-center{
-				float: right;
-				overflow: hidden;
-				
-			}
-			.slip-center-left{
-				float: left;
-				width: 1.1rem;
-				height: 1.1rem;
-				margin-right: 1.2rem;
-				margin-top: .3rem;
-			}
-			.slip-center-right{
-				float: right;
-				width: .18rem;
-				height: .34rem;
-				margin-right: .3rem;
-				margin-top: .63rem;
-			}
-			/* list样式开始*/
-			.baodan{
-				height: 1.06rem;
-				overflow: hidden;
-				border-bottom:1px solid #ddd ;
-				background-color: #fff;
-			}
-			.baodan-left{
-				width: 49%;
-				float: left;
-				text-align: center;
-				line-height: 1.06rem;
-			}
-			.baodan-right{
-				width: 49%;
-				float: right;
-				text-align: center;
-				line-height: 1.06rem;
-			}
-			.baodan-left-color{
-				font-size: .28rem;
-				color: #ff8a00;
-			}
-			.baocolor{
-				color: #999;
-			}
-			.more{
-				text-align: center;
-			}
-			/* list样式结束*/
-			/* qianshou样式开始*/
-			.baozhang{
-				height: .84rem;
-				overflow: hidden;
-				background-color: #fff;
-				border-bottom: 1px solid #ddd;
-				line-height: .84rem;
-			}
-			.baozhang-left{
-				float: left;
-				margin-left: .25rem;
-			}
-			.baozhang-left-title{
-				font-size: .24rem;
-				color: #ea0000;
-			}
-			.baozhang-right{
-				float: right;
-				margin-right: .3rem;
-				width: .18rem;
-				height: .34rem;
-				margin-top: .08rem;
-			}
-			.quanbu{
-				height: .55rem;
-				background-color: #fff;
-				text-align: center;
-				line-height: .55rem;
-				color: #ff8a00;
-			}
-			/* qianshou样式结束*/
-			/* detil样式开始*/
-			/* detil样式结束*/
-			/*shixiao.zaibao样式开始*/
-			.shixiao-head{
-				margin-left: .4rem;
-				padding-top: .3rem;
-				font-size: .28rem;
-				color: #333;
-			}
-			.shixiao-head1{
-				margin-left: .4rem;
-				margin-top: .16rem;
-				font-size: .24rem;
-				color: #999;
-			}
-			.shixiao{
-				    height: 1.4rem;
-				    border-bottom: 1px solid #ddd;
-				    background-color: #fff;
-			}
-			.shixiao-img{
-				margin-right: .5rem;
-				margin-top: .45rem;
-			}
-			.slip-manager-shixiao{
-				height: 2rem;
-				background-color: #fff;
-			}
-			.slip-manager-shixiao-bottom{
-				height: 2.4rem;
-				background-color: #fff;
-			}
-			.shixiao-bottom{
-				padding-top: .3rem;
-				margin-left: .4rem;
-			}
-			.slip-manager-top-tab-right{
-				float: right;
-				margin-right: .5rem;
-				color: #267cfc;
-			}
-			.left{
-				float: left;
-			}
-			.slip-manager-top-tab ul{
-				overflow: hidden;
-			}
-			.slip-manager-top-tab ul li{
-				
-				margin-top: .16rem;
-			}
-			.zongji{
-				height: 1rem;
-				line-height: 1rem;
-				background-color: #fff;
-			}
-			.zongji-title{
-				font-size: .30rem;
-				color: #ff8a00;
-				margin-left: .4rem;
-			}
-			/*shixiao.zaibao样式结束*/
-body{
+
+.test {
+	position: absolute;
+	z-index: 998;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	display: block;
+	transition: background 350ms cubic-bezier(.165, .84, .44, 1);
+	background: rgba(0, 0, 0, .85)!important;
+	box-shadow: -4px 0 4px rgba(0, 0, 0, .5), 4px 0 4px rgba(0, 0, 0, .5);
+	-webkit-tap-highlight-color: transparent;
+}
+
+.manager {
+	position: absolute;
+	left: 50%;
+	width: 5.64rem;
+	height: 4rem;
+	top: 50%;
+	z-index: 10000!important;
+	background-color: #fff;
+	-webkit-overflow-scrolling: touch;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	border-radius: .25rem;
+}
+
+.manager-top {
+	height: .92rem;
+	border-bottom: 1px solid #dddddd;
+	overflow: hidden;
+}
+
+.manager-top-left {
+	float: left;
+	margin-left: .3rem;
+	margin-top: .3rem;
+	border-left: 6px solid #f6b85f;
+}
+
+.manager-top-right {
+	float: right;
+	height: .45rem;
+	width: .45rem;
+	margin-right: .5rem;
+	margin-top: .22rem;
+}
+
+.manager-top-left-title {
+	font-size: .3rem;
+	color: #333;
+	margin-left: .2rem;
+}
+
+.manager-center-name {
+	margin-top: .38rem;
+	margin-left: .4rem;
+	padding-bottom: .24rem;
+}
+
+.name-size {
+	font-size: .3rem;
+	color: #999;
+}
+
+.juli {
+	margin-left: .65rem;
+}
+
+.juli1 {
+	margin-left: .2rem;
+}
+
+.juli4 {
+	margin-left: .45rem;
+}
+
+.input {
+	font-size: .24rem;
+	color: #999;
+}
+
+.buttom {
+	text-align: center;
+}
+
+.confirm {
+	width: 1.64rem;
+	height: .6rem;
+	border-radius: .08rem;
+	border: 1px solid #dddddd;
+	color: #744c22;
+}
+
+.img {
+	background-color: #f6d85f;
+	border: 1px solid #f6d85f;
+}
+
+.slip-center {
+	float: right;
+	overflow: hidden;
+}
+
+.slip-center-left {
+	float: left;
+	width: 1.1rem;
+	height: 1.1rem;
+	margin-right: 1.2rem;
+	margin-top: .3rem;
+}
+
+.slip-center-right {
+	float: right;
+	width: .18rem;
+	height: .34rem;
+	margin-right: .3rem;
+	margin-top: .63rem;
+}
+
+
+/* list样式开始*/
+
+.baodan {
+	height: 1.06rem;
+	overflow: hidden;
+	border-bottom: 1px solid #ddd;
+	background-color: #fff;
+}
+
+.baodan-left {
+	width: 49%;
+	float: left;
+	text-align: center;
+	line-height: 1.06rem;
+}
+
+.baodan-right {
+	width: 49%;
+	float: right;
+	text-align: center;
+	line-height: 1.06rem;
+}
+
+.baodan-left-color {
+	font-size: .28rem;
+	color: #ff8a00;
+}
+
+.baocolor {
+	color: #999;
+}
+
+.more {
+	text-align: center;
+}
+
+
+/* list样式结束*/
+
+
+/* qianshou样式开始*/
+
+.baozhang {
+	height: .84rem;
+	overflow: hidden;
+	background-color: #fff;
+	border-bottom: 1px solid #ddd;
+	line-height: .84rem;
+}
+
+.baozhang-left {
+	float: left;
+	margin-left: .25rem;
+}
+
+.baozhang-left-title {
+	font-size: .24rem;
+	color: #ea0000;
+}
+
+.baozhang-right {
+	float: right;
+	margin-right: .3rem;
+	width: .18rem;
+	height: .34rem;
+	margin-top: .08rem;
+}
+
+.quanbu {
+	height: .55rem;
+	background-color: #fff;
+	text-align: center;
+	line-height: .55rem;
+	color: #ff8a00;
+}
+
+
+/* qianshou样式结束*/
+
+
+/* detil样式开始*/
+
+
+/* detil样式结束*/
+
+
+/*shixiao.zaibao样式开始*/
+
+.shixiao-head {
+	margin-left: .4rem;
+	padding-top: .3rem;
+	font-size: .28rem;
+	color: #333;
+}
+
+.shixiao-head1 {
+	margin-left: .4rem;
+	margin-top: .16rem;
+	font-size: .24rem;
+	color: #999;
+}
+
+.shixiao {
+	height: 1.4rem;
+	border-bottom: 1px solid #ddd;
+	background-color: #fff;
+}
+
+.shixiao-img {
+	margin-right: .5rem;
+	margin-top: .45rem;
+}
+
+.slip-manager-shixiao {
+	height: 2rem;
+	background-color: #fff;
+}
+
+.slip-manager-shixiao-bottom {
+	height: 2.4rem;
+	background-color: #fff;
+}
+
+.shixiao-bottom {
+	padding-top: .3rem;
+	margin-left: .4rem;
+}
+
+.slip-manager-top-tab-right {
+	float: right;
+	margin-right: .5rem;
+	color: #267cfc;
+}
+
+.left {
+	float: left;
+}
+
+.slip-manager-top-tab ul {
+	overflow: hidden;
+}
+
+.slip-manager-top-tab ul li {
+	margin-top: .16rem;
+}
+
+.zongji {
+	height: 1rem;
+	line-height: 1rem;
+	background-color: #fff;
+}
+
+.zongji-title {
+	font-size: .30rem;
+	color: #ff8a00;
+	margin-left: .4rem;
+}
+
+
+/*shixiao.zaibao样式结束*/
+
+body {
 	font-family: "PingFang-SC-Medium";
 }
 
-.mui-bar{
+.mui-bar {
 	padding-top: .4rem;
-    height: 1.32rem;
+	height: 1.32rem;
 }
-.mui-bar-nav~.mui-content{
+
+.mui-bar-nav~.mui-content {
 	padding-top: 1.32rem;
+}
+
+.toast_loading {
+	width: 1.28rem;
+	height: 1.28rem;
+	border-radius: 4px;
+	background: rgba(0, 0, 0, .6);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-left: -0.6rem;
+	margin-top: -0.6rem;
+	z-index: 100;
+	overflow: hidden;
+	color: #fff;
+	text-align: center;
+}
+
+.toast_loading img {
+	transform-origin: 50% 50%;
+	transform: rotate(0deg);
+	animation: carMove 1.5s infinite;
+	-webkit-animation: carMove 1.5s infinite;
+}
+
+@keyframes carMove {
+	0% {
+		transform: rotate3D(0, 0, 1, 0deg);
+	}
+	to {
+		transform: rotate3D(0, 0, 1, 360deg);
+	}
+}
+
+@-webkit-keyframes carMove {
+	0% {
+		-webkit-transform: rotate3D(0, 0, 1, 0deg);
+	}
+	to {
+		-webkit-transform: rotate3D(0, 0, 1, 360deg);
+	}
 }

@@ -157,24 +157,24 @@
 @include('frontend.channels.insure_alert')
 <script>
     $('.head-right').on('tap',function () {
-        Mask.loding();
+
         location.href="bmapp:homepage";
     });
     $('.head-left').on('tap',function(){
-        Mask.loding();
+
         window.location.go(-1);
     });
     $('#warranty_info_y').on('tap',function(){
-        Mask.loding();
+
     });
     $('#warranty_info_n').on('tap',function(){
-        Mask.loding();
+
     });
     $('#warranty_info_y2').on('tap',function(){
-        Mask.loding();
+
     });
     $('#warranty_info_n2').on('tap',function(){
-        Mask.loding();
+
     });
     //				mui.init();
     mui('.mui-scroll-wrapper').scroll({
@@ -224,7 +224,7 @@
 																	<div class="slip-manager-nei">\
 																		<span class="slip-manager-bot size" >保单号:<span class="slip-manager-bot-left">001021122201719812353344514</span></span>\
 																		<div style="margin-top: .1rem;">\
-																			<span class="slip-manager-bot size" >被保险人:<span class="slip-manager-bot-left">王石磊</span></span>\
+																			<span class="slip-manager-bot size" >被保险人:<span class="slip-manager-bot-left">被保人</span></span>\
 																		</div>\
 																		<div style="margin-top: .1rem;">\
 																			<span class="slip-manager-bot size" >申请时间:<span class="slip-manager-bot-left">2017-09-25 08:23:59</span></span>\

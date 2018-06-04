@@ -68,7 +68,7 @@ class IntersController
      */
     public function jointLogin(){
         $input = $this->request->all();
-        LogHelper::logChannelSuccess($input, 'YD_joint_login_params');
+        //LogHelper::logChannelSuccess($input, 'YD_joint_login_params');
         $return_data =[];
         $webapi_route = config('yunda.server_host').config('yunda.webapi_route');
         if(empty($input)){
@@ -139,7 +139,7 @@ class IntersController
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_bank';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-            $return_data['data']['content'] = '银行卡信息缺失，请绑定银行卡！';
+            $return_data['data']['content'] = '绑定银行卡,开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_bank?token='.$token;
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -154,6 +154,8 @@ class IntersController
 				'bank_code'=>$bank_code,
 				'bank_city'=>$input['bank_address']??"",
 				'phone'=>$input['bank_phone']??"",
+				'created_at'=>time(),
+				'updated_at'=>time(),
 			]);
 		}
         //用用户身份证信息查询授权状态
@@ -167,17 +169,17 @@ class IntersController
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-            $return_data['data']['content'] = '免密授权未开启，请授权！';
+            $return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
-        if(!$user_setup_res['authorize_status']||!$user_setup_res['authorize_status']){
+        if(!$user_setup_res['authorize_status']||!$user_setup_res['auto_insure_status']){
             $return_data['code'] = '204';
             $return_data['message']['digest'] = 'default';
             $return_data['message']['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-            $return_data['data']['content'] = '免密授权未开启，请授权！';
+            $return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -206,8 +208,10 @@ class IntersController
                $current_insurance_status = false;
            }else{
 			   $cust_warranty_res = CustWarranty::where('user_id',$cust_res['id'])
+				   ->where('warranty_status','<>','6')//失效的订单
 				   ->where('created_at','>',strtotime(date('Y-m-d')).'000')//今天凌晨的时间戳
 				   ->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
+				   ->orderBy('created_at','desc')
 				   ->first();
 			   if(empty($cust_warranty_res)){
 			   	 $current_insurance_status = false;
@@ -215,7 +219,7 @@ class IntersController
 			   	 $current_insurance_status = true;
 			   }
 		   }
-            if(!$current_insurance_status){//没有进行过投保操作
+            if(!$current_insurance_status){//TODO 没有进行过投保操作
 				$input['insured_days'] = empty($user_setup_res['auto_insure_type'])?'1':$user_setup_res['auto_insure_type'];
 				$input['price'] = '2';
                 switch ($input['insured_days']){
@@ -229,13 +233,13 @@ class IntersController
                         $input['price'] = $user_setup_res['auto_insure_price'];
                         break;
                 }
-                LogHelper::logSuccess($input,'YD_pay_insure1_params');
+                //LogHelper::logSuccess($input,'YD_pay_insure1_params');
                 dispatch(new YunDaPayInsure($input));//TODO 投保操作（异步队列）
                 $return_data['code'] = '200';
                 $return_data['message']['digest'] = 'default';
                 $return_data['message']['details'] = 'insuring';
                 $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-                $return_data['data']['content'] = '投保中';
+                $return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
                 $return_data['data']['target_url'] = $webapi_route.'do_insured?token='.$token;
 				$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                 return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -250,16 +254,36 @@ class IntersController
                     $return_data['message']['digest'] = 'default';
                     $return_data['message']['details'] = 'insured';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-                    $return_data['data']['content'] = '保障中';
+                    $return_data['data']['content'] = '今日快递保生效中>>';
                     $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
 					$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
                 }else{
+                	if($check_status=='2'){
+						$return_data['code'] = '205';
+						$return_data['message']['digest'] = 'default';
+						$return_data['message']['details'] = 'isured_fail';
+						$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
+						$return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
+						$return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
+						$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
+						return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+					}
+					if($pay_status=='2'){
+						$return_data['code'] = '205';
+						$return_data['message']['digest'] = 'default';
+						$return_data['message']['details'] = 'isured_fail';
+						$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
+						$return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
+						$return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
+						$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
+						return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+					}
                     $return_data['code'] = '205';
                     $return_data['message']['digest'] = 'default';
                     $return_data['message']['details'] = 'isured_fail';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-                    $return_data['data']['content'] = '投保失败！';
+                    $return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
                     $return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
 					$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
                     return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -270,7 +294,7 @@ class IntersController
         $return_data['message']['digest'] = 'default';
         $return_data['message']['details'] = 'insured';
         $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
-        $return_data['data']['content'] = '保障中';
+        $return_data['data']['content'] = '今日快递保生效中>>';
         $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
         $return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
         return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -321,7 +345,7 @@ class IntersController
             ->select('id')
             ->first();
 		$token = isset(TokenHelper::getToken($input)['token'])?TokenHelper::getToken($input)['token']:"";
-		$webapi_route = config('yunda.server_host').config('yunda.webapi_route').'insure_authorize?token='.$token;
+		$webapi_route = config('yunda.server_host').config('yunda.webapi_route').'bank_authorize?token='.$token;
         if(empty($person_res)){//没有此人信息，先插入信息，然后再授权
             Person::insert([
                 'name'=>$insured_name,

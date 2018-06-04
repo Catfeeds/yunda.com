@@ -77,7 +77,7 @@ class ProductController extends BaseController
     {
         $input = Requests::all();
         if(!isset($input['tariff'])){
-            return "<script>alert('请选择适合的参数！'); window.history.go(-1);</script>";
+            return "<script>alert('请选择适合的参数！'); history.go(-1);</script>";
         }
         $agent_id = $input['agent_id'];//代理人ID
         $ditch_id = $input['ditch_id'];//渠道ID
@@ -225,7 +225,7 @@ class ProductController extends BaseController
                 ->with('parameter',$data['parameter'])
                 ->with('product_res',$data['product_res']);
         }else {
-            return "<script>alert('订单不存在或已被删除'); window.history.go(-1);</script>";
+            return "<script>alert('订单不存在或已被删除'); history.go(-1);</script>";
         }
     }
 
@@ -471,7 +471,7 @@ class ProductController extends BaseController
             //通过产品预订单查找信息
             $prepare_parameter = OrderPrepareParameter::where('identification',$input['identification'])->first();
             if(is_null($prepare_parameter)){
-                return "<script>alert('操作失败，重新尝试');window.history.go(-1);</script>";
+                return "<script>alert('操作失败，重新尝试');history.go(-1);</script>";
             }
             $ditch_id = $prepare_parameter->ditch_id;
             $agent_id = $prepare_parameter->agent_id;
@@ -512,7 +512,7 @@ class ProductController extends BaseController
                 $card_info = IdentityCardHelp::getIDCardInfo($input['insuredIdNumber']);
 //                dd($card_info);
                 if($card_info['status'] != 2){
-                    return "<script>alert('被保人". $input['insuredIdNumber'] ."身份证信息有误！'); window.history.go(-1);</script>";
+                    return "<script>alert('被保人". $input['insuredIdNumber'] ."身份证信息有误！'); history.go(-1);</script>";
                 }
                 if(is_null($input['insuredPhone'])){
                     $input['insuredPhone'] = '';
@@ -623,19 +623,19 @@ class ProductController extends BaseController
                 return redirect('/product/pay_settlement/'.$union_order_code);
             }else {//说明验证未通过，返回错误信息,
                 if($return_status == 500){
-                    return "<script>alert('当前用户不适合投保，请更换后稍后重试'); window.history.go(-1);</script>";
+                    return "<script>alert('当前用户不适合投保，请更换后稍后重试'); history.go(-1);</script>";
                 }
                 $error_message = $return_data->content;
                  $pos = mb_strripos($error_message,'！');
                  if($pos){
                      $error_message = mb_substr($error_message,0,$pos+1);
                  }
-                return "<script>alert('" .$error_message ."');window.history.go(-1);</script>";
+                return "<script>alert('" .$error_message ."');history.go(-1);</script>";
             }
         }catch (Exception $e)
         {
             DB::rollBack();
-            return "<script>alert('下单失败，重新尝试');window.history.go(-1);</script>";
+            return "<script>alert('下单失败，重新尝试');history.go(-1);</script>";
         }
     }
 
@@ -831,7 +831,7 @@ class ProductController extends BaseController
 //                        array_push($error_person,$person_name->name);
                 }
             }
-            return "<script>alert('".$error_message."');window.history.go(-1);</script>";
+            return "<script>alert('".$error_message."');history.go(-1);</script>";
 
         }
     }
@@ -896,14 +896,14 @@ class ProductController extends BaseController
 //            $agent_id = $parameter_arr[2];
 //            $isMyProduct = $this->isMyProduct($product_id,$ditch_id,$agent_id);
 //            if(!$isMyProduct){//说明无权
-//                return "<script>alert('错误');window.history.go(-1);</script>";
+//                return "<script>alert('错误');history.go(-1);</script>";
 //            }
 //        }else if(isset($_GET['plan'])){//说明有计划书
 //           $sole_code = $_GET['plan'];
 //           $plan = Plan::where('sole_code',$sole_code)
 //               ->first();
 //           if(!$plan){
-//               return "<script>alert('页面错误');window.history.go(-1);</script>";
+//               return "<script>alert('页面错误');history.go(-1);</script>";
 //           }
 //           $plan_detail = json_decode($plan->parameter);
 //           $plan_detail = $this->objectarray_pre($plan_detail);

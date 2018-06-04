@@ -196,10 +196,10 @@ class IndexController
         $biz_content['insured_city'] = $user_res['address_detail'];
         $biz_content['insured_county'] = $user_res['address_detail'];
         $biz_content['insured_address'] = $user_res['address_detail'];
-        $biz_content['bank_code'] = $bank_res['authorize_bank'];
+        $biz_content['bank_code'] = $user_setup_res['authorize_bank'];
         $biz_content['bank_name'] = $bank_res['bank'];
         $biz_content['bank_address'] = $bank_res['bank_city'];
-        $biz_content['bank_phone'] = $bank_res['phone'];
+        $biz_content['bank_phone'] = $user_res['phone'];
         $biz_content['channel_order_code'] = "";
         $biz_content['insured_days'] = $user_setup_res['auto_insure_type']??"1";
         $biz_content['price'] = '2';
@@ -214,7 +214,7 @@ class IndexController
                 $biz_content['price'] = $user_setup_res['auto_insure_price'];
                 break;
         }
-        LogHelper::logSuccess($biz_content,'YD_pay_insure2_params');
+        //LogHelper::logSuccess($biz_content,'YD_pay_insure2_params');
         dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
         $ins_status = '100';//投保状态：成功200/失败500/投保中100
         $ins_msg = '投保中，请稍等~';//备注信息
@@ -371,7 +371,7 @@ class IndexController
 			ChannelOperate::where('channel_user_code',$person_code)
 				->where('proposal_num',$union_order_code)
 				->update(['pay_status'=>'500','pay_content'=>$response->content]);
-			LogHelper::logError($response->content, 'YD_pay_order_'.$union_order_code);
+			//LogHelper::logError($response->content, 'YD_pay_order_'.$union_order_code);
 			$return_data['status'] = false;
 			$return_data['message'] = '用户获取签约链接失败';
 			return $return_data;

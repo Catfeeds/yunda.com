@@ -70,7 +70,7 @@
             _this.bankPicker()
             _this.areaPicker()
             $('.icon-guanbi').click(function () {
-                location.href = "bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
             $('input').bind('input propertychange', function () {
                 _this.isDisabled()
@@ -134,15 +134,31 @@
     }
     app.init();
     $('#insure_authorize_info').on('tap', function () {
-        Mask.loding();
+
     });
     $('#confirm').on('click', function () {
         var bank_code = $("input[name='bank_code']").val();
         var person_phone = $("input[name='person_phone']").val();
         var person_name = $("input[name='person_name']").val();
         var person_code = $("input[name='person_code']").val();
+         if(bank_code.length == 0||person_name.length == 0||person_code.length == 0){
+            Mask.alert('姓名，手机号，银行卡不能为空', 3);
+            return false;
+		}
         if (bank_code.length == 0 || person_name.length == 0 || person_phone.length == 0) {
             Mask.alert('姓名，手机号，银行卡不能为空', 3);
+            return false;
+        }
+        if(!isChn(person_name)){
+            Mask.alert('姓名必须是汉字', 3);
+            return false;
+		}
+		if(!isRealNum(person_phone)){
+            Mask.alert('手机号必须是数字', 3);
+            return false;
+		}
+        if(!isRealNum(bank_code)){
+            Mask.alert('银行卡必须是数字', 3);
             return false;
         }
         $.ajax({
@@ -160,9 +176,27 @@
         });
     });
     $('#wechat_pay').on('tap', function () {
-        Mask.loding();
+
         $('#do_insure_sign').submit();
     });
+    function isRealNum(val){
+        // isNaN()函数 把空串 空格 以及NUll 按照0来处理 所以先去除
+        if(val === "" || val ==null){
+            return false;
+        }
+        if(!isNaN(val)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+	function isChn(str) {
+        if (!str.match( /^[\u4E00-\u9FA5]{1,}$/)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 </script>
 </body>
 </html>

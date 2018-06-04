@@ -20,6 +20,7 @@ use App\Helper\IPHelper;
 use App\Models\Person;
 use Ixudra\Curl\Facades\Curl;
 use App\Helper\TokenHelper;
+use Illuminate\Support\Facades\DB;
 
 class BankController
 {
@@ -55,9 +56,23 @@ class BankController
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
 		$person_phone = $token_data['insured_phone'];
-		$user_res = Person::where('phone', $person_phone)->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')->first();
+		$user_res = Person::where('phone', $person_phone)
+			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')
+			->first();
 		$cust_id = $user_res['id'];
+		$bank_authorize = ChannelInsureSeting::where('cust_cod',$person_code)
+			->with(['bank'=>function ($a){
+				$a->where('state','1');
+			}])
+			->select('authorize_bank')
+			->first();
+		if(!empty($bank_authorize)&&!empty($bank_authorize['bank'])){
+			Bank::where('bank_code',$bank_authorize['authorize_bank'])->update([
+				'state'=>'0'
+			]);
+		}
 		$bank_res = Bank::where('cust_id', $cust_id)
+			->where('state','<>','1')
 			->select('id', 'bank', 'bank_code', 'bank_city', 'phone')
 			->get()->toArray();
 		return view('channels.yunda.bank_index', compact('bank_res'));
@@ -85,10 +100,12 @@ class BankController
 	{
 		$input = $this->request->all();
 		$person_data = json_decode($input['person_data'], true);
-		$bank = $input['bank_name'];
+		$bank = $input['bank_name']??" ";
 		$bank_cod = $input['bank_code'];
-		$bank_city = $input['bank_city'];
+		$bank_city = $input['bank_city']??" ";
 		$cust_res = Person::where('papers_code', $person_data['insured_code'])->select()->first();
+		DB::beginTransaction();
+		try{
 		if (empty($cust_res)) {
 			Person::insert([
 				'name' => $person_data['insured_name'],
@@ -119,7 +136,14 @@ class BankController
 			'bank_code' => $bank_cod,
 			'bank_city' => $bank_city,
 			'phone' => '',
+			'created_at'=>time(),
+			'updated_at'=>time(),
 		]);
+			DB::commit();
+		}catch (\Exception $e){
+			DB::rollBack();
+			return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
+		}
 		if ($insert_res) {
 			return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
 		} else {
@@ -145,15 +169,16 @@ class BankController
 			->first();
 		$cust_id = $bank_res['cust_id'];
 		$bank_num = Bank::where('cust_id', $cust_id)
+			->where('state','<>','1')
 			->select('bank_code')
 			->get();
 		$bank_del_status = true;//删除按钮显示状态，默认显示
 		if (count($bank_num) <= 1) {//只剩最后一张银行卡
 			$bank_del_status = false;
 		}
-		if ($bank_res['bank_deal_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
-			$bank_del_status = false;
-		}
+//		if ($bank_res['bank_deal_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
+//			$bank_del_status = false;
+//		}
 		return view('channels.yunda.bank_info', compact('cust_id', 'bank_res', 'bank_del_status'));
 	}
 
@@ -172,24 +197,40 @@ class BankController
 		$cust_id = $input['cust_id'];
 		$bank_cod = $input['bank_code'];
 		$bank_num = Bank::where('cust_id', $cust_id)
+			->where('state','<>','1')
 			->select('bank_code')
 			->get();
-		$bank_res = Bank::where('cust_id', $cust_id)
-			->where('bank_code', $bank_cod)
-			->select('bank', 'bank_code', 'bank_city', 'bank_deal_type', 'phone')
+		$bank_authorize = ChannelInsureSeting::where('authorize_bank',$bank_cod)
+			->where('cust_id', $cust_id)
+			->select('id')
 			->first();
 		if (count($bank_num) <= 1) {//只剩最后一张银行卡
 			return json_encode(['status' => '500', 'msg' => '最后一张银行卡，不能删除']);
 		}
-		if ($bank_res['bank_type'] == 'own') {//从韵达传递过来的数据中获取的银行卡信息
-			return json_encode(['status' => '500', 'msg' => '系统银行卡数据，不能删除']);
+//		if ($bank_res['bank_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
+//			return json_encode(['status' => '500', 'msg' => '系统银行卡数据，不能删除']);
+//		}
+		DB::beginTransaction();
+		try{
+			Bank::where('cust_id', $cust_id)
+				->where('bank_code', $bank_cod)
+				->update([
+					'state'=>'1'
+				]);
+			$bank_res = Bank::where('cust_id', $cust_id)
+				->where('state','<>','1')
+				->select('bank_code')
+				->get();
+		if(!empty($bank_authorize)){
+			ChannelInsureSeting::where('id',$bank_authorize['id'])
+				->update([
+					'authorize_bank'=>$bank_res[0]['bank_code']
+				]);
 		}
-		$del_res = Bank::where('cust_id', $cust_id)
-			->where('bank_code', $bank_cod)
-			->delete();
-		if ($del_res) {
+			DB::commit();
 			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
-		} else {
+		}catch (\Exception $e){
+			DB::rollBack();
 			return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
 		}
 	}
@@ -309,7 +350,7 @@ class BankController
 			ChannelOperate::where('channel_user_code', $person_code)
 				->where('proposal_num', $union_order_code)
 				->update(['pay_status' => '500', 'pay_content' => $response->content]);
-			LogHelper::logError($response->content, 'YD_pay_order_' . $union_order_code);
+			//LogHelper::logError($response->content, 'YD_pay_order_' . $union_order_code);
 			$return_data['status'] = false;
 			$return_data['message'] = '用户获取签约链接失败';
 			return $return_data;
@@ -460,6 +501,8 @@ class BankController
 		$person_name = $input['person_name'];
 		$bank_code = $input['bank_code'];
 		$user_res = Person::where('papers_code', $person_code)->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')->first();
+		DB::beginTransaction();
+		try{
 		if (empty($user_res)) {
 			$user_res['id'] = Person::insertGetId([
 				'name' => $person_name,
@@ -487,6 +530,8 @@ class BankController
 				'bank_city' => '',
 				'bank_deal_type' => '1',
 				'phone' => '',
+				'created_at'=>time(),
+				'updated_at'=>time(),
 			]);
 		}
 		if (empty($seting_res)) {
@@ -507,8 +552,14 @@ class BankController
 				'authorize_status' => '1',
 				'authorize_start' => time(),
 				'authorize_bank' => $bank_code,
+				'auto_insure_status'=>'1',
 			]);
 		}
-		return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
+			DB::commit();
+			return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
+		}catch (\Exception $e){
+			DB::rollBack();
+			return json_encode(['status' => '500', 'msg' => '开通免密支付成功']);
+		}
 	}
 }

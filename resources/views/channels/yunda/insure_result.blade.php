@@ -16,11 +16,11 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<img src="{{config('view_url.channel_views')}}imges/back.png">
+					<a href="bmapp:homepage"><i class="iconfont icon-fanhui"></i></a>
 				</div>
 			</div>
 			<div class="head-right">
-				<i class="iconfont icon-close"></i>
+				<a href="bmapp:homepage"><i class="iconfont icon-close"></i></a>
 			</div>
 			<div class="head-title">
 				<span>购买结果</span>
@@ -101,24 +101,22 @@
             var person_code = "{{$person_code}}";
             var warranty_code = "{{$warranty_res['warranty_code']??""}}";
             $('#warranty_info').on('click',function () {
-                Mask.loding();
+
                 window.location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_info/'+warranty_code+'?token='+token;
             });
             $('#insure_seting').on('click',function () {
-                Mask.loding();
+
                 window.location.href = '{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token='+token;
             });
             $('#do_insure').on('click',function () {
-                Mask.loding();
+
                 window.location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+token;
             });
             $('.head-right').on('tap',function () {
-                Mask.loding();
-                location.href="bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                Mask.loding();
-                window.history.go(-1);
+                history.back(-1);return false;
             });
 		</script>
 	</body>
