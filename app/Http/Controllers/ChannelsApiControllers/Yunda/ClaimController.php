@@ -190,7 +190,7 @@ class ClaimController
 
             $data['url'] = env('APP_URL').config('yunda.email_url').'/claim_email?claim_yunda_info_id='.$claim_yunda_info->id;
 
-            Mail::to(config('yunda.product_id_email'))->send(new YundaEmail($data));
+//            Mail::to(config('yunda.product_id_email'))->send(new YundaEmail($data));
             $email = true;
 
             return view('channels.yunda.claim_result', compact('email'));
