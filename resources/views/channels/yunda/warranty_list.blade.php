@@ -100,7 +100,7 @@
     $('.content').click(function () {
         var warranty_id = $(this).data('id');
         if (warranty_id) {
-            //Mask.loding();
+            //Mask.loding(5);
             location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_detail/' + warranty_id + '?token=' + token;
         }
     });
