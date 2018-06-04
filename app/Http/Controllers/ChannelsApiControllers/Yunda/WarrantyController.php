@@ -63,10 +63,12 @@ class WarrantyController
         //保单状态 1待处理, 2待支付,3待生效, 4保障中,5可续保，6已失效，7已退保  8已过保
         $warranty_res = CustWarranty::where('user_id',$user_res['id'])
             ->where('warranty_status',$status)//已失效
-            ->select('id','warranty_code','warranty_uuid','start_time','end_time','warranty_status')
+            ->select('id','warranty_code','warranty_uuid','pro_policy_no','start_time','end_time','check_status','pay_status','warranty_status')
             ->get();
-        $warranty_status = config('status_setup.warranty');//保单状态
-        return view('channels.yunda.warranty_list',compact('warranty_status','warranty_ok_res','warranty_paying_res','warranty_timeout_res','warranty_res','person_code'));
+        $warranty_status = config('status_setup.warranty_status');//保单状态
+        $pay_status = config('status_setup.pay_status');//支付状态
+        $check_status = config('status_setup.check_status');//核保状态
+        return view('channels.yunda.warranty_list',compact('warranty_status','pay_status','check_status','warranty_ok_res','warranty_paying_res','warranty_timeout_res','warranty_res','person_code'));
     }
 
     /**
@@ -80,7 +82,7 @@ class WarrantyController
             ->select('id','papers_code','papers_type','name','phone')
             ->first();
         $warranty_res = CustWarranty::where('id',$warranty_id)
-            ->select('id','warranty_code','warranty_uuid','start_time','end_time','warranty_status')
+            ->select('id','warranty_code','warranty_uuid','pro_policy_no','start_time','end_time','check_status','pay_status','warranty_status')
             ->first();
         $cust_policy_res = CustWarrantyPerson::where('warranty_uuid',$warranty_res['warranty_uuid'])
             ->select('out_order_no','type','relation_name','name','card_type','card_code','phone','occupation','birthday','sex','age','email','nationality','annual_income','height','weight','area','address','start_time','end_time')
@@ -101,8 +103,11 @@ class WarrantyController
                 $inusred_res['phone'] = $value['phone'];
             }
         }
-        $warranty_status = config('status_setup.warranty');//保单状态
-        return view('channels.yunda.warranty_detail',compact('warranty_status','warranty_res','user_res','policy_res','inusred_res'));
+        //sleep(30);
+		$warranty_status = config('status_setup.warranty_status');//保单状态
+		$pay_status = config('status_setup.pay_status');//支付状态
+		$check_status = config('status_setup.check_status');//核保状态
+        return view('channels.yunda.warranty_detail',compact('warranty_status','pay_status','check_status','warranty_res','user_res','policy_res','inusred_res'));
     }
 
 }

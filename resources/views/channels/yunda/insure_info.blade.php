@@ -70,7 +70,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<img src="{{config('view_url.channel_views')}}imges/back.png">
+					<i class="iconfont icon-fanhui"></i>
 				</div>
 			</div>
 			<div class="head-right">
@@ -133,19 +133,17 @@
             localStorage.setItem('token', token);
 			$('#do_insured').on('click',function () {
 			    var person_code = "{{$person_code}}";
-                Mask.loding();
+
 				window.location.href = "{{config('view_url.channel_yunda_target_url')}}do_insured?token="+token;
             });
             $('.head-right').on('tap',function () {
-                Mask.loding();
-                location.href="bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                Mask.loding();
-                window.history.go(-1);
+                history.back(-1);return false;
             });
             $('.ins_clause').on('tap',function(){
-                Mask.loding();
+
             });
 		</script>
 	</body>

@@ -32,7 +32,7 @@
     <img src="/image/500.png"/>
 </div>
 <div class="text-wrapper">
-    <a class="btn-return" href="/">返回首页</a>
+    <a class="btn-return" onclick="history.back(-1);return false;">返回</a>
 </div>
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>

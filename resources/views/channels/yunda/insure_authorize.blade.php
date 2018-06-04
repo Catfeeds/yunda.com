@@ -14,7 +14,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<img src="{{config('view_url.channel_views')}}imges/back.png">
+					<i class="iconfont icon-fanhui"></i>
 				</div>
 			</div>
 			<div class="head-right">
@@ -80,13 +80,19 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+            $('.head-right').on('tap',function () {
+                location.href = "bmapp:homepage";return false;
+            });
+            $('.head-left').on('tap',function(){
+                history.back(-1);return false;
+            });
             var token = "{{$_GET['token']}}";
             localStorage.setItem('token', token);
             var app = {
                 init: function () {
                     var _this = this;
                     $('.icon-guanbi').click(function () {
-                        location.href = "bmapp:homepage";
+                        location.href = "bmapp:homepage";return false;
                     });
                     $('input').bind('input propertychange', function () {
                         _this.isDisabled()
@@ -122,7 +128,7 @@
             }
             app.init();
             $('#insure_authorize_info').on('tap', function () {
-                Mask.loding();
+
             });
             $('#confirm').on('click', function () {
                 var bank_code = $("input[name='bank_code']").val();
@@ -160,7 +166,7 @@
                 });
             });
             $('#wechat_pay').on('tap', function () {
-                Mask.loding();
+
                 $('#do_insure_sign').submit();
             });
             function isRealNum(val){

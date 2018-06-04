@@ -59,7 +59,7 @@
 				<header class="mui-bar mui-bar-nav">
 					<div class="head-left">
 						<div class="head-img">
-							<img src="{{config('view_url.channel_views')}}imges/back.png"/>
+							<i class="iconfont icon-fanhui"></i>
 						</div>
 					</div>
 					<div class="head-right">
@@ -96,12 +96,10 @@
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
             $('.head-right').on('tap',function () {
-                Mask.loding();
-                location.href="bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                Mask.loding();
-                window.location.go(-1);
+                history.back(-1);return false;
             });
 		</script>
 	</body>

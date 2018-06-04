@@ -15,8 +15,10 @@
 
 	<body id="process9">
 				<header class="mui-bar mui-bar-nav">
-					<div class="head-img">
-						<img src="{{config('view_url.channel_views')}}imges/back.png" />
+					<div class="head-left">
+						<div class="head-img">
+							<i class="iconfont icon-fanhui"></i>
+						</div>
 					</div>
 					<div class="head-title">
 						<span>银行卡列表</span>
@@ -51,27 +53,25 @@
                 var token = localStorage.getItem('token');
 				var cust_id = '1';
                 $('#add').click(function(){
-                    Mask.loding();
+
                     location.href = '{{config('view_url.channel_yunda_target_url')}}bank_bind?token='+token;
                 });
                 $('#add2').click(function(){
-                    Mask.loding();
+
                     location.href = '{{config('view_url.channel_yunda_target_url')}}bank_bind?token='+token;
                 });
                 $('.tablist').click(function(){
                     var bank_id = $(this).data('id');
                     if(bank_id){
-                        Mask.loding();
+
                         location.href = '{{config('view_url.channel_yunda_target_url')}}bank_info/'+bank_id+'?token='+token;
 					}
                 });
                 $('.head-right').on('tap',function () {
-                    Mask.loding();
-                    location.href="bmapp:homepage";
+                    location.href = "bmapp:homepage";return false;
                 });
-                $('.head-img').on('tap',function(){
-                    Mask.loding();
-                    window.history.go(-1);
+                $('.head-left').on('tap',function(){
+                    history.back(-1);return false;
                 });
 			</script>
 	</body>

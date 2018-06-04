@@ -20,7 +20,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<img src="{{config('view_url.channel_views')}}imges/back.png">
+					<i class="iconfont icon-fanhui"></i>
 				</div>
 			</div>
 			<div class="head-right">
@@ -34,6 +34,7 @@
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<div>
+						@if(!empty($result))
 						<ul class="form-wrapper">
 							<li style="font-weight: bold;">快递保.意外险</li>
 							<li>理赔状态<input style="color: #267cfc;" @if($result->claim_status == 2)onclick="uploadInfo({{$result->claim_id}})"@endif  type="text" value="{{$status['claim_status'][$result->status]}}"/></li>
@@ -66,7 +67,9 @@
 								@endif
 							</ul>
 						</div>
+						@endif
 					</div>
+
 				</div>
 			</div>
 		</div>
@@ -76,12 +79,12 @@
 		<script>
             var token = localStorage.getItem('token');
             $('.head-right').on('tap',function () {
-                Mask.loding();
-                location.href="bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
-            $('.head-img').on('tap',function(){
-                Mask.loding();
-                window.history.go(-1);
+            $('.head-left').on('tap',function(){
+                // history.back(-1);
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_progress?token=" + token;
+                return false;
             });
             //上传资料
             function uploadInfo(id){

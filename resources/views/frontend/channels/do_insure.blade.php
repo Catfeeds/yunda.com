@@ -88,35 +88,35 @@
 		<script src="{{config('view_url.channel_url')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_url')}}js/common.js"></script>
 		<script>
-            Mask.loding();
+
             window.onload = function(){
                 $('.loading-wrapper').remove();
             };
             $('.head-right').on('tap',function () {
-                Mask.loding();
+
                 location.href="bmapp:homepage";
             });
             $('.head-left').on('tap',function(){
-                Mask.loding();
+
                 location.href="bmapp:homepage";
             });
             $('#claim_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#warranty_target').on('tap',function(){
-                Mask.loding();
+
             });
 			$('#seting_target').on('tap',function(){
-				Mask.loding();
+
 			});
             $('#insure_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#insure_no_target').on('tap',function(){
-                Mask.loding();
+
             });
             $('#insure_set_target').on('tap',function(){
-                Mask.loding();
+
             });
 		</script>
 	</body>

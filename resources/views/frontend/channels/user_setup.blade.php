@@ -51,11 +51,11 @@
 		<script src="{{config('view_url.channel_url')}}js/common.js"></script>
 		<script>
             $('.head-right').on('tap',function () {
-                Mask.loding();
+
                 location.href="bmapp:homepage";
             });
             $('.head-left').on('tap',function(){
-                Mask.loding();
+
                 window.location.go(-1);
             });
 		</script>

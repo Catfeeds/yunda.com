@@ -16,7 +16,7 @@
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
-					<img src="{{config('view_url.channel_views')}}imges/back.png">
+					<i class="iconfont icon-fanhui"></i>
 				</div>
 			</div>
 			<div class="head-right">
@@ -93,12 +93,10 @@
 		<script>
             var token = localStorage.getItem('token');
             $('.head-right').on('tap',function () {
-                Mask.loding();
-                location.href="bmapp:homepage";
+                location.href = "bmapp:homepage";return false;
             });
-            $('.head-img').on('tap',function(){
-                Mask.loding();
-                window.history.go(-1);
+            $('.head-left').on('tap',function(){
+                history.back(-1);return false;
             });
 
             $('#home').click(function(){

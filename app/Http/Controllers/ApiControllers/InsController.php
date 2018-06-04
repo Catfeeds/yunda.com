@@ -189,7 +189,7 @@ class InsController extends Base
             ->first();
 
         if(!$prepare)
-            return "<script>alert('订单不存在或已被删除'); window.history.go(-1);</script>";
+            return "<script>alert('订单不存在或已被删除'); history.go(-1);</script>";
 
         $this->request->private_p_code = $prepare->private_p_code;
 
@@ -209,7 +209,7 @@ class InsController extends Base
 //        dd($biz_content);
         $prepare = OrderPrepareParameter::where('identification', $biz_content['identification'])->first();
         if(!$prepare)
-            return "<script>alert('订单不存在或已被删除'); window.history.go(-1);</script>";
+            return "<script>alert('订单不存在或已被删除'); history.go(-1);</script>";
 
         $parameter = json_decode($prepare->parameter, true);
 //        dd($parameter);
@@ -233,7 +233,7 @@ class InsController extends Base
             ->post();
 
         if($response->status !== 200)
-            return "<script>alert('". $response->content ."'); window.history.go(-1);</script>";
+            return "<script>alert('". $response->content ."'); history.go(-1);</script>";
 
         //订单信息录入
         $return_data = json_decode($response->content, true);
@@ -241,7 +241,7 @@ class InsController extends Base
         if($add_res)
             return redirect('/insurance/pay_settlement/'.$return_data['order']['order_no']);
 
-        return "<script>alert('下单失败，重新尝试');window.history.go(-1);</script>";
+        return "<script>alert('下单失败，重新尝试');history.go(-1);</script>";
     }
 
     //跳转到支付页面
