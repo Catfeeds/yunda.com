@@ -78,7 +78,11 @@
     });
     //显示详情
     function showId(id){
-        location.href = '{{config('view_url.channel_yunda_target_url')}}claim_info?claim_id='+id+'&token='+token;
+        if('{{$type}}' == 0 && '{{$value->claim_status}}' == 2){
+            location.href = '{{config('view_url.channel_yunda_target_url')}}claim_material_upload?claim_id='+id+'&token='+token;
+		}else{
+            location.href = '{{config('view_url.channel_yunda_target_url')}}claim_info?claim_id='+id+'&token='+token;
+		}
     }
     //上传资料
     function uploadInfo(id){
