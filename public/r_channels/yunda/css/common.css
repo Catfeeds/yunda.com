@@ -250,7 +250,7 @@ img {
 .loadEffect span:nth-child(7) {
     bottom: 0;
     left: 50%;
-    margin-left: -.1rem
+    margin-left: -.1rem;
     -webkit-animation-delay: 0.91s;
 }
 
@@ -542,7 +542,7 @@ button:disabled{
 	border: none;
 }
 .mui-numbox .mui-numbox-input{
-	border: 1px solid #00A2FF1;
+	border: 1px solid #00A2FF;
 }
 
 /*选择框*/
