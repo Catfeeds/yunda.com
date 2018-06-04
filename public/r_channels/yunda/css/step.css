@@ -678,9 +678,10 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
     font-size: .9rem;
 }
 #process8 .info-wrapper .list li {
-    height: 3rem;
-    line-height: 3rem;
-    border-bottom: 1px solid #ddd;
+    /*height: 3rem;*/
+	line-height: 3rem;
+	border-bottom: 1px solid #ddd;
+	overflow: hidden;
 }
 #process8 .info-wrapper .list li:last-child{border: none;}
 #process8 .main-content{background: #fff;}

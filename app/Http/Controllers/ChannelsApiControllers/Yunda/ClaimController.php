@@ -206,6 +206,7 @@ class ClaimController
 
     /**
      * 显示审核页面
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
      */
     public function claimEmail(){
         $input = $this->request->all();
@@ -274,6 +275,7 @@ class ClaimController
 
     /**
      * 处理审核结果
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function claimAudit(){
         $input = $this->request->all();
@@ -341,12 +343,14 @@ class ClaimController
     }
 
 
-
-
+    /**
+     * 理赔详情
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function claimInfo(){
         $input = $this->request->all();
         $result = DB::table('claim_yunda')
-            ->join('claim_yunda_info','claim_yunda_info.claim_id','=','claim_yunda.id')
+            ->leftJoin('claim_yunda_info','claim_yunda_info.claim_id','=','claim_yunda.id')
             ->join('cust_warranty','cust_warranty.id','=','claim_yunda.warranty_id')
             ->join('product','product.id','=','cust_warranty.product_id')
             ->where('claim_yunda.id', $input['claim_id'])
