@@ -340,7 +340,7 @@ class IntersController
         $return_data['code'] = '200';
         $return_data['message']['digest'] = 'default';
         $person_res = Person::where('papers_code',$insured_code)
-            ->where('name',$insured_name)
+            
             ->where('phone',$insured_phone)
             ->select('id')
             ->first();
