@@ -13,14 +13,6 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\YunDaPrepare::class,
-        Commands\Msg::class,
-        Commands\YundaCallback::class,
-        Commands\Test::class,
-        Commands\YunDaPay::class,
-        Commands\YunDaIssue::class,
-        Commands\YunDaPre::class,
-        Commands\YunResAuto::class,
         Commands\YdWechatPre::class,
     ];
 
@@ -44,7 +36,7 @@ class Kernel extends ConsoleKernel
         //$schedule->command('reminders:send')->hourly()->between('7:00', '22:00');//在指定时间内每小时执行一次
         //$schedule->command('reminders:send')->hourly()->unlessBetween('23:00', '4:00');//在指定时间外每小时执行一次
         //$schedule->command('emails:send')->withoutOverlapping();//避免任务重叠
-		$schedule->command('yunda_wechat_prepare')->everyMinute()->between('00:00', '10:00')->runInBackground();
+		$schedule->command('yunda_wechat_prepare')->everyMinute();
     }
 
     /**

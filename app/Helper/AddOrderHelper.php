@@ -35,6 +35,7 @@ class AddOrderHelper
 //		dump($policy_res);
 //		dump($holder_res);
 //		die;
+		$time = intval($this->getMillisecond());
 		DB::beginTransaction();//开启事务
 		try{
 			$policy_check_res  = Person::where('papers_code',$policy_res['ty_toubaoren_id_number'])
@@ -63,7 +64,7 @@ class AddOrderHelper
 				$user_policy_res->company_id = '';
 				$user_policy_res->del = '0';
 				$user_policy_res->status = '1';
-				$user_policy_res->created_at = time();
+				$user_policy_res->created_at = $time;
 				$user_policy_res->save();
 			}
 			foreach($holder_res as $value){
@@ -93,8 +94,8 @@ class AddOrderHelper
 					$user_holder_res->company_id = '';
 					$user_holder_res->del = '0';
 					$user_holder_res->status = '1';
-					$user_holder_res->created_at = time();
-					$user_holder_res->updated_at = time();
+					$user_holder_res->created_at = $time;
+					$user_holder_res->updated_at = $time;
 					$user_holder_res->save();
 				}
 			}
@@ -111,10 +112,10 @@ class AddOrderHelper
 			$cust_warranty->agent_id = '';//代理人id
 			$cust_warranty->ditch_id = '';//渠道id
 			$cust_warranty->plan_id = '';//计划书id
-			$cust_warranty->product_id = $prepare['private_p_code'];//产品id
-			$cust_warranty->premium = $return_data['total_premium'];//价格
+			$cust_warranty->product_id = $prepare['private_p_code']??"1";//产品id
+			$cust_warranty->premium = $return_data['total_premium']/100;//价格
 			$cust_warranty->start_time = '';//起保时间
-			$cust_warranty->end_time = '';//保障结束时间
+			$cust_warranty->end_time = strtotime(date('Y-m-d',time()).' 23:59:59').'999';//保障结束时间
 			$cust_warranty->ins_company_id = '';//保险公司id
 			$cust_warranty->count = '1';//购买份数
 			$cust_warranty->pay_time = '';//支付时间
@@ -127,8 +128,8 @@ class AddOrderHelper
 			$cust_warranty->check_status = '3';//核保状态
 			$cust_warranty->pay_status = '0';//支付状态
 			$cust_warranty->warranty_status = '2';//保单状态
-			$cust_warranty->created_at = time();//创建时间
-			$cust_warranty->updated_at = time();//更新时间
+			$cust_warranty->created_at = $time;//创建时间
+			$cust_warranty->updated_at = $time;//更新时间
 			$cust_warranty->state = '1';//删除标识 0删除 1可用
 			$cust_warranty->save();
 			//投保人信息
@@ -154,8 +155,8 @@ class AddOrderHelper
 			$cust_warranty_person->address = $policy_res['channel_user_address'];//详细地址
 			$cust_warranty_person->start_time = '';//起保时间
 			$cust_warranty_person->end_time = '';//保障结束时间
-			$cust_warranty_person->created_at = time();//创建时间
-			$cust_warranty_person->updated_at = time();//更新时间
+			$cust_warranty_person->created_at = $time;//创建时间
+			$cust_warranty_person->updated_at = $time;//更新时间
 			$cust_warranty_person->save();
 			//被保人信息
 			if(count($holder_res)>0){//多个被保人
@@ -182,8 +183,8 @@ class AddOrderHelper
 					$cust_warranty_person->address = $value['channel_user_address'];//详细地址
 					$cust_warranty_person->start_time = '';//起保时间
 					$cust_warranty_person->end_time = '';//保障结束时间
-					$cust_warranty_person->created_at = time();//创建时间
-					$cust_warranty_person->updated_at = time();//更新时间
+					$cust_warranty_person->created_at = $time;//创建时间
+					$cust_warranty_person->updated_at = $time;//更新时间
 					$cust_warranty_person->save();
 				}
 			}
@@ -204,4 +205,13 @@ class AddOrderHelper
 			return false;
 		}
 	}
+
+	/**
+	 * 获取毫秒值
+	 */
+	function getMillisecond() {
+		list($t1, $t2) = explode(' ', microtime());
+		return (float)sprintf('%.0f',(floatval($t1)+floatval($t2))*1000);
+	}
+
 }
