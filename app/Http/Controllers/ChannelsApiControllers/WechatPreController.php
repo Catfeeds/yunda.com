@@ -2,14 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: wangsl
- * Date: 2018/04/12
- * Time: 12:03
- * 韵达已签约业务员预投保定时任务-从凌晨开始
+ * Date: 2018/5/22
+ * Time: 11:51
  */
-namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+namespace App\Http\Controllers\ChannelsApiControllers;
+
 use App\Models\ChannelContract;
+use App\Models\Person;
 use Illuminate\Http\Request;
 use App\Helper\RsaSignHelp;
 use App\Helper\AesEncrypt;
@@ -26,52 +26,83 @@ use App\Models\OrderParameter;
 use App\Models\WarrantyPolicy;
 use App\Models\WarrantyRecognizee;
 use App\Models\WarrantyRule;
-use App\Models\Person;
+
 use \Illuminate\Support\Facades\Redis;
 
-
-
-class YdWechatPre extends Command
+class WechatPreController extends BaseController
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'yunda_wechat_prepare';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'yunda_wechat_prepare Command description';
-
-
-    /**
-     * Create a new command instance.
-     * @return void
-     * 初始化
-     *
-     */
-    public function __construct(Request $request)
-    {
-        parent::__construct();
-        set_time_limit(0);//永不超时
+	/**
+	 * Create a new command instance.
+	 * @return void
+	 * 初始化
+	 *
+	 */
+	public function __construct(Request $request)
+	{
+		set_time_limit(0);//永不超时
 		$this->request = $request;
 		$this->log_helper = new LogHelper();
 		$this->sign_help = new RsaSignHelp();
-    }
+	}
+
+	/**
+	 * 测试已签约&联合登录的用户的预投保操作
+	 * 匹配出前一天的联合登录用户中已经微信签约的，进行预投保操作（定时任务）
+	 * 第二天联合登陆后进行投保操作（代扣，异步操作）
+	 */
+	public function wechatPre(){
+		$channel_contract_info = ChannelContract::with(['person'=>function($a){
+				$a->select('name','papers_type','papers_code','phone','email','address','address_detail');
+			}])
+			//openid,签约人身份证号
+			->select('openid','channel_user_code')
+			->groupBy('channel_user_code')
+			->get();
+		if(empty($channel_contract_info)){
+			echo json_encode(['msg'=>'投保失败,没有签约信息','status'=>'500'],JSON_UNESCAPED_UNICODE);
+		}
+		foreach ($channel_contract_info as $key=>$value){
+			$channel_operate_res = ChannelOperate::where('channel_user_code',$value['channel_user_code'])
+				->where('operate_time',date('Y-m-d',time()))
+				->where('prepare_status','200')
+				->select('proposal_num')
+				->first();
+			if(empty($channel_operate_res)) {
+				if (!empty($value['person'])) {
+					$card_info = IdentityCardHelp::getIDCardInfo($value['channel_user_code']);
+					if ($card_info['status'] = 2) {
+						$joint_login = ChannelJointLogin::where('phone', $value['person']['phone'])->select('login_start')->first();
+						$value['person']['operate_time'] = date('Y-m-d', time());
+						$value['person']['sex'] = $card_info['sex'];
+						$value['person']['birthday'] = $card_info['birthday'];
+						$value['person']['province'] = $value['person']['address'];
+						$value['person']['city'] = $value['person']['address'];
+						$value['person']['county'] = $value['person']['address'];
+						$value['person']['courier_state'] = $value['person']['address_detail'];//站点地址
+						$value['person']['courier_start_time'] = date('Y-m-d H:i:s', $joint_login['login_start']);//上工时间
+						$this->doInsurePrepare($value['person']);
+					}else{
+						echo json_encode(['msg'=>'投保失败,身份证格式不对','status'=>'500'],JSON_UNESCAPED_UNICODE);
+					}
+				}else{
+					echo json_encode(['msg'=>'投保失败,没有投保人信息','status'=>'500'],JSON_UNESCAPED_UNICODE);
+				}
+			}else{
+				echo json_encode(['msg'=>'投保成功，投保单号'.$channel_operate_res['proposal_num'],'status'=>'200'],JSON_UNESCAPED_UNICODE);
+			}
+		}
+	}
 
 	/**
 	 * 全员预投保
 	 */
-	public function handle(){
+	public function doAllPersonPre(){
 		$key = 'prepare_params';
 		if(!Redis::exists($key)){//redis是否存在这个键
 			$person_res = Person::select('name','papers_code','phone','papers_type','email','address','address_detail')
-			->limit(100000)
-			->get();
+				->limit(100000)
+				->get();
 			foreach ($person_res as $value){
 				Redis::rPush("prepare_params",$value);//右侧存入队列
 			}
@@ -79,14 +110,14 @@ class YdWechatPre extends Command
 		$count = Redis::Llen($key);//队列的长度
 		if($count>0){
 			for($i=1;$i<=50;$i++){
-			$prepare_params = Redis::rpop($key); //右侧出队列
-			$prepare_params = json_decode($prepare_params,true);
-			$channel_operate_res = ChannelOperate::where('channel_user_code',$prepare_params['papers_code'])
-				->where('operate_time',date('Y-m-d',time()))
-				->where('prepare_status','200')
-				->select('proposal_num')
-				->first();
-			if(empty($channel_operate_res)) {
+				$prepare_params = Redis::rpop($key); //右侧出队列
+				$prepare_params = json_decode($prepare_params,true);
+				$channel_operate_res = ChannelOperate::where('channel_user_code',$prepare_params['papers_code'])
+					->where('operate_time',date('Y-m-d',time()))
+					->where('prepare_status','200')
+					->select('proposal_num')
+					->first();
+				if(empty($channel_operate_res)) {
 					$card_info = IdentityCardHelp::getIDCardInfo($prepare_params['papers_code']);
 					if ($card_info['status'] = 2) {
 						$joint_login = ChannelJointLogin::where('phone', $prepare_params['phone'])->select('login_start')->first();
@@ -108,10 +139,10 @@ class YdWechatPre extends Command
 					}else{
 						echo json_encode(['msg'=>'投保失败,身份证格式不对','status'=>'500'],JSON_UNESCAPED_UNICODE);
 					}
-			}else{
-				echo json_encode(['msg'=>'投保成功，投保单号'.$channel_operate_res['proposal_num'],'status'=>'200'],JSON_UNESCAPED_UNICODE);
+				}else{
+					echo json_encode(['msg'=>'投保成功，投保单号'.$channel_operate_res['proposal_num'],'status'=>'200'],JSON_UNESCAPED_UNICODE);
+				}
 			}
-		}
 		}
 	}
 
@@ -177,25 +208,24 @@ class YdWechatPre extends Command
 			$content = $response->content;
 			$return_data =  json_encode(['status'=>'501','content'=>$content],JSON_UNESCAPED_UNICODE);
 			print_r($return_data);
+		}
+		$prepare['parameter'] = '0';
+		$prepare['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
+		$prepare['ty_product_id'] = 'VGstMTEyMkEwMUcwMQ';
+		$prepare['agent_id'] = '0';
+		$prepare['ditch_id'] = '0';
+		$prepare['user_id'] = $prepare['papers_code'];
+		$prepare['identification'] = '0';
+		$prepare['union_order_code'] = '0';
+		$return_data = json_decode($response->content, true);
+		//todo  本地订单录入
+		$add_res = $this->addOrder($return_data, $prepare,$toubaoren);
+		if($add_res){
+			$return_data =  json_encode(['status'=>'200','content'=>'投保完成'],JSON_UNESCAPED_UNICODE);
+			print_r($return_data);
 		}else{
-			$prepare['parameter'] = '0';
-			$prepare['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
-			$prepare['ty_product_id'] = 'VGstMTEyMkEwMUcwMQ';
-			$prepare['agent_id'] = '0';
-			$prepare['ditch_id'] = '0';
-			$prepare['user_id'] = $prepare['papers_code'];
-			$prepare['identification'] = '0';
-			$prepare['union_order_code'] = '0';
-			$return_data = json_decode($response->content, true);
-			//todo  本地订单录入
-			$add_res = $this->addOrder($return_data, $prepare,$toubaoren);
-			if($add_res){
-				$return_data =  json_encode(['status'=>'200','content'=>'投保完成'],JSON_UNESCAPED_UNICODE);
-				print_r($return_data);
-			}else{
-				$return_data =  json_encode(['status'=>'500','content'=>'投保失败'],JSON_UNESCAPED_UNICODE);
-				print_r($return_data);
-			}
+			$return_data =  json_encode(['status'=>'500','content'=>'投保失败'],JSON_UNESCAPED_UNICODE);
+			print_r($return_data);
 		}
 	}
 
@@ -340,9 +370,8 @@ class YdWechatPre extends Command
 		}catch (\Exception $e)
 		{
 			DB::rollBack();
-			//Loghelper::logChannelError([$return_data, $prepare], $e->getMessage(), 'addOrder');
+			////Loghelper::logChannelError([$return_data, $prepare], $e->getMessage(), 'addOrder');
 			return false;
 		}
 	}
-
 }

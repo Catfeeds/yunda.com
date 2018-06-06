@@ -75,7 +75,7 @@ class IdentityCardHelp{
         $result['status']=2;//0：未知错误，1：身份证格式错误，2：无错误
         $result['isAdult']=$flag;//0标示成年，1标示未成年
         $result['sex'] = $sex; //性别 男 女
-        $result['birthday']=$tdate;//生日日期
+        $result['birthday']=$tdate??"";//生日日期
         return $result;
     }
 
