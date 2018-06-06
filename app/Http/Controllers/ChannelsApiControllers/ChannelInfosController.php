@@ -75,6 +75,9 @@ class ChannelInfosController extends BaseController
 //		$params['biz_content'] = $newstr;
 //		Redis::rPush("prepare_info",$biz_content);//入队操作
 		$params = $this->request->all();
+        if(!isset($params['biz_content'])||empty($params['biz_content'])){
+            return json_encode(['status' => '500', 'content' => 'params is empty!'],JSON_UNESCAPED_UNICODE);
+        }
 		$order = array('\r\n','\r','\n');
 		$replace='';
 		$params['biz_content'] = str_replace($order,$replace,$params['biz_content']);
