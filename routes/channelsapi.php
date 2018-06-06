@@ -10,7 +10,7 @@ Route::group(['prefix' => 'channelsapi','namespace'=>'ChannelsApiControllers'],f
     //欢迎页面
     Route::any('/','IndexController@index');
     //企业获取授权
-    Route::any('et_account','IndexController@getAccount');
+    Route::any('get_account','IndexController@getAccount');
     //预投保信息变形存库
     Route::any('insert_prepare','ChannelInfosController@insertPrepare');
     //预投保操作
