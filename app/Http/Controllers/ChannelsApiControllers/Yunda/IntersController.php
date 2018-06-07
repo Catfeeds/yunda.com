@@ -24,6 +24,9 @@ use App\Jobs\YdWechatPay;
 use App\Helper\TokenHelper;
 use App\Helper\IdentityCardHelp;
 use DateTime;
+use App\Helper\WechatPayHelper;
+use App\Helper\WechatSignHelper;
+use App\Helper\IPHelper;
 
 class IntersController
 {
@@ -113,14 +116,6 @@ class IntersController
 			]);
 		}
 		$person_result = Person::where('phone',$insured_phone)->select('id','phone','papers_code')->first();
-        //TODO 判断泰康是否签约
-		//TODO 没有签约，签约接口
-		//TODO 签约失败，直接去英大
-
-		//TODO 已签约，直接去支付
-		//TODO 支付失败，订单置失效，去英大
-
-		//TODO 英大操作
 		//再判断channel_joint_login表里有没有值-插入(今天的值)
 		$channel_login_result = ChannelJointLogin::where('phone',$insured_phone)
 			->where('login_start','>=',strtotime(date('Y-m-d')))
@@ -165,6 +160,26 @@ class IntersController
 				'created_at'=>time(),
 				'updated_at'=>time(),
 			]);
+		}
+		//todo 查询泰康投保
+		$tk_res = $this->getTkInsure($person_result);
+		if(!empty($tk_res)&&$tk_res['status']=='201'){//可以签约
+			$return_data['code'] = '204';
+			$return_data['message']['digest'] = 'default';
+			$return_data['message']['details'] = 'no_authorize';
+			$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
+			$return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
+			$return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
+			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
+			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+		}else if(!empty($tk_res)&&$tk_res['status']=='202'){
+			$return_data['code'] = '200';
+			$return_data['message']['digest'] = 'default';
+			$return_data['message']['details'] = 'insured';
+			$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
+			$return_data['data']['content'] = '今日快递保生效中>>';
+			$return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
+			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
 		}
         //用用户身份证信息查询授权状态
 		//todo  联合登录有两种情况；未开免密；保险生效中
@@ -308,34 +323,54 @@ class IntersController
         return json_encode($return_data,JSON_UNESCAPED_UNICODE);
     }
 
-    public function getTkInsure($person_result){
-    	if(empty($person_result)){
-    		return false;
+	/**
+	 * 获取泰康投保详情
+	 * @param $person_result
+	 * @return array
+	 */
+	public function getTkInsure($person_result){
+		$return_data = [];
+		if(empty($person_result)){
+			$return_data['status'] = '500';
+			$return_data['content'] = 'person is empty';
+			return $return_data;
 		}
 		//TODO 判断有无预投保
 		$prepareRes = CustWarranty::where('user_id',$person_result['id'])
-			->where('end_time',strtotime(date('Y-m-d',time()).' 23:59:59').'999')//昨天的
+//			->where('end_time',strtotime(date('Y-m-d',time()).' 23:59:59').'999')//昨天的
 			->where('warranty_status','2')//状态
 			->select('pro_policy_no')
 			->first();
-    	if(empty($prepareRes)){
-			return false;
+		if(empty($prepareRes)){
+			$return_data['status'] = '500';
+			$return_data['content'] = 'no prepare';
+			return $return_data;
 		}
 		//TODO 判断泰康是否签约
 		$contractRes = ChannelContract::where('channel_user_code',$person_result['papers_code'])
 			->select('openid','contract_id','contract_expired_time','channel_user_code')
 			->first();
 		if(empty($contractRes)){
-			//TODO 没有签约，签约接口
-
-
-			//TODO 签约失败，直接去英大
-			return false;
+			//TODO 没有，直接去英大
+			$return_data['status'] = '500';
+			$return_data['content'] = 'no contract';
+			return $return_data;
+		}else{
+			//TODO 已签约，直接去支付
+			$wechatPayHelp = new WechatPayHelper();
+			$wechatPayRes = $wechatPayHelp->WechatPay($person_result['papers_code']);
+			//TODO 支付失败，订单置失效，去英大
+			if($wechatPayRes['status']!=200){
+				//TODO 签约失败，直接去英大
+				$return_data['status'] = '500';
+				$return_data['content'] = 'faild to pay';
+				return $return_data;
+			}else{
+				$return_data['status'] = '202';
+				$return_data['content'] = '支付成功';
+				return $return_data;
+			}
 		}
-
-		//TODO 已签约，直接去支付
-		//TODO 支付失败，订单置失效，去英大
-
 	}
 
     /**
@@ -374,11 +409,6 @@ class IntersController
 			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone  is empty';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 		}
-		//TODO 先查询微信签约
-		//TODO 有预投保，就走签约接口
-
-		//TODO 再查询银行卡授权
-		//TODO 授权状态根据微信签约状态和银行卡授权来确定
         $return_data =[];
         $return_data['code'] = '200';
         $return_data['message']['digest'] = 'default';
@@ -407,6 +437,17 @@ class IntersController
 			$return_data['data']['url'] =$webapi_route;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
+		//TODO 判断泰康是否签约
+		$contractRes = ChannelContract::where('channel_user_code',$insured_code)
+			->select('openid','contract_id','contract_expired_time','channel_user_code')
+			->first();
+        if(!empty($contractRes)){
+			$authorize_status = config('yunda.authorize_status.yes');
+			$return_data['message']['details'] = '已授权';
+			$return_data['data']['status'] = $authorize_status;
+			$return_data['data']['url'] = '';
+			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+		}
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
             ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time')
             ->first();
@@ -540,133 +581,4 @@ class IntersController
         $return_data['message']['details'] = 'insuring';
         return json_encode($return_data,JSON_UNESCAPED_UNICODE);
     }
-
-
-	//签约操作
-	public function insureSign($union_order_code,$phone,$person_code){
-		if(!empty($_SERVER["HTTP_CLIENT_IP"])){
-			$cip = $_SERVER["HTTP_CLIENT_IP"];
-		}
-		elseif(!empty($_SERVER["HTTP_X_FORWARDED_FOR"])){
-			$cip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-		}
-		elseif(!empty($_SERVER["REMOTE_ADDR"])){
-			$cip = $_SERVER["REMOTE_ADDR"];
-		}
-		else{
-			$cip = "无法获取！";
-		}
-		$data = [];
-		$data['price'] = '2';
-		$data['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
-		$data['quote_selected'] = '';
-		$data['insurance_attributes'] = '';
-		$data['union_order_code'] = $union_order_code;
-		$data['pay_account'] = $phone??$union_order_code;
-		$data['clientIp'] = $cip??'222.131.24.108';
-		$data = $this->signhelp->tySign($data);
-		//发送请求
-		$response = Curl::to(env('TY_API_SERVICE_URL') . '/ins_curl/contract_ins')
-			->returnResponseObject()
-			->withData($data)
-			->withTimeout(60)
-			->post();
-		if($response->status != 200){
-			ChannelOperate::where('channel_user_code',$person_code)
-				->where('proposal_num',$union_order_code)
-				->update(['pay_status'=>'500','pay_content'=>$response->content]);
-			$respose =  json_encode(['status'=>'502','content'=>'支付签约失败'],JSON_UNESCAPED_UNICODE);
-			return false;
-		}
-		$return_data =  json_decode($response->content,true);//签约返回数据
-		$url =  $return_data['result_content']['contracturl'];//禁止转义
-		return view('frontend.channels.test_url')->with('url',$url);
-	}
-	//签约回调  TODO  签约回调
-	public function contractCallBack(){
-		$input = $this->request->all();
-		LogHelper::logChannelSuccess($input, 'contractCallBack');
-		$contract_code = $input['contract_code'];
-		$union_order_code = substr($contract_code,0,-8);
-		$channel_res = ChannelOperate::where('proposal_num',$union_order_code)->select('channel_user_code')->first();
-		$channel_user_code = $channel_res['channel_user_code'];
-		$channel_contract_res = ChannelContract::where('channel_user_code',$channel_user_code)
-			->where('is_valid',0)//TODO 签约是正常的
-			->select('openid','contract_id','contract_expired_time')//openid,签约协议号,签约过期时间
-			->first();
-		$contract_expired_time = strtotime($channel_contract_res['contract_expired_time']);
-		if(empty($channel_contract_res)){//没签约
-			$channel_contract = new ChannelContract();
-			$channel_contract->operate_time = $input['operate_time'];
-			$channel_contract->request_serial = $input['request_serial'];
-			$channel_contract->contract_expired_time = $input['contract_expired_time'];
-			$channel_contract->contract_id = $input['contract_id'];
-			$channel_contract->change_type = $input['change_type'];
-			$channel_contract->contract_code = $input['contract_code'];
-			$channel_contract->openid = $input['openid'];
-			$channel_contract->channel_user_code = $channel_user_code;
-			$channel_contract->save();
-		}elseif($contract_expired_time<time()) {//签约已过期,更新签约
-			ChannelContract::where('channel_user_code',$channel_user_code)->update([
-				'operate_time' => $input['operate_time'],
-				'request_serial' => $input['request_serial'],
-				'contract_expired_time' => $input['contract_expired_time'],
-				'contract_id' => $input['contract_id'],
-				'change_type' => $input['change_type'],
-				'contract_code' => $input['contract_code'],
-				'openid' => $input['openid'],
-			]);
-		}
-		return json_encode(['status'=>'200','msg'=>'回调成功']);
-	}
-	//微信代扣支付
-	public function insureWechatPay(){
-		set_time_limit(0);//永不超时
-		$access_token = $this->request->header('access-token');
-		$access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-		$channel_code  = $access_token_data['channel_code'];
-		$person_code  = $access_token_data['person_code'];
-		$person_phone  = $access_token_data['person_phone'];
-		$channel_contract_info = ChannelContract::where('channel_user_code',$person_code)->select(['openid','contract_id'])->first();
-		$channel_res = ChannelOperate::where('channel_user_code',$person_code)
-			->where('prepare_status','200')
-			->where('operate_time',date('Y-m-d',time()-24*3600))
-			->select('proposal_num')
-			->first();
-		$union_order_code = $channel_res['proposal_num'];
-		$data = [];
-		$data['price'] = '2';
-		$data['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
-		$data['quote_selected'] = '';
-		$data['insurance_attributes'] = '';
-		$data['union_order_code'] = $union_order_code;
-		$data['pay_account'] = $channel_contract_info['openid']??"oalT50N9lxHbWhGBDTF3FMCYhTx8";
-		$data['contract_id'] = $channel_contract_info['contract_id']??"201801050468783068";
-		$data = $this->signhelp->tySign($data);
-		//发送请求
-		$response = Curl::to(env('TY_API_SERVICE_URL') . '/ins_curl/wechat_pay_ins')
-			->returnResponseObject()
-			->withData($data)
-			->withTimeout(60)
-			->post();
-		// print_r($response);die;
-		if($response->status != 200){
-			ChannelOperate::where('channel_user_code',$person_code)
-				->where('proposal_num',$union_order_code)
-				->update(['pay_status'=>'500','pay_content'=>$response->content]);
-			return redirect('/channelsapi/to_insure')->with('status','支付失败');
-		}
-		$return_data =  json_decode($response->content,true);//返回数据
-		// LogHelper::logChannelSuccess($return_data, 'pay_return_data');
-		//TODO  可以改变订单表的状态
-		ChannelOperate::where('channel_user_code',$person_code)
-			->where('proposal_num',$union_order_code)
-			->update(['pay_status'=>'200']);
-		WarrantyRule::where('union_order_code',$union_order_code)
-			->update(['status'=>'1']);
-		Order::where('order_code',$union_order_code)
-			->update(['status'=>'1']);
-		$respose =  json_encode(['status'=>'200','content'=>'支付成功'],JSON_UNESCAPED_UNICODE);
-		return redirect('/channelsapi/do_insure')->with('status','支付成功');
-	}
 }
