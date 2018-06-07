@@ -43,6 +43,7 @@ use App\Helper\IdentityCardHelp;
 use App\Models\CustWarranty;
 use App\Models\CustWarrantyPerson;
 use App\Jobs\YunDaPay;
+use App\Helper\TokenHelper;
 
 class TkClaimController
 {
@@ -57,9 +58,8 @@ class TkClaimController
     }
     //理赔选择
     public function toClaim(){
-        $access_token = $this->request->header('access-token');
-		$access_token_data = json_decode($this->sign_help->base64url_decode($access_token),true);
-        $person_code = $access_token_data['person_code'];
+		$token_data = TokenHelper::getData($_GET['token']);
+		$person_code = $token_data['insured_code'];
         $time = date('Y-m-d',time()-3600*48);
         //最近三天内可理赔的保单详情
         $channel_operate_res = ChannelOperate::where('channel_user_code',$person_code)
@@ -108,15 +108,20 @@ class TkClaimController
         return view('frontend.channels.claim_apply_way');
     }
     //理赔第一步：填写出险人信息 todo 报案
-    public function claimStep1($warranty_code){
-        $data = $this->getClaimCommon($warranty_code);
-        $member = $this->getInsurantInfo($data);
+    public function claimStep1(){
+		$warranty_res = CustWarranty::where('id',$_GET['warranty_id'])->select('warranty_code')->first();
+        $data = $this->getClaimCommons($warranty_res['warranty_code']);
         $address = $this->getAreaInfo($data);
+        $member = $this->getInsurantInfo($data);
         $user_info = $this->getMemberInfo($data);
-//                dump($address);
-//                dump($member);
-//                dump($user_info);
-//                die;
+//        print_r($address);
+//        print_r($member);
+//		print_r($user_info);
+//		die;
+		if(empty($address)&&empty($member)&&empty($user_info)){
+			$result =  json_encode(['status'=>'501','content'=>'初始化出错'],JSON_UNESCAPED_UNICODE);
+			return $result;
+		}
         if(json_decode($address,true)){
             $address  = json_decode($address,true);
         }else{
@@ -132,28 +137,21 @@ class TkClaimController
         }else{
             return back()->with('status','获取会员信息出错！');
         }
-//                dump($address);
-//                dump($member);
-//                dump($user_info);
-//                die;
         if(empty($address)&&empty($member)&&empty($user_info)){
-            // //LogHelper::logChannelError($member, 'YD_TK_get_init_member');
-            // //LogHelper::logChannelError($address, 'YD_TK_get_init_area');
-            // //LogHelper::logChannelError($address, 'YD_TK_get_init_user_info');
             $result =  json_encode(['status'=>'501','content'=>'初始化出错'],JSON_UNESCAPED_UNICODE);
             return $result;
         }
-        ChannelOperate::where('proposal_num',$data['union_order_code'])->update(['init_status'=>'200','init_content'=>json_encode($member)]);
+//        ChannelOperate::where('proposal_num',$data['union_order_code'])->update(['init_status'=>'200','init_content'=>json_encode($member)]);
         return view('frontend.channels.claim_step1')
             ->with('area',$address)
             ->with('member',$member)
             ->with('user_info',$user_info)
-            ->with('warranty_code',$warranty_code);
+            ->with('warranty_code',$warranty_res['warranty_code']);
     }
     //处理第一步：报案处理
     public function doClaimStep1(){
         $input = $this->request->all();
-        $data = $this->getClaimCommon($input['warranty_code']);
+        $data = $this->getClaimCommons($input['warranty_code']);
         $datas = $this->signhelp->tySign($input);
         $response = Curl::to(env('TY_API_SERVICE_URL') .'/claim/save_case_info')
             ->returnResponseObject()
@@ -183,7 +181,7 @@ class TkClaimController
     }
     //理赔第二步：填写收款人账户信息
     public function claimStep2($warranty_code){
-        $data = $this->getClaimCommon($warranty_code);
+        $data = $this->getClaimCommons($warranty_code);
         $res = $this->getCliamSaveInfo($data);
         return view('frontend.channels.claim_step2')
             ->with('res',$res)
@@ -825,30 +823,38 @@ class TkClaimController
     //获取请求接口的公共参数  todo 有改动
     public function getClaimCommon($warranty_code){
         //获取保单号，联合订单号，产品信息，被保人信息等
-        $warranty_res = Warranty::where('warranty_code',$warranty_code)
+        $warranty_res = CustWarranty::where('warranty_code',$warranty_code)
             ->with([
-                'warranty_rule.warranty_rule_order.warranty_recognizee',
-                'warranty_rule.warranty_product',
-                'warranty_rule.warranty_rule_order',
-                'warranty_rule.policy',
+                'person','warrantyPerson'
             ])->first();
         $data = [];
-        if(!empty($warranty_res->warranty_rule)
-            &&!empty($warranty_res->warranty_rule->policy)
-            &&!empty($warranty_res->warranty_rule->warranty_rule_order->warranty_recognizee)){
-            $data['ins_policy_code'] = $warranty_code;
-            $data['private_p_code'] = $warranty_res->warranty_rule->private_p_code ??  'VGstMTEyMkEwMUcwMQ';
-            $data['union_order_code'] = $warranty_res->warranty_rule->union_order_code;
-            $data['ty_product_id'] = $warranty_res->warranty_rule->warranty_product->ty_product_id ??  '15';
-            $data['policy_user_code'] =$warranty_res->warranty_rule->policy->code;
-            $data['channel_user_code'] =$warranty_res->warranty_rule->policy->code;
-            $data['recognizee_user_code'] =$warranty_res->warranty_rule->warranty_rule_order->warranty_recognizee[0]->code;
-
-        }
+		$data['ins_policy_code'] = $warranty_code;
+		$data['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
+		$data['union_order_code'] = $warranty_res['pro_policy_no']??"";
+		$data['ty_product_id'] = '15';
+		$data['policy_user_code'] = $warranty_res['person']['papers_code']??"";
+		$data['channel_user_code'] =$warranty_res['person']['papers_code']??"";
+		$data['recognizee_user_code'] =$warranty_res['person']['papers_code']??"";
         return $data;
     }
+	public function getClaimCommons($warranty_code){
+		//获取保单号，联合订单号，产品信息，被保人信息等
+		$data = [];
+		$data['ins_policy_code'] = "600021122201824029260836117";
+		$data['private_p_code'] = 'VGstMTEyMkEwMUcwMQ';
+		$data['union_order_code'] = "000021122201824038668992117";
+		$data['ty_product_id'] = '15';
+		$data['policy_user_code'] = "130535199110183117";
+		$data['channel_user_code'] = "130535199110183117";
+		$data['recognizee_user_code'] = "130535199110183117";
+		return $data;
+	}
     //获取会员绑定信息查询接口
     public function getMemberInfo($res){
+		LogHelper::logChannelError(date('YmdHis',time()), 'YD_TK_Get_Member_start');
+		if(empty($res)){
+			return back()->with('status','获取会员信息出错！');
+		}
         $data = [];
         $data['ins_policy_code'] = $res['ins_policy_code'];
         $data['union_order_code'] = $res['union_order_code'] ?? '';
@@ -864,14 +870,18 @@ class TkClaimController
 //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            //LogHelper::logChannelError($content, 'YD_TK_Claim_Info');
             return back()->with('status','获取会员信息出错');
         }
         $return_data =  is_array($response->content)? json_encode($response->content) :$response->content;
+		LogHelper::logChannelError(date('YmdHis',time()), 'YD_TK_Get_Member_end');
         return $return_data;
     }
     //获取地区初始化信息
     public function getAreaInfo($res){
+		LogHelper::logChannelError(date('YmdHis',time()), 'YD_TK_Get_Area_start');
+		if(empty($res)){
+			return back()->with('status','获取地区初始化信息失败！');
+		}
         $data = [];
         $data['ins_policy_code'] = $res['ins_policy_code'];
         $data['union_order_code'] = $res['union_order_code'];
@@ -887,20 +897,24 @@ class TkClaimController
         //        print_r($response);die;
         if($response->status != 200){
             $content = $response->content;
-            //LogHelper::logChannelError($content, 'YD_TK_Get_Area');
             return back()->with('status','获取地区初始化信息失败');
         }
         $return_data =  is_array($response->content)? json_encode($response->content) :$response->content;
+		LogHelper::logChannelError(date('YmdHis',time()), 'YD_TK_Get_Area_end');
         return $return_data;
     }
     //获取投保人信息
     public function getInsurantInfo($res){
+    	if(empty($res)){
+			return back()->with('status','获取会员信息出错！');
+		}
         $data = [];
         $data['ins_policy_code'] = $res['ins_policy_code'];
         $data['union_order_code'] = $res['union_order_code'];
         $data['private_p_code'] = $res['private_p_code'];
         $data['ty_product_id'] = $res['ty_product_id'];
         $member_info = $this->getMemberInfo($res);
+		LogHelper::logChannelError(date('YmdHis',time()), 'YD_TK_Get_insure_start');
 //        dd($member_info);
         if(json_decode($member_info,true)){
             $member_info  = json_decode($member_info,true);
@@ -925,6 +939,7 @@ class TkClaimController
             return back()->with('status','获取投保人信息失败');
         }
         $return_data =  is_array($response->content)? json_encode($response->content) :$response->content;
+		LogHelper::logChannelError(date('YmdHis',time()), 'YD_TK_Get_insure_end');
         return $return_data;
     }
     //获取投保进度

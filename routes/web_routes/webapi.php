@@ -54,6 +54,34 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('claim_send_email', 'ClaimController@claimSendEmail');
 	Route::any('claim_audit', 'ClaimController@claimAudit');
 	Route::any('base_upload_file', 'ClaimController@baseUploadFile');
+
+	//todo =============================================泰康理赔=====================================
+	//在线理赔
+	Route::any('to_claim','TkClaimController@toClaim');//理赔选择
+	Route::any('claim_notice/{warranty_code}','TkClaimController@claimNotice');//自助理赔服务须知
+	Route::any('claim_step1','TkClaimController@claimStep1');//理赔第一步：填写出险人信息
+	Route::any('do_claim_step1','TkClaimController@doClaimStep1');//处理第一步
+	Route::any('claim_step2/{warranty_code}','TkClaimController@claimStep2');//理赔第二步：填写收款人账户信息
+	Route::any('claim_step3','TkClaimController@claimStep3');//理赔第三步：上传身份证件信息
+	Route::any('claim_step4','TkClaimController@claimStep4');//理赔第四步：上传理赔资料
+	Route::any('do_claim_step4','TkClaimController@doClaimStep4');//处理第四步
+	Route::any('claim_submit/{warranty_code}','TkClaimController@claimSubmit');//理赔资料提交
+	Route::any('do_claim_del','TkClaimController@doClaimDel');//处理理赔资料删除
+	Route::any('do_claim_submit','TkClaimController@doClaimSubmit');//处理理赔资料提交
+	//理赔服务指南
+	Route::any('claim_apply_guide','TkClaimController@claimApplyGuide');//理赔操作指引
+	Route::any('claim_apply_range','TkClaimController@claimApplyRange');//理赔操作指引
+	Route::any('claim_apply_info','TkClaimController@claimApplyInfo');//理赔操作指引
+	Route::any('claim_apply_guide_index','TkClaimController@claimApplyGuideIndex');//理赔操作指引
+	Route::any('claim_apply_way','TkClaimController@claimApplyWay');//理赔操作指引
+	//理赔进度/历史查询
+	Route::any('claim_records/{person_code}','TkClaimController@claimRecords');//理赔进度历史列表
+	Route::any('claim_info/{warranty_code}','TkClaimController@claimInfo');//理赔详情
+	Route::any('claim_add_material/{warranty_code}','TkClaimController@claimAddMaterial');//理赔资料补充
+	Route::any('do_claim_add_material','TkClaimController@doClaimAddMaterial');//处理理赔资料补充
+	//理赔三方接口
+	Route::any('email_send','TkClaimController@getEmailSend');//理赔邮件
+	Route::any('sms_send','TkClaimController@getSmsCode');//理赔短信
 });
 
 

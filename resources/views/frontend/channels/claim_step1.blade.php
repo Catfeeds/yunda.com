@@ -24,7 +24,7 @@
 			</div>
 		</div>
 		<!--表单填写-->
-		<form action="{{ url('/channelsapi/do_claim_step1')}}"  method="post" id="do_claim_step1">
+		<form  action="{{ url('/webapi/do_claim_step1')}}"  method="post" id="do_claim_step1">
 			{{--enctype="multipart/form-data"--}}
 			{{ csrf_field() }}
 			<input type="hidden" name="warranty_code" value="{{$warranty_code}}">

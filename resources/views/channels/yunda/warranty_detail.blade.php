@@ -153,10 +153,19 @@
 					{{--<span>{{$user_res['phone']}}</span>--}}
 					{{--</div>--}}
 					{{--</div>--}}
-					@if($warranty_res['warranty_status'] == '4'||$warranty_res['warranty_status'] == '8')
-						<div class="btn">
-							<button id="claim_target" value="{{$warranty_res['id']}}">申请理赔</button>
-						</div>
+					{{--TODO 用产品id区分不同产品的理赔--}}
+					@if($warranty_res['product_id']=='1')
+						@if($warranty_res['warranty_status'] == '4'||$warranty_res['warranty_status'] == '8')
+							<div class="btn">
+								<button id="claim_target_yd" value="{{$warranty_res['id']}}">申请理赔</button>
+							</div>
+						@endif
+					@elseif($warranty_res['product_id']=='0')
+						@if($warranty_res['warranty_status'] == '4'||$warranty_res['warranty_status'] == '8')
+							<div class="btn">
+								<button id="claim_target_tk" value="{{$warranty_res['id']}}">申请理赔</button>
+							</div>
+						@endif
 					@endif
 				</div>
 			</div>
@@ -177,10 +186,13 @@
         window.location.href = "{{config('view_url.channel_yunda_target_url')}}warranty_list?token=" + token;
         return false;
     });
-    $('#claim_target').on('click', function () {
-        var id = $('#claim_target').val();
-
+    $('#claim_target_yd').on('click', function () {
+        var id = $('#claim_target_yd').val();
         window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_user?warranty_id=" + id + '&token=' + token;
+    });
+    $('#claim_target_tk').on('click', function () {
+        var id = $('#claim_target_tk').val();
+        window.location.href = "{{config('view_url.channel_yunda_target_url')}}claim_step1?warranty_id=" + id + '&token=' + token;
     });
 </script>
 </body>
