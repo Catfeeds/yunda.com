@@ -55,8 +55,8 @@ class WarrantyController
             ->select('id')
             ->get();
         $warranty_timeout_res = CustWarranty::where('user_id',$user_res['id'])
-            ->where('warranty_status','6')//已失效
-            ->orWhere('warranty_status','8')
+            ->whereIn('warranty_status',[6,8])//已失效
+            //->orWhere('warranty_status','8')
             ->select('id')
             ->get();
         $input = $this->request->all();
@@ -64,8 +64,9 @@ class WarrantyController
         //保单状态 1待处理, 2待支付,3待生效, 4保障中,5可续保，6已失效，7已退保  8已过保
         if($status=="6"){
             $warranty_res = CustWarranty::where('user_id',$user_res['id'])
-                ->where('warranty_status',$status)//保障中
-                ->orWhere('warranty_status','8')
+                //->where('warranty_status',$status)//保障中
+                //->orWhere('warranty_status','8')
+                ->whereIn('warranty_status',[$status,8])//已失效 已过保
                 ->select('id','warranty_code','warranty_uuid','pro_policy_no','start_time','end_time','check_status','pay_status','warranty_status')
                 ->get();
         }else{
