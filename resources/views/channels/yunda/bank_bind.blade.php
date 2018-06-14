@@ -180,11 +180,13 @@
             data: {'bank_name':bank_name,'bank_city':bank_city,'bank_code':bank_code,'person_data':person_data},
             dataType: "json",
             success: function (data) {
-                $('#save').attr('style',"display:none");
                 Mask.alert(data.msg,3);
-                setTimeout(function(){//两秒后跳转
-                    window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index?token="+token;
-                },2000);
+                if(data.status==200){
+                    $('#save').attr('style',"display:none");
+                    setTimeout(function(){//两秒后跳转
+                        window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index?token="+token;
+                    },2000);
+				}
             }
         });
     });
