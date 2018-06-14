@@ -542,7 +542,7 @@ class BankController
 				'updated_at'=>time(),
 			]);
 		}else{
-			return json_encode(['status' => '500', 'msg' => '开通免密支付失败,请检查银行卡']);
+			return json_encode(['status' => '500', 'msg' => '此银行卡已开通免密授权']);
 		}
 		$seting_res = ChannelInsureSeting::where('cust_id', $cust_id)
 			->select('id')
