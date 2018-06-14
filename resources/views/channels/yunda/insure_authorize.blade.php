@@ -51,8 +51,11 @@
 									<input type="text" name="person_phone" value="{{$cust_phone}}" placeholder="请输入"/>
 								</div>
 							</div>
-							<p>*支持的银行：建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</p>
-							<p>*手机号请填写您银行卡绑定的手机号</p>
+							<p><span style="color: red">*</span>银行卡开户人必须为本人，且保证卡里余额充足</p>
+							<p><span style="color: red">*</span>请填写办理该银行卡时预留的手机号码</p>
+							<p><span style="color: red">*</span>支持的银行：<br/>
+								<span style="font-size:12px">建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</span>
+							</p>
 						</div>
 						<div class="popups-footer">
 							<div class="label-wrapper">

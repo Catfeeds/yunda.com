@@ -768,8 +768,8 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			#process10 .policy_list_wrapper .banknotice {
 				padding: 0 .2rem;
 				background: #fff;
-				height: 3rem;
-				line-height: 1rem;
+				height: 2.7rem;
+				line-height: 0.5rem;
 				border-bottom: 1px solid #DDDDDD;
 				overflow: hidden;
 			}
