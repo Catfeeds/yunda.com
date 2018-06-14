@@ -67,6 +67,7 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+            var token = localStorage.getItem('token');
             $('.head-right').on('tap',function(){
                 location.href = "bmapp:homepage";return false;
             });
