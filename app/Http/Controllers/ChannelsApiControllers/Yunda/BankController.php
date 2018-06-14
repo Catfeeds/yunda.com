@@ -528,28 +528,28 @@ class BankController
 			]);
 		}
 		$cust_id = $user_res['id'];
-		$bank_res = Bank::where('bank_code', $bank_code)
-			->select('id')
-			->first();
-		if (empty($bank_res)) {
-			Bank::insert([
-				'cust_type' => '1',
-				'cust_id' => $cust_id,
-				'bank' => '',
-				'bank_code' => $bank_code,
-				'bank_city' => '',
-				'bank_deal_type' => '1',
-				'phone' => '',
-				'created_at'=>time(),
-				'updated_at'=>time(),
-			]);
-		}else{
-			return json_encode(['status' => '500', 'msg' => '此银行卡已开通免密授权']);
-		}
 		$seting_res = ChannelInsureSeting::where('cust_id', $cust_id)
 			->select('id')
 			->first();
 		if (empty($seting_res)) {
+			$bank_res = Bank::where('bank_code', $bank_code)
+				->select('id')
+				->first();
+			if (empty($bank_res)) {
+				Bank::insert([
+					'cust_type' => '1',
+					'cust_id' => $cust_id,
+					'bank' => '',
+					'bank_code' => $bank_code,
+					'bank_city' => '',
+					'bank_deal_type' => '1',
+					'phone' => '',
+					'created_at'=>time(),
+					'updated_at'=>time(),
+				]);
+			}else{
+				return json_encode(['status' => '500', 'msg' => '此银行卡已开通免密授权']);
+			}
 			ChannelInsureSeting::insert([
 				'cust_id' => $cust_id,
 				'cust_cod' => $person_code ?? "0",
