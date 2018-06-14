@@ -68,11 +68,13 @@ class WarrantyController
                 //->orWhere('warranty_status','8')
                 ->whereIn('warranty_status',[$status,8])//已失效 已过保
                 ->select('id','warranty_code','warranty_uuid','pro_policy_no','start_time','end_time','check_status','pay_status','warranty_status')
+				->orderBy('created_at','desc')
                 ->get();
         }else{
             $warranty_res = CustWarranty::where('user_id',$user_res['id'])
                 ->where('warranty_status',$status)//保障中
                 ->select('id','warranty_code','warranty_uuid','pro_policy_no','start_time','end_time','check_status','pay_status','warranty_status')
+				->orderBy('created_at','desc')
                 ->get();
         }
         $warranty_status = config('status_setup.warranty_status');//保单状态
