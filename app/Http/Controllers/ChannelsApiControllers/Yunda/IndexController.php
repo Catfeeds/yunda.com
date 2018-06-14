@@ -386,19 +386,19 @@ class IndexController
 //                break;
             case 'no_bank'://没有绑定银行卡
                 $ins_msg = '没有银行卡信息，请绑定银行卡';//备注信息
-                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'bank_index';//跳转URL
+                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'bank_index?token='.$this->input['token'];//跳转URL
                 break;
             case 'no_authorize'://没有授权
                 $ins_msg = '银行卡没有授权免密支付，请授权';//备注信息
-                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'insure_authorize';//跳转URL
+                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'insure_authorize?token='.$this->input['token'];//跳转URL
                 break;
             case 'insured_fail'://投保失败（系统错误）
-                $ins_msg = '投保失败,请重新尝试';//备注信息
-                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'ins_info';//跳转URL
+                $ins_msg = '投保失败';//备注信息
+                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'ins_info?token='.$this->input['token'];//跳转URL
                 break;
             default:
-                $ins_msg = '投保失败,请重新尝试';//备注信息
-                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'ins_info';//跳转URL
+                $ins_msg = '投保失败';//备注信息
+                $target_url = config('yunda.server_host').config('view_url.channel_yunda_target_url').'ins_info?token='.$this->input['token'];//跳转URL
         }
         $ins_status = '500';
         $warranty_res = [];
