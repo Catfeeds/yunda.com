@@ -210,29 +210,35 @@ class BankController
 //		if ($bank_res['bank_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
 //			return json_encode(['status' => '500', 'msg' => '系统银行卡数据，不能删除']);
 //		}
-		$update_res = Bank::where('id', $bank_id)
-			->update([
-				'state'=>1
-			]);
-		if(!empty($bank_authorize)){
-			$bank_res = Bank::where('cust_id', $cust_id)
-				->where('state','<>','1')
-				->select('bank_code')
-				->get();
-			$insure_seting = ChannelInsureSeting::where('id',$bank_authorize['id'])
+		DB::beginTransaction();
+		try{
+			$update_res = Bank::where('id', $bank_id)
 				->update([
-					'authorize_bank'=>$bank_res[0]['bank_code']
+					'state'=>1
 				]);
-		}else{
-			$insure_seting = '0';
-		}
-		if($update_res&&$insure_seting){
-			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
-		}else{
+			if(!empty($bank_authorize)){
+				$bank_res = Bank::where('cust_id', $cust_id)
+					->where('state','<>','1')
+					->select('bank_code')
+					->get();
+				$insure_seting = ChannelInsureSeting::where('id',$bank_authorize['id'])
+					->update([
+						'authorize_bank'=>$bank_res[0]['bank_code']
+					]);
+			}else{
+				$insure_seting = '1';
+			}
+			if($update_res&&$insure_seting){
+				DB::commit();
+				return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
+			}else{
+				DB::rollBack();
+				return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
+			}
+		}catch (\Exception $e){
+			DB::rollBack();
 			return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
 		}
-
-
 	}
 
 	/**
@@ -559,7 +565,7 @@ class BankController
 			return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
 		}catch (\Exception $e){
 			DB::rollBack();
-			return json_encode(['status' => '500', 'msg' => '开通免密支付成功']);
+			return json_encode(['status' => '500', 'msg' => '开通免密支付失败']);
 		}
 	}
 }
