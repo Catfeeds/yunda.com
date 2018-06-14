@@ -178,6 +178,10 @@
             Mask.alert('银行卡必须是数字', 3);
             return false;
         }
+        if (bank_code.length < 16) {
+            Mask.alert('银行卡格式不正确', 3);
+            return false;
+        }
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

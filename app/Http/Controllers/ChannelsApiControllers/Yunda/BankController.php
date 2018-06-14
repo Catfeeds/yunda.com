@@ -21,6 +21,7 @@ use App\Models\Person;
 use Ixudra\Curl\Facades\Curl;
 use App\Helper\TokenHelper;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\YdWechatPay;
 
 class BankController
 {
@@ -138,8 +139,14 @@ class BankController
 				'updated_at'=>time(),
 			]);
 			if ($insert_res) {
-				DB::commit();
-				return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
+				$bank_insure_res = $this->doBankInsured($person_data['insured_phone']);
+				if($bank_insure_res['status']=='200'){
+					DB::commit();
+					return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
+				}else{
+					DB::rollBack();
+					return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
+				}
 			} else {
 				DB::rollBack();
 				return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
@@ -149,6 +156,72 @@ class BankController
 			return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
 		}
 
+	}
+
+	/**
+	 * 绑定银行卡触发投保操作
+	 * @access public
+	 * @return json
+	 *
+	 */
+	public function doBankInsured($person_phone){
+		$user_res = Person::where('phone', $person_phone)
+			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'email', 'address', 'address_detail')
+			->first();
+		$return_data = [];
+		//姓名，身份证信息，手机号判空
+		if (!$user_res['name'] || !$user_res['papers_code'] || !$user_res['phone']) {
+			$return_data['status'] = '500';
+			$return_data['msg'] = '个人信息不完善';
+			return $return_data;
+		}
+		$user_setup_res = ChannelInsureSeting::where('cust_cod', $person_code)
+			->select('authorize_status', 'authorize_start', 'authorize_bank', 'auto_insure_status', 'auto_insure_type', 'auto_insure_price', 'auto_insure_time')
+			->first();
+		if (!$user_setup_res || !$user_setup_res['authorize_bank']) {
+			$return_data['status'] = '500';
+			$return_data['msg'] = '没有开启快递保免密支付';
+			return $return_data;
+		}
+		$bank_res = Bank::where('cust_id', $user_res['id'])
+			->where('bank_code', $user_setup_res['authorize_bank'])
+			->select('bank', 'bank_code', 'bank_city', 'phone')
+			->first();
+		$biz_content['channel_code'] = 'YD';
+		$biz_content['courier_state'] = '';
+		$biz_content['courier_start_time'] = '';
+		$biz_content['p_code'] = '';
+		$biz_content['is_insure'] = '';
+		$biz_content['insured_name'] = $user_res['name'];
+		$biz_content['insured_code'] = $user_res['papers_code'];
+		$biz_content['insured_phone'] = $user_res['phone'];
+		$biz_content['insured_email'] = $user_res['email'];
+		$biz_content['insured_province'] = $user_res['address_detail'];
+		$biz_content['insured_city'] = $user_res['address_detail'];
+		$biz_content['insured_county'] = $user_res['address_detail'];
+		$biz_content['insured_address'] = $user_res['address_detail'];
+		$biz_content['bank_code'] = $user_setup_res['authorize_bank'];
+		$biz_content['bank_name'] = $bank_res['bank'];
+		$biz_content['bank_address'] = $bank_res['bank_city'];
+		$biz_content['bank_phone'] = $user_res['phone'];
+		$biz_content['channel_order_code'] = "";
+		$biz_content['insured_days'] = $user_setup_res['auto_insure_type'] ?? "1";
+		$biz_content['price'] = '2';
+		switch ($biz_content['insured_days']) {
+			case '1':
+				$biz_content['price'] = $user_setup_res['auto_insure_price'];
+				break;
+			case '3':
+				$biz_content['price'] = $user_setup_res['auto_insure_price'];
+				break;
+			case '10':
+				$biz_content['price'] = $user_setup_res['auto_insure_price'];
+				break;
+		}
+		dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
+		$return_data['status'] = '200';
+		$return_data['msg'] = '核保中，请稍等~';
+		return $return_data;
 	}
 
 	/**
@@ -570,8 +643,14 @@ class BankController
 				'auto_insure_status'=>'1',
 			]);
 		}
-			DB::commit();
-			return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
+			$bank_insure_res = $this->doBankInsured($person_phone);
+			if($bank_insure_res['status']=='200'){
+				DB::commit();
+				return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
+			}else{
+				DB::rollBack();
+				return json_encode(['status' => '500', 'msg' => '开通免密支付失败']);
+			}
 		}catch (\Exception $e){
 			DB::rollBack();
 			return json_encode(['status' => '500', 'msg' => '开通免密支付失败']);
