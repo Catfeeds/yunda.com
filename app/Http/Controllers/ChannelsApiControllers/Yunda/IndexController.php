@@ -263,7 +263,7 @@ class IndexController
 		$cust_warranty_res = CustWarranty::where('user_id', $user_res['id'])
 			//->where('warranty_status', '<>', '6')//失效的订单
 			->where('created_at', '>', strtotime(date('Y-m-d')) . '000')//今天凌晨的时间戳
-			->select('warranty_uuid', 'warranty_code', 'created_at', 'check_status', 'pay_status', 'warranty_status','resp_insure_msg','resp_pay_msg')
+			->select('warranty_uuid', 'warranty_code', 'created_at', 'check_status', 'pay_status', 'warranty_status','resp_insure_msg','resp_pay_msg','start_time','end_time')
 			->orderBy('created_at', 'desc')
 			->first();
 		if (empty($cust_warranty_res)) {//今天还没有投过保
@@ -284,7 +284,7 @@ class IndexController
 				$ins_status = '200';//投保状态：成功200/失败500/投保中100
 				$ins_msg = '今日快递保生效中>>';//备注信息
 				$target_url = config('yunda.server_host') . config('view_url.channel_yunda_target_url') . 'warranty_list?token='.$this->input['token'];//跳转URL
-				$warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
+				$warranty_res = $cust_warranty_res;//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
 				return $this->insResult($person_code, $ins_status, $ins_msg, $target_url, $warranty_res);
 			} else {
 				if ($check_status == '2') {

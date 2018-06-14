@@ -45,9 +45,15 @@
 					<div class="date">
 						<div class="text"><i class="iconfont icon-chenggong"></i>保障已生效</div>
 						<ul class="list">
-							<li>保单号<span class="fr">41785452123654</span></li>
-							<li>保障开始时间<span class="fr">2018-02-22 19:45</span></li>
-							<li>保障结束时间<span class="fr">2018-02-22 23:59</span></li>
+							@if(!empty($warranty_res))
+								@if(isset($warranty_res['warranty_code'])&&strpos($warranty_res['warranty_code'],','))
+									@foreach(explode(',',$warranty_res['warranty_code']) as $key=>$value)
+							<li>@if($key==0)保单号@endif<span class="fr">{{$value}}</span></li>
+									@endforeach
+							<li>保障开始时间<span class="fr">{{date('Y-m-d',substr($warranty_res['start_time'],0,strlen($warranty_res['start_time'])-3)).' '.'上工时间'}}</span></li>
+							<li>保障结束时间<span class="fr">{{date('Y-m-d',substr($warranty_res['end_time'],0,strlen($warranty_res['end_time'])-3)).' '.'23:59:59'}}</span></li>
+								@endif
+							@endif
 						</ul>
 					</div>
 					<div class="btn-wrapper">
