@@ -11,6 +11,7 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('ins_info', 'IndexController@insInfo');//投保详情页面
 	Route::any('ins_center', 'IndexController@insureCenter');//我的保险页面
 	Route::any('do_insured', 'IndexController@doInsured');//投保操作
+	Route::any('do_new_insured', 'IndexController@doNewInusred');//出新单投保操作
 	Route::any('ins_error/{error_type}', 'IndexController@insError');//错误提示页面
 	//静态页面
 	Route::any('insure_tk_clause', 'IndexController@insTkClause');//产品条款页面-泰康

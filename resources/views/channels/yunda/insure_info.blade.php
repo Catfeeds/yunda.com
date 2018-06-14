@@ -134,7 +134,7 @@
 			$('#do_insured').on('click',function () {
 			    var person_code = "{{$person_code}}";
 
-				window.location.href = "{{config('view_url.channel_yunda_target_url')}}do_insured?token="+token;
+				window.location.href = "{{config('view_url.channel_yunda_target_url')}}do_new_insured?token="+token;
             });
             $('.head-right').on('tap',function () {
                 location.href = "bmapp:homepage";return false;

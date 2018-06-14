@@ -35,10 +35,10 @@
 					</a>
 					@if(!$auto_insure_status)
 					<!--自动购保功能关闭时渲染-->
-						<a href="{{config('view_url.channel_yunda_target_url')}}insure_seting?token={{$_GET['token']}}" id="insure_set_target" class="status-wrapper">自动购保功能关闭中，去开启   >></a>
+						<a href="{{config('view_url.channel_yunda_target_url')}}insure_seting?token={{$_GET['token']}}" id="insure_set_target" class="status-wrapper">开启快递保免密支付,每日出行有保障>></a>
 					@else
 							@if(!$insured_status)
-								<a href="{{config('view_url.channel_yunda_target_url')}}ins_info?token={{$_GET['token']}}" id="insure_no_target" class="status-wrapper">保障未生效，点击查看详情  >></a>
+								<a href="{{config('view_url.channel_yunda_target_url')}}ins_info?token={{$_GET['token']}}" id="insure_no_target" class="status-wrapper">今日快递保未生效,点击查看原因>></a>
 							@endif
 					@endif
 					<ul class="list-wrapper">
