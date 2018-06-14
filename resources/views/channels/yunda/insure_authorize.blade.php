@@ -31,26 +31,28 @@
 						<div class="popups-content">
 							<div class="top">
 								<p style="margin-bottom: .16rem;">上工才投保,每天2元钱</p>
-								<h2 class="title">开通免密支付协议</h2>
+								<h2 class="title">开通银行卡转账授权</h2>
 							</div>
 							<div class="policy_list_wrapper">
-								<div class="tab" style="color: #adadad">
-									<span class="item">银行卡</span>
-								</div>
+								{{--<div class="tab" style="color: #adadad">--}}
+									{{--<span class="item">银行卡</span>--}}
+								{{--</div>--}}
 								<div class="tab">
 									<span class="item">姓名</span>
-									<input type="text" name="person_name" value="{{$cust_name??''}}" />
+									<input type="text" name="person_name" value="{{$cust_name??''}}" placeholder="请输入"/>
 								</div>
 								<div class="tab">
-									<span class="item">手机号</span>
-									<input type="text" name="person_phone" value="{{$cust_phone}}" />
-								</div>
-								<div class="tab">
-									<span class="item">卡号</span>
-									<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:''}}"/>
+									<span class="item">银行卡号</span>
+									<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:''}}" placeholder="请输入"/>
 									<input type="hidden" name="person_code" value="{{$person_code}}"/>
 								</div>
+								<div class="tab">
+									<span class="item">对应手机号</span>
+									<input type="text" name="person_phone" value="{{$cust_phone}}" placeholder="请输入"/>
+								</div>
 							</div>
+							<p>*支持的银行：建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</p>
+							<p>*手机号请填写您银行卡绑定的手机号</p>
 						</div>
 						<div class="popups-footer">
 							<div class="label-wrapper">

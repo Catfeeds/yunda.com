@@ -99,25 +99,20 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
-            localStorage.setItem('token', token);
-            var token = localStorage.getItem('token');
             var get_token = "{{$_GET['token']}}";
-            if(token==null||token==''){
-                token = get_token;
-			}
             var person_code = "{{$person_code}}";
             var warranty_code = "{{$warranty_res['warranty_code']??""}}";
             $('#warranty_info').on('click',function () {
 
-                window.location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_info/'+warranty_code+'?token='+token;
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_info/'+warranty_code+'?token='+get_token;
             });
             $('#insure_seting').on('click',function () {
 
-                window.location.href = '{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token='+token;
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token='+get_token;
             });
             $('#do_insure').on('click',function () {
 
-                window.location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+token;
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+get_token;
             });
             $('.head-right').on('tap',function () {
                 location.href = "bmapp:homepage";return false;
