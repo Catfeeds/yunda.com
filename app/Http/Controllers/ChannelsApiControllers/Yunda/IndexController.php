@@ -56,58 +56,58 @@ class IndexController
 	{
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-		$person_phone = $token_data['insured_phone'];
-		$user_seting = ChannelInsureSeting::where('cust_cod', $person_code)
-			->select('cust_id', 'authorize_status', 'authorize_start')
-			->first();
-		$authorize_status = $user_seting['authorize_status'];//免密开通状态
-		if (!$authorize_status) {
-			$cust_id = '';
-			$cust_name = '';
-			$cust_phone = '';
-			$user_res = Person::where('phone', $person_phone)
-				->select('id', 'name', 'phone')
-				->first();
-			if (!empty($user_res)) {
-				$cust_id = $user_res['id'];
-				$cust_name = $user_res['name'];
-				$cust_phone = $user_res['phone'];
-			}
-			$insure_seting = ChannelInsureSeting::where('cust_cod', $person_code)
-				->select('authorize_bank')
-				->first();
-			$bank = [];
-			if (!empty($insure_seting)) {
-				$bank['code'] = $insure_seting['authorize_bank'];
-			}
-			$bank_res = Bank::where('cust_id', $cust_id)
-				->select('bank', 'bank_code', 'bank_city', 'phone', 'bank_deal_type')
-				->get();
-			if (!empty($bank_res)) {
-				foreach ($bank_res as $value) {
-					if ($value['bank_deal_type'] == '1') {
-						$bank['code'] = $value['bank_code'];
-						$bank['name'] = $value['bank'];
-						$bank['city'] = $value['bank_city'];
-						$bank['phone'] = $value['phone'];
-					}
-				}
-			}
-			$params = [];
-			$params['person_code'] = $person_code ?? "";
-			$params['person_phone'] = $cust_phone ?? "";
-			$params['person_name'] = $cust_name ?? "";
-			$wechat_res = $this->getWechatAuthorize($params);//微信签约显示状态
-			if ($wechat_res['status']) {
-				$wechat_status = $wechat_res['status'];//微信签约按钮显示状态
-				$wechat_url = $wechat_res['url'];//签约URL
-			} else {
-				$wechat_status = $wechat_res['status'];//微信签约按钮显示状态
-				$wechat_url = '';//签约URL
-			}
-			//签约页面上会显示签约人的相关信息
-			return view('channels.yunda.insure_authorize', compact('bank', 'cust_id', 'cust_name', 'cust_phone', 'person_code', 'wechat_status', 'wechat_url'));
-		}
+//		$person_phone = $token_data['insured_phone'];
+//		$user_seting = ChannelInsureSeting::where('cust_cod', $person_code)
+//			->select('cust_id', 'authorize_status', 'authorize_start')
+//			->first();
+//		$authorize_status = $user_seting['authorize_status'];//免密开通状态
+//		if (!$authorize_status) {
+//			$cust_id = '';
+//			$cust_name = '';
+//			$cust_phone = '';
+//			$user_res = Person::where('phone', $person_phone)
+//				->select('id', 'name', 'phone')
+//				->first();
+//			if (!empty($user_res)) {
+//				$cust_id = $user_res['id'];
+//				$cust_name = $user_res['name'];
+//				$cust_phone = $user_res['phone'];
+//			}
+//			$insure_seting = ChannelInsureSeting::where('cust_cod', $person_code)
+//				->select('authorize_bank')
+//				->first();
+//			$bank = [];
+//			if (!empty($insure_seting)) {
+//				$bank['code'] = $insure_seting['authorize_bank'];
+//			}
+//			$bank_res = Bank::where('cust_id', $cust_id)
+//				->select('bank', 'bank_code', 'bank_city', 'phone', 'bank_deal_type')
+//				->get();
+//			if (!empty($bank_res)) {
+//				foreach ($bank_res as $value) {
+//					if ($value['bank_deal_type'] == '1') {
+//						$bank['code'] = $value['bank_code'];
+//						$bank['name'] = $value['bank'];
+//						$bank['city'] = $value['bank_city'];
+//						$bank['phone'] = $value['phone'];
+//					}
+//				}
+//			}
+//			$params = [];
+//			$params['person_code'] = $person_code ?? "";
+//			$params['person_phone'] = $cust_phone ?? "";
+//			$params['person_name'] = $cust_name ?? "";
+//			$wechat_res = $this->getWechatAuthorize($params);//微信签约显示状态
+//			if ($wechat_res['status']) {
+//				$wechat_status = $wechat_res['status'];//微信签约按钮显示状态
+//				$wechat_url = $wechat_res['url'];//签约URL
+//			} else {
+//				$wechat_status = $wechat_res['status'];//微信签约按钮显示状态
+//				$wechat_url = '';//签约URL
+//			}
+//			//签约页面上会显示签约人的相关信息
+//			return view('channels.yunda.insure_authorize', compact('bank', 'cust_id', 'cust_name', 'cust_phone', 'person_code', 'wechat_status', 'wechat_url'));
+//		}
 		return view('channels.yunda.insure_info', compact('person_code'));
 	}
 
