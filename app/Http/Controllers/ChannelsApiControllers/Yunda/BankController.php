@@ -121,9 +121,7 @@ class BankController
 			]);
 		}
 		$cust_res = Person::where('papers_code', $person_data['insured_code'])->select()->first();
-		$bank_repeat = Bank::where('cust_id', $cust_res['id'])
-			->where('bank', $bank)
-			->where('bank_code', $bank_cod)
+		$bank_repeat = Bank::where('bank_code', $bank_cod)
 			->select('id')
 			->first();
 		if (!empty($bank_repeat)) {
@@ -140,15 +138,16 @@ class BankController
 			'updated_at'=>time(),
 		]);
 			DB::commit();
+			if ($insert_res) {
+				return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
+			} else {
+				return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
+			}
 		}catch (\Exception $e){
 			DB::rollBack();
 			return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
 		}
-		if ($insert_res) {
-			return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
-		} else {
-			return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
-		}
+
 	}
 
 	/**
