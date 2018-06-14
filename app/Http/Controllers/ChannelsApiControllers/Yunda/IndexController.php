@@ -287,21 +287,21 @@ class IndexController
 				$warranty_res = $cust_warranty_res;//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
 				return $this->insResult($person_code, $ins_status, $ins_msg, $target_url, $warranty_res);
 			} else {
-				if ($check_status == '2') {
-					$ins_status = '500';
-					$ins_msg = $check_msg ?? "核保失败";//备注信息
-					$target_url = config('yunda.server_host') . config('view_url.channel_yunda_target_url') . 'ins_center?token='.$this->input['token'];//跳转URL
-					$warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
-					return $this->insResult($person_code, $ins_status, $ins_msg, $target_url, $warranty_res);
-				} else if ($pay_status == '2') {
+				if(!empty($pay_msg)){
 					$ins_status = '500';
 					$ins_msg = $pay_msg ?? "支付失败";//备注信息
 					$target_url = config('yunda.server_host') . config('view_url.channel_yunda_target_url') . 'ins_center?token='.$this->input['token'];//跳转URL
 					$warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
 					return $this->insResult($person_code, $ins_status, $ins_msg, $target_url, $warranty_res);
+				}elseif(!empty($check_msg)){
+					$ins_status = '500';
+					$ins_msg = $check_msg ?? "核保失败";//备注信息
+					$target_url = config('yunda.server_host') . config('view_url.channel_yunda_target_url') . 'ins_center?token='.$this->input['token'];//跳转URL
+					$warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
+					return $this->insResult($person_code, $ins_status, $ins_msg, $target_url, $warranty_res);
 				}else{
 					$ins_status = '500';
-					$ins_msg = $check_msg.','.$pay_msg;//备注信息
+					$ins_msg = '投保失败';//备注信息
 					$target_url = config('yunda.server_host') . config('view_url.channel_yunda_target_url') . 'ins_center?token='.$this->input['token'];//跳转URL
 					$warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
 					return $this->insResult($person_code, $ins_status, $ins_msg, $target_url, $warranty_res);

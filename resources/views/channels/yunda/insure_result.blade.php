@@ -99,6 +99,7 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+            localStorage.setItem('token', token);
             var token = localStorage.getItem('token');
             var get_token = "{{$_GET['token']}}";
             if(token==null||token==''){
