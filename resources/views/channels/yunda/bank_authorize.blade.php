@@ -173,7 +173,9 @@
             dataType: "json",
             success: function (data) {
                 Mask.alert(data.msg, 3);
-                $('#confirm').attr("style", "display:none;");
+                if(data.status==200){
+                    $('#confirm').attr("style", "display:none;");
+				}
             }
         });
     });

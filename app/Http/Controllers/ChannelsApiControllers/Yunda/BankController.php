@@ -54,13 +54,12 @@ class BankController
 	public function bankIndex()
 	{
 		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
 		$person_phone = $token_data['insured_phone'];
 		$user_res = Person::where('phone', $person_phone)
 			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')
 			->first();
 		$cust_id = $user_res['id'];
-		$bank_authorize = ChannelInsureSeting::where('cust_cod',$person_code)
+		$bank_authorize = ChannelInsureSeting::where('cust_id',$cust_id)
 			->with(['bank'=>function ($a){
 				$a->where('state','1');
 			}])
@@ -505,8 +504,11 @@ class BankController
 		$input = $this->request->all();
 		$person_code = $input['person_code'];
 		$person_name = $input['person_name'];
+		$person_phone = $input['person_phone'];
 		$bank_code = $input['bank_code'];
-		$user_res = Person::where('papers_code', $person_code)->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')->first();
+		$user_res = Person::where('phone', $person_phone)
+			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')
+			->first();
 		DB::beginTransaction();
 		try{
 		if (empty($user_res)) {
@@ -514,7 +516,7 @@ class BankController
 				'name' => $person_name,
 				'papers_type' => '1',
 				'papers_code' => $person_code,
-				'phone' => '',
+				'phone' => $person_phone,
 				'cust_type' => '1',
 				'authentication' => '1',
 				'del' => '0',
@@ -524,9 +526,9 @@ class BankController
 			]);
 		}
 		$cust_id = $user_res['id'];
-		$seting_res = ChannelInsureSeting::where('cust_cod', $person_code)
-			->select('id')->first();
-		$bank_res = Bank::where('bank_code', $bank_code)->select('id')->first();
+		$bank_res = Bank::where('bank_code', $bank_code)
+			->select('id')
+			->first();
 		if (empty($bank_res)) {
 			Bank::insert([
 				'cust_type' => '1',
@@ -539,12 +541,17 @@ class BankController
 				'created_at'=>time(),
 				'updated_at'=>time(),
 			]);
+		}else{
+			return json_encode(['status' => '500', 'msg' => '开通免密支付失败,请检查银行卡']);
 		}
+		$seting_res = ChannelInsureSeting::where('cust_id', $cust_id)
+			->select('id')
+			->first();
 		if (empty($seting_res)) {
 			ChannelInsureSeting::insert([
 				'cust_id' => $cust_id,
 				'cust_cod' => $person_code ?? "0",
-				'cust_type' => '',
+				'cust_type' => 'user',
 				'authorize_bank' => $bank_code,
 				'authorize_status' => '1',
 				'authorize_start' => time(),
