@@ -82,11 +82,14 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
+			var token = "{{$_GET['token']}}";
             $('.head-right').on('tap',function(){
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                history.back(-1);return false;
+                //history.back(-1);
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}insure_seting?token="+token;
+                return false;
             });
 			$(function() {
 			    var cust_id = '1';

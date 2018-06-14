@@ -71,7 +71,8 @@
                     location.href = "bmapp:homepage";return false;
                 });
                 $('.head-left').on('tap',function(){
-                    history.back(-1);return false;
+                    window.location.href = "{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token="+token;
+                    return false;
                 });
 			</script>
 	</body>

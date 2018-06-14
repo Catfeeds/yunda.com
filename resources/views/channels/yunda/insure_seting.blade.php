@@ -46,8 +46,11 @@
             $('.head-right').on('tap',function(){
                 location.href = "bmapp:homepage";return false;
             });
+            var token = "{{$_GET['token']}}";
             $('.head-left').on('tap',function(){
-                history.back(-1);return false;
+                //history.back(-1);
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token="+token;
+                return false;
             });
 		</script>
 	</body>
