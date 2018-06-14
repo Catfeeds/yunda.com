@@ -10,6 +10,7 @@ namespace App\Http\Controllers\ChannelsApiControllers\Yunda;
 
 
 use App\Models\Bank;
+use App\Models\CustWarranty;
 use Illuminate\Http\Request;
 use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
@@ -121,30 +122,33 @@ class IndexController
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
         if($person_code){
-            //TODO 匹配出没有签约的
-            //TODO  匹配出签约过期的
             $user_seting_res = ChannelInsureSeting::where('cust_cod',$person_code)
-                ->select('authorize_status','auto_insure_status','warranty_id','insure_days','insure_start')
+                ->select('authorize_status','auto_insure_status')
                 ->first();
-            $auto_insure_status = $user_seting_res['auto_insure_status'];
-            $warranty_id = $user_seting_res['warranty_id'];
-            $insure_days = $user_seting_res['insure_days'];
-            $insure_start = $user_seting_res['insure_start'];
-            if(empty($warranty_id)){
-                $insured_status = '0';//投保失败
-            }elseif($insure_start+$insure_days*24*3600<time()){
-                $insured_status = '0';//保障失效
-            }else{
-                $insured_status = '1';//保障中
-            }
+            $person_res = Person::where('papers_code',$person_code)
+				->select('id')
+				->first();
+            if(empty($user_seting_res)&&empty($person_res)){
+				$auto_insure_status = '0';//自动投保状态
+				$insured_status = '0';//保障状态
+			}else{
+				$auto_insure_status = $user_seting_res['auto_insure_status'];
+				$warranty_res = CustWarranty::where('user_id',$person_res['id'])
+					->where('warranty_status','4')//生效的订单
+					->where('created_at','>',strtotime(date('Y-m-d')).'000')//今天凌晨的时间戳
+					->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
+					->orderBy('updated_at','desc')
+					->first();
+				if(empty($warranty_res)){
+					$insured_status = '0';//投保失败
+				}else{
+					$insured_status = '1';//保障中
+				}
+			}
         }else{
             $insured_status = '0';//保障状态
             $auto_insure_status = '0';//自动投保状态
         }
-		$user_seting = ChannelInsureSeting::where('cust_cod',$person_code)
-			->select('cust_id','authorize_status','authorize_start')
-			->first();
-		$authorize_status  = $user_seting['authorize_status'];//免密授权开通状态
         return view('channels.yunda.insure_center',compact('person_code','insured_status','auto_insure_status','authorize_status'));
     }
 

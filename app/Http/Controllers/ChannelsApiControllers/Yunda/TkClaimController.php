@@ -177,7 +177,7 @@ class TkClaimController
             'claim_start_time'=>date('Y-m-d',time()),
             'claim_start_status'=>'200'
         ]);
-        return redirect('/channelsapi/claim_step2/'.$input['warranty_code'])->with('status','用户信息提交成功');
+        return redirect('/webapi/claim_step2/'.$input['warranty_code'])->with('status','用户信息提交成功');
     }
     //理赔第二步：填写收款人账户信息
     public function claimStep2($warranty_code){
@@ -258,7 +258,7 @@ class TkClaimController
     public function doClaimStep4(){
         set_time_limit(0);//永不超时
         $input = $this->request->all();
-        $data = $this->getClaimCommon($input['warranty_code']);//获取通用信息
+        $data = $this->getClaimCommons($input['warranty_code']);//获取通用信息
         $claim_id = $this->getCliamId($data);//获取报案号
         $claim_save_info = $this->getCliamSaveInfo($data);//获取报案返回信息
         $member_info = $this->getMemberInfo($data);//获取会员信息
@@ -267,7 +267,7 @@ class TkClaimController
         if(json_decode($member_info,true)){
             $member_info  = json_decode($member_info,true);
         }else{
-            return back()->with('status','获取信息出错！');
+			dd($input);
         }
         $claim_apply_info = isset($input['claim_apply_info'])?$input['claim_apply_info']:[];
         $start_time_info = isset($input['start_time_info'])?$input['start_time_info']:[];
@@ -288,6 +288,7 @@ class TkClaimController
         $data['coop_id'] = $member_info['member_id'];
         $data['sign'] =  $claim_save_info['sign'];
         $data['claim_flag'] = $claim_save_info['bank_flag'];
+        dd($data);
         //调用上传方法
         $cid1_res = $this->getImgUpload($cid1_info,$data,'cid1');//证件正面
         $cid2_res = $this->getImgUpload($cid2_info,$data,'cid2');//证件反面
@@ -378,7 +379,7 @@ class TkClaimController
         ChannelOperate::where('proposal_num',$data['union_order_code'])->update([
             'claim_status'=>'100',//理赔材料提交成功
         ]);
-        return redirect('/channelsapi/claim_submit/'.$data['ins_policy_code'])->with('status','理赔信息提交成功！');
+        return redirect('/webapi/claim_submit/'.$data['ins_policy_code'])->with('status','理赔信息提交成功！');
     }
     //获取图片上传路径
     public function getImgPath($res,$param){
@@ -744,7 +745,7 @@ class TkClaimController
         ChannelOperate::where('proposal_num',$data['union_order_code'])->update([
             'claim_status'=>'200',//理赔材料提交成功
         ]);
-        return redirect('/channelsapi/claim_submit/'.$input['warranty_code'])->with('status','理赔资料提交成功');
+        return redirect('/webapi/claim_submit/'.$input['warranty_code'])->with('status','理赔资料提交成功');
     }
     //理赔材料补充
     public function claimAddMaterial($warranty_code){
@@ -818,7 +819,7 @@ class TkClaimController
                 'add_push_files'=>json_encode($image_paths),
                 'claim_add_status'=>'200',//已上传补充资料
             ]);
-        return redirect('/channelsapi/to_claim')->with('status','补充资料上传成功！');
+        return redirect('/webapi/to_claim')->with('status','补充资料上传成功！');
     }
     //获取请求接口的公共参数  todo 有改动
     public function getClaimCommon($warranty_code){
@@ -980,8 +981,9 @@ class TkClaimController
     public function getCliamId($res){
         $claim_apply_res =  ChannelClaimApply::where('warranty_code',$res['ins_policy_code'])
             ->first();
+		$return_data = [];
         if(empty($claim_apply_res)){
-            return back()->with('status','获取报案号出错');
+            return $return_data;
         }
         $return_data =  isset(json_decode($claim_apply_res['user_report_content'],true)['claim_id'])?json_decode($claim_apply_res['user_report_content'],true)['claim_id']:[];
         return $return_data;

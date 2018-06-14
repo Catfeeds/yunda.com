@@ -60,7 +60,7 @@
 <div style="width:100%;height:100%;" id="defuTimes">
 	<!--表单填写-->
 	<!--表单填写-->
-	<form action="{{ url('/channelsapi/do_claim_step4')}}"  method="post" id="do_claim_step4" enctype="multipart/form-data">
+	<form action="{{ url('/webapi/do_claim_step4')}}"  method="post" id="do_claim_step4" enctype="multipart/form-data">
 		{{ csrf_field() }}
 		<input type="hidden" name="warranty_code" value="{{$data['ins_policy_code']}}">
 		<input type="hidden" name="bank_info" value="{{$bank_info}}">

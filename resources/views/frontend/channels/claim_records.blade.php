@@ -215,7 +215,7 @@
                         if(cur <= total){
                             var imgStr = currentIndex === 0 ? '<img src="/channel_info/imges/Security-label.png"/>' : '<img src="/channel_info/imges/Failure-label.png"/>';
                             setTimeout(function() {
-                                var html = '<a class="bottom-slip" href="/channelsapi/claim_info/601021122201721542523570514"  id="warranty_info_n">\
+                                var html = '<a class="bottom-slip" href="/webapi/claim_info/601021122201721542523570514"  id="warranty_info_n">\
 															<div class="slip-left">\
 																<div class="slip-manager">\
 																	<div >\

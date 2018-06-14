@@ -65,7 +65,7 @@
     <p class="w95 ulev-1 t-6 line-height marginAuto paddingTB">(2)若非上述机构出具的死亡证明(如村委会/居委会)，则须同时提供合法有效的户籍注销证明。</p>
     <p class="w95 ulev-3 t-3 line-height marginAuto paddingTB2">3、因意外导致的保险事故，并经由公安机关等有权机构处理的需要提供意外事故证明。</p>
     <br><br>
-    <a href="/channelsapi/claim_apply_way" onclick="downLipei();">
+    <a href="/webapi/claim_apply_way" onclick="downLipei();">
         <div class="tel24hour bgRed marginAuto">
             <img src="{{config('view_url.channel_url')}}imges/download.png">
             <span class="t-wh">理赔申请书下载</span>

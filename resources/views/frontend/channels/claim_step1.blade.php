@@ -363,7 +363,7 @@
             function get_code(tka_mobile,mobile_sign){
                 $.ajax( {
                     type : "post",
-                    url : "/channelsapi/sms_send",
+                    url : "/webapi/sms_send",
                     dataType : 'json',
                     data : {tka_mobile:tka_mobile,mobile_sign:mobile_sign},
                     headers: {

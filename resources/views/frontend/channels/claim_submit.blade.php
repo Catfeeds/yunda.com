@@ -116,7 +116,7 @@
 			@endif
 		@endforeach
    	</div>
-	<form action="{{ url('/channelsapi/do_claim_submit')}}"  method="post" id="do_claim_submit">
+	<form action="{{ url('/webapi/do_claim_submit')}}"  method="post" id="do_claim_submit">
 		{{ csrf_field() }}
 		<input type="hidden" name="warranty_code" value="{{$warranty_code}}">
     	<button  class="service-btn" style="margin-top: 2rem;margin-bottom: 2rem;">确认提交</button>
@@ -137,7 +137,7 @@
     function claimDel(key) {
         $.ajax( {
             type : "get",
-            url : "/channelsapi/do_claim_del",
+            url : "/webapi/do_claim_del",
             dataType : 'json',
             data : {code:code,key:key},
             success:function(msg){

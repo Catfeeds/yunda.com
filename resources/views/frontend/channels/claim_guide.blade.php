@@ -15,7 +15,7 @@
 	    <img src="{{config('view_url.channel_url')}}imges/home.png" class="home" onclick="close_windows();">
 	</div>
 	<div style="margin-top: 4.6rem;">
-		<a id="claim_apply_range" href="/channelsapi/claim_apply_range">
+		<a id="claim_apply_range" href="/webapi/claim_apply_range">
 			<div class="search2 marginAuto">
 				<div class="line2"></div>
 				<div class="fl w90">
@@ -24,7 +24,7 @@
 			    <img src="{{config('view_url.channel_url')}}imges/arrow-right.png" class="arrow-right">
 			</div>
 		</a>
-		<a id="claim_apply_info" href="/channelsapi/claim_apply_info">
+		<a id="claim_apply_info" href="/webapi/claim_apply_info">
 			<div class="search2 margin-t" >
 				<div class="line2"></div>
 				<div class="fl w90">
@@ -33,7 +33,7 @@
 			    <img src="{{config('view_url.channel_url')}}imges/arrow-right.png" class="arrow-right">
 			</div>
 		</a>
-		<a id="claim_apply_guide" href="/channelsapi/claim_apply_guide_index">
+		<a id="claim_apply_guide" href="/webapi/claim_apply_guide_index">
 			<div class="search2 margin-t">
 				<div class="line2"></div>
 				<div class="fl w90">
@@ -48,13 +48,13 @@
 <script src="{{config('view_url.channel_url')}}js/main.js" type="text/javascript"></script>
 <script>
     $('#claim_apply_range').on('tap',function () {
-        location.href="/channelsapi/claim_apply_range";
+        location.href="/webapi/claim_apply_range";
     });
     $('#claim_apply_info').on('tap',function(){
-        location.href="/channelsapi/claim_apply_info";
+        location.href="/webapi/claim_apply_info";
     });
     $('#claim_apply_guide').on('tap',function(){
-        location.href="/channelsapi/claim_apply_guide";
+        location.href="/webapi/claim_apply_guide";
     });
 </script>
 </html>
