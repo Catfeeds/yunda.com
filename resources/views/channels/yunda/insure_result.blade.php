@@ -78,7 +78,7 @@
 					@elseif($ins_status == '100')
 					{{--TODO  投保中--}}
 						<div class="date">
-							<div class="text color-wraning"><i class="iconfont icon-chenggong"></i>投保中...</div>
+							<div class="text color-wraning"><i class="iconfont icon-chenggong"></i>核保中...</div>
 							<ul class="list">
 								<li class="cause">
 									<div>原因说明：<span class="fr" style="color: #606060;">{{$ins_msg}}</span></div>
