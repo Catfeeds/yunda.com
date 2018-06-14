@@ -99,47 +99,49 @@ class BankController
 	{
 		$input = $this->request->all();
 		$person_data = json_decode($input['person_data'], true);
-		$bank = $input['bank_name']??" ";
 		$bank_cod = $input['bank_code'];
-		$bank_city = $input['bank_city']??" ";
-		$cust_res = Person::where('papers_code', $person_data['insured_code'])->select()->first();
-		DB::beginTransaction();
-		try{
-		if (empty($cust_res)) {
-			Person::insert([
-				'name' => $person_data['insured_name'],
-				'papers_type' => '1',
-				'papers_code' => $person_data['insured_code'],
-				'phone' => $person_data['insured_phone'],
-				'cust_type' => '1',
-				'authentication' => '1',
-				'del' => '0',
-				'status' => '1',
-				'created_at' => time(),
-				'updated_at' => time(),
-			]);
-		}
-		$cust_res = Person::where('papers_code', $person_data['insured_code'])->select()->first();
-		$bank_repeat = Bank::where('bank_code', $bank_cod)
+		$bank = $input['bank_name']??" ";
+		$bank_city = $input['bank_city']??"";
+		$cust_res = Person::where('phone', $person_data['insured_phone'])
 			->select('id')
 			->first();
-		if (!empty($bank_repeat)) {
-			return json_encode(['status' => '500', 'msg' => '银行卡已存在，请更换银行卡！']);
-		}
-		$insert_res = Bank::insert([
-			'cust_id' => $cust_res['id'],
-			'cust_type' => '1',
-			'bank' => $bank,
-			'bank_code' => $bank_cod,
-			'bank_city' => $bank_city,
-			'phone' => '',
-			'created_at'=>time(),
-			'updated_at'=>time(),
-		]);
-			DB::commit();
+		DB::beginTransaction();
+		try{
+			if (empty($cust_res)) {
+				Person::insert([
+					'name' => $person_data['insured_name'],
+					'papers_type' => '1',
+					'papers_code' => $person_data['insured_code'],
+					'phone' => $person_data['insured_phone'],
+					'cust_type' => '1',
+					'authentication' => '1',
+					'del' => '0',
+					'status' => '1',
+					'created_at' => time(),
+					'updated_at' => time(),
+				]);
+			}
+			$bank_repeat = Bank::where('bank_code', $bank_cod)
+				->select('id')
+				->first();
+			if (!empty($bank_repeat)) {
+				return json_encode(['status' => '500', 'msg' => '银行卡已存在，请更换银行卡！']);
+			}
+			$insert_res = Bank::insert([
+				'cust_id' => $cust_res['id'],
+				'cust_type' => '1',
+				'bank' => $bank,
+				'bank_code' => $bank_cod,
+				'bank_city' => $bank_city,
+				'phone' => '',
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
 			if ($insert_res) {
+				DB::commit();
 				return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
 			} else {
+				DB::rollBack();
 				return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
 			}
 		}catch (\Exception $e){
