@@ -765,6 +765,14 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 				border-bottom: 1px solid #DDDDDD;
 				overflow: hidden;
 			}
+			#process10 .policy_list_wrapper .banknotice {
+				padding: 0 .2rem;
+				background: #fff;
+				height: 3rem;
+				line-height: 1rem;
+				border-bottom: 1px solid #DDDDDD;
+				overflow: hidden;
+			}
 			#process2 .policy_list_wrapper .tab {
 				padding: 0 .2rem;
 				background: #fff;

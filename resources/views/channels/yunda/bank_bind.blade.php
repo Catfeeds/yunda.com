@@ -56,6 +56,10 @@
 					<input type="text" name="bank_code"/>
 				</div>
 				<input hidden type="text" name="person_data" value="{{json_encode($token_data)}}"/>
+				<div class="banknotice">
+				<p><span style="color: red">*</span>支持的银行：建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</p>
+				<p><span style="color: red">*</span>手机号请填写您银行卡绑定的手机号</p>
+				</div>
 				<div class="agree-wrapper">
 					<label>我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}bank_authorize_info?token={{$_GET['token']}}" id="insure_authorize_info"> 《转账授权书》 </a><i class="icon-check active"></i><input hidden type="checkbox" value=""/></label>
 				</div>
