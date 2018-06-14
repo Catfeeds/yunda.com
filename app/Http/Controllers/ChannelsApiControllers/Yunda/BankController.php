@@ -164,7 +164,7 @@ class BankController
 	public function bankInfo($bank_id)
 	{
 		$bank_res = Bank::where('id', $bank_id)
-			->select('cust_id', 'bank', 'bank_code', 'bank_city', 'bank_deal_type', 'phone')
+			->select('id','cust_id', 'bank', 'bank_code', 'bank_city', 'bank_deal_type', 'phone')
 			->first();
 		$cust_id = $bank_res['cust_id'];
 		$bank_num = Bank::where('cust_id', $cust_id)
@@ -195,6 +195,7 @@ class BankController
 		$input = $this->request->all();
 		$cust_id = $input['cust_id'];
 		$bank_cod = $input['bank_code'];
+		$bank_id = $input['bank_id'];
 		$bank_num = Bank::where('cust_id', $cust_id)
 			->where('state','<>','1')
 			->select('bank_code')
@@ -209,29 +210,29 @@ class BankController
 //		if ($bank_res['bank_type'] == '1') {//从韵达传递过来的数据中获取的银行卡信息
 //			return json_encode(['status' => '500', 'msg' => '系统银行卡数据，不能删除']);
 //		}
-		DB::beginTransaction();
-		try{
-			Bank::where('cust_id', $cust_id)
-				->where('bank_code', $bank_cod)
-				->update([
-					'state'=>'1'
-				]);
+		$update_res = Bank::where('id', $bank_id)
+			->update([
+				'state'=>1
+			]);
+		if(!empty($bank_authorize)){
 			$bank_res = Bank::where('cust_id', $cust_id)
 				->where('state','<>','1')
 				->select('bank_code')
 				->get();
-		if(!empty($bank_authorize)){
-			ChannelInsureSeting::where('id',$bank_authorize['id'])
+			$insure_seting = ChannelInsureSeting::where('id',$bank_authorize['id'])
 				->update([
 					'authorize_bank'=>$bank_res[0]['bank_code']
 				]);
+		}else{
+			$insure_seting = '0';
 		}
-			DB::commit();
+		if($update_res&&$insure_seting){
 			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
-		}catch (\Exception $e){
-			DB::rollBack();
+		}else{
 			return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
 		}
+
+
 	}
 
 	/**
