@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
 	</head>
-	<body id="process2">
+	<body id="process2" style="background: #fff;">
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">

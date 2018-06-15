@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css"/>
 	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css"/>
 </head>
-<body id="process2">
+<body id="process2" style="background: #fff;">
 <div class="popups">
 	<div class="popups-content">
 		<div class="top">
@@ -57,10 +57,13 @@
 			<div class="label-wrapper">
 				<div class="or">or</div>
 				<div class="wechat">微信</div>
-				{{--<label><input id="agree" checked type="checkbox" />我已阅读并同意<a style="color: #00A2FF;">《免密授权书》</a></label>--}}
+				<label><input id="agree" checked type="checkbox" />我已阅读并同意<a style="color: #00A2FF;">《免密授权书》</a></label>
 			</div>
-			<button type="button" id="wechat_pay" class="btn btn-default" style="background: #1aad19;">开通微信免密支付</button>
+			<button type="button" id="wechat_pay" class="btn " style="background: #1aad19;">开通微信免密授权</button>
 		@endif
+		{{--<div class="label-wrapper">--}}
+			{{--<label><a style="color: #00A2FF;">开通微信免密授权>></a></label>--}}
+		{{--</div>--}}
 	</div>
 </div>
 <script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
