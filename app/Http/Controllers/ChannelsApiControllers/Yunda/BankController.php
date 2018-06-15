@@ -21,7 +21,7 @@ use App\Models\Person;
 use Ixudra\Curl\Facades\Curl;
 use App\Helper\TokenHelper;
 use Illuminate\Support\Facades\DB;
-use App\Jobs\YdWechatPay;
+use App\Jobs\YunDaPayInsure;
 
 class BankController
 {
@@ -168,6 +168,7 @@ class BankController
 		$user_res = Person::where('phone', $person_phone)
 			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'email', 'address', 'address_detail')
 			->first();
+
 		$return_data = [];
 		//姓名，身份证信息，手机号判空
 		if (!$user_res['name'] || !$user_res['papers_code'] || !$user_res['phone']) {
@@ -175,6 +176,7 @@ class BankController
 			$return_data['msg'] = '个人信息不完善';
 			return $return_data;
 		}
+		$person_code = $user_res['papers_code'];
 		$user_setup_res = ChannelInsureSeting::where('cust_cod', $person_code)
 			->select('authorize_status', 'authorize_start', 'authorize_bank', 'auto_insure_status', 'auto_insure_type', 'auto_insure_price', 'auto_insure_time')
 			->first();
