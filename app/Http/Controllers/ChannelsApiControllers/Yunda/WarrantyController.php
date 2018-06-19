@@ -49,15 +49,18 @@ class WarrantyController
         $warranty_ok_res = CustWarranty::where('user_id',$user_res['id'])
             ->where('warranty_status','4')//保障中
             ->select('id')
+			->limit(50)
             ->get();
         $warranty_paying_res = CustWarranty::where('user_id',$user_res['id'])
             ->where('warranty_status','2')//待支付
             ->select('id')
+			->limit(50)
             ->get();
         $warranty_timeout_res = CustWarranty::where('user_id',$user_res['id'])
             ->whereIn('warranty_status',[6,8])//已失效
             //->orWhere('warranty_status','8')
             ->select('id')
+			->limit(50)
             ->get();
         $input = $this->request->all();
         $status = $input['status']??"4";//默认保障中
@@ -69,12 +72,14 @@ class WarrantyController
                 ->whereIn('warranty_status',[$status,8])//已失效 已过保
                 ->select('id','warranty_code','warranty_uuid','pro_policy_no','start_time','end_time','check_status','pay_status','warranty_status')
 				->orderBy('created_at','desc')
+				->limit(50)
                 ->get();
         }else{
             $warranty_res = CustWarranty::where('user_id',$user_res['id'])
                 ->where('warranty_status',$status)//保障中
                 ->select('id','warranty_code','warranty_uuid','pro_policy_no','start_time','end_time','check_status','pay_status','warranty_status')
 				->orderBy('created_at','desc')
+				->limit(50)
                 ->get();
         }
         $warranty_status = config('status_setup.warranty_status');//保单状态
