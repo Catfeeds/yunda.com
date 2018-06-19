@@ -180,7 +180,7 @@ class IndexController
 		}
 		dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
 		$ins_status = '100';//投保状态：成功200/失败500/投保中100
-		$ins_msg = '核保中，请稍等~';//备注信息
+		$ins_msg = '支付中，请稍等~';//备注信息
 		$target_url = config('yunda.server_host') . config('view_url.channel_yunda_target_url') . 'warranty_list?token='.$this->input['token'];//跳转URL
 		$warranty_res = [];//保单信息：产品，被保人，保障期限，保单号，保费，保障起止时间
 		return $this->insResult($person_code, $ins_status, $ins_msg, $target_url, $warranty_res);

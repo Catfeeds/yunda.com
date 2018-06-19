@@ -221,7 +221,7 @@ class BankController
 		}
 		dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
 		$return_data['status'] = '200';
-		$return_data['msg'] = '核保中，请稍等~';
+		$return_data['msg'] = '支付中，请稍等~';
 		return $return_data;
 	}
 
