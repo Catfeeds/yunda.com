@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
 use App\Models\ChannelInsureSeting;
+use App\Models\Bank;
 use App\Helper\TokenHelper;
 
 class SetingController
@@ -74,7 +75,24 @@ class SetingController
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
 		$person_phone = $token_data['insured_phone'];
-        $auto_res = ChannelInsureSeting::where('cust_cod',$person_code)
+		$user_res = Person::where('papers_code',$person_code)
+			->select('id','phone','name')
+			->first();
+		if(empty($user_res)){
+			Person::insert([
+				'name'=>$token_data['insured_name'],
+				'papers_type'=>'1',
+				'papers_code'=>$token_data['insured_code'],
+				'phone'=>$token_data['insured_phone'],
+				'cust_type'=>'1',
+				'authentication'=>'1',
+				'del'=>'0',
+				'status'=>'1',
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
+		}
+        $auto_res = ChannelInsureSeting::where('cust_id',$user_res['id'])
             ->select('auto_insure_status','auto_insure_type','auto_insure_time')
             ->first();
         return view('channels.yunda.insure_auto',compact('auto_res','person_code','person_phone'));

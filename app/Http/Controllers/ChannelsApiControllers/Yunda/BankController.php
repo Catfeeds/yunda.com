@@ -168,7 +168,6 @@ class BankController
 		$user_res = Person::where('phone', $person_phone)
 			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'email', 'address', 'address_detail')
 			->first();
-
 		$return_data = [];
 		//姓名，身份证信息，手机号判空
 		if (!$user_res['name'] || !$user_res['papers_code'] || !$user_res['phone']) {

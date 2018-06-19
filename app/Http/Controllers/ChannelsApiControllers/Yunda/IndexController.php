@@ -197,18 +197,34 @@ class IndexController
 	{
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
-		if ($person_code) {
-			$user_seting_res = ChannelInsureSeting::where('cust_cod', $person_code)
-				->select('authorize_status', 'auto_insure_status')
-				->first();
+		if(!empty($person_code)){
 			$person_res = Person::where('papers_code', $person_code)
 				->select('id')
 				->first();
+			if(empty($person_res)){
+				Person::insert([
+					'name'=>$token_data['insured_name'],
+					'papers_type'=>'1',
+					'papers_code'=>$token_data['insured_code'],
+					'phone'=>$token_data['insured_phone'],
+					'cust_type'=>'1',
+					'authentication'=>'1',
+					'del'=>'0',
+					'status'=>'1',
+					'created_at'=>time(),
+					'updated_at'=>time(),
+				]);
+			}
+			$user_seting_res = ChannelInsureSeting::where('cust_id',$person_res['id'])
+				->select('authorize_status','authorize_status', 'auto_insure_status')
+				->first();
 			if (empty($user_seting_res) && empty($person_res)) {
 				$auto_insure_status = '0';//自动投保状态
+				$authorize_status = '0';//授权状态
 				$insured_status = '0';//保障状态
 			} else {
 				$auto_insure_status = $user_seting_res['auto_insure_status'];
+				$authorize_status = $user_seting_res['authorize_status'];
 				$warranty_res = CustWarranty::where('user_id', $person_res['id'])
 					->where('warranty_status', '4')//生效的订单
 					->where('created_at', '>', strtotime(date('Y-m-d')) . '000')//今天凌晨的时间戳
@@ -223,6 +239,7 @@ class IndexController
 			}
 		} else {
 			$insured_status = '0';//保障状态
+			$authorize_status = '0';//授权状态
 			$auto_insure_status = '0';//自动投保状态
 		}
 		return view('channels.yunda.insure_center', compact('person_code', 'insured_status', 'auto_insure_status', 'authorize_status'));
