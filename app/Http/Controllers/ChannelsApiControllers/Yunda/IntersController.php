@@ -77,8 +77,8 @@ class IntersController
         $webapi_route = config('yunda.server_host').config('yunda.webapi_route');
         if(empty($input)){
             $return_data['code'] = '500';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'empty';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'empty';
             $return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
             $return_data['data']['content'] = 'empty';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -93,8 +93,8 @@ class IntersController
         //姓名，身份证信息，手机号判空
         if(!$insured_name||!$insured_code||!$insured_phone){
 			$return_data['code'] = '500';
-			$return_data['message']['digest'] = 'default';
-			$return_data['message']['details'] = 'empty';
+			$return_data['message'][]['digest'] = 'default';
+			$return_data['message'][]['details'] = 'empty';
 			$return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
 			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone  is empty';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -140,8 +140,8 @@ class IntersController
         //银行卡信息判空
         if(!$bank_code){
             $return_data['code'] = '202';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'no_bank';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'no_bank';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
             $return_data['data']['content'] = '绑定银行卡,开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_bank?token='.$token;
@@ -167,8 +167,8 @@ class IntersController
 		$tk_res = $this->getTkInsure($person_result);
 		if(!empty($tk_res)&&$tk_res['status']=='201'){//可以签约
 			$return_data['code'] = '204';
-			$return_data['message']['digest'] = 'default';
-			$return_data['message']['details'] = 'no_authorize';
+			$return_data['message'][]['digest'] = 'default';
+			$return_data['message'][]['details'] = 'no_authorize';
 			$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
 			$return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
 			$return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
@@ -176,8 +176,8 @@ class IntersController
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 		}else if(!empty($tk_res)&&$tk_res['status']=='202'){
 			$return_data['code'] = '200';
-			$return_data['message']['digest'] = 'default';
-			$return_data['message']['details'] = 'insured';
+			$return_data['message'][]['digest'] = 'default';
+			$return_data['message'][]['details'] = 'insured';
 			$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
 			$return_data['data']['content'] = '今日快递保生效中>>';
 			$return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
@@ -192,8 +192,8 @@ class IntersController
         //LogHelper::logChannelSuccess($input,time()-$time, 'YD_joint_login_params_end2');
         if(empty($user_setup_res)){//未授权(首次购买)
             $return_data['code'] = '203';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'no_authorize';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
             $return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
@@ -202,8 +202,8 @@ class IntersController
         }
         if(!$user_setup_res['authorize_status']||!$user_setup_res['auto_insure_status']){
             $return_data['code'] = '204';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'no_authorize';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'no_authorize';
             $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
             $return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
@@ -262,8 +262,8 @@ class IntersController
                 //LogHelper::logSuccess($input,'YD_pay_insure1_params');
                 dispatch(new YunDaPayInsure($input));//TODO 投保操作（异步队列）
                 $return_data['code'] = '200';
-                $return_data['message']['digest'] = 'default';
-                $return_data['message']['details'] = 'insuring';
+                $return_data['message'][]['digest'] = 'default';
+                $return_data['message'][]['details'] = 'insuring';
                 $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
                 $return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
                 $return_data['data']['target_url'] = $webapi_route.'do_insured?token='.$token;
@@ -279,8 +279,8 @@ class IntersController
                 //LogHelper::logChannelSuccess($input,time()-$time, 'YD_joint_login_params_end4');
                 if($warranty_status=='3'||$warranty_status=='4'){
                     $return_data['code'] = '200';
-                    $return_data['message']['digest'] = 'default';
-                    $return_data['message']['details'] = 'insured';
+                    $return_data['message'][]['digest'] = 'default';
+                    $return_data['message'][]['details'] = 'insured';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
                     $return_data['data']['content'] = '今日快递保生效中>>';
                     $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
@@ -289,8 +289,8 @@ class IntersController
                 }else{
                 	if($check_status=='2'){
 						$return_data['code'] = '205';
-						$return_data['message']['digest'] = 'default';
-						$return_data['message']['details'] = 'isured_fail';
+						$return_data['message'][]['digest'] = 'default';
+						$return_data['message'][]['details'] = 'isured_fail';
 						$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
 						$return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
 						$return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
@@ -299,8 +299,8 @@ class IntersController
 					}
 					if($pay_status=='2'){
 						$return_data['code'] = '205';
-						$return_data['message']['digest'] = 'default';
-						$return_data['message']['details'] = 'isured_fail';
+						$return_data['message'][]['digest'] = 'default';
+						$return_data['message'][]['details'] = 'isured_fail';
 						$return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
 						$return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
 						$return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
@@ -308,8 +308,8 @@ class IntersController
 						return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 					}
                     $return_data['code'] = '205';
-                    $return_data['message']['digest'] = 'default';
-                    $return_data['message']['details'] = 'isured_fail';
+                    $return_data['message'][]['digest'] = 'default';
+                    $return_data['message'][]['details'] = 'isured_fail';
                     $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
                     $return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
                     $return_data['data']['target_url'] = $webapi_route.'ins_error/isured_fail?token='.$token;
@@ -319,8 +319,8 @@ class IntersController
             }
         }
         $return_data['code'] = '200';
-        $return_data['message']['digest'] = 'default';
-        $return_data['message']['details'] = 'insured';
+        $return_data['message'][]['digest'] = 'default';
+        $return_data['message'][]['details'] = 'insured';
         $return_data['data']['status'] = config('yunda.joint_status.yes');//（01显示/02不显示）
         $return_data['data']['content'] = '今日快递保生效中>>';
         $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
@@ -394,8 +394,8 @@ class IntersController
         $return_data =[];
         if(empty($input)){
             $return_data['code'] = '500';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'empty';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'empty';
             $return_data['data']['status'] = config('yunda.authorize_status.no');//（01显示/02不显示）
             $return_data['data']['content'] = 'empty';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -409,15 +409,15 @@ class IntersController
 		//姓名，身份证信息，手机号判空
 		if(!$insured_name||!$insured_code||!$insured_phone){
 			$return_data['code'] = '500';
-			$return_data['message']['digest'] = 'default';
-			$return_data['message']['details'] = 'empty';
+			$return_data['message'][]['digest'] = 'default';
+			$return_data['message'][]['details'] = 'empty';
 			$return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
 			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone  is empty';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 		}
         $return_data =[];
         $return_data['code'] = '200';
-        $return_data['message']['digest'] = 'default';
+        $return_data['message'][]['digest'] = 'default';
         $person_res = Person::where('papers_code',$insured_code)
             ->where('phone',$insured_phone)
             ->select('id')
@@ -438,7 +438,7 @@ class IntersController
                 'updated_at'=>time(),
             ]);
             $authorize_status = config('yunda.authorize_status.no');
-            $return_data['message']['details'] = '未授权';
+            $return_data['message'][]['details'] = '未授权';
             $return_data['data']['status'] = $authorize_status;
 			$return_data['data']['url'] =$webapi_route;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -449,7 +449,7 @@ class IntersController
 			->first();
         if(!empty($contractRes)){
 			$authorize_status = config('yunda.authorize_status.yes');
-			$return_data['message']['details'] = '已授权';
+			$return_data['message'][]['details'] = '已授权';
 			$return_data['data']['status'] = $authorize_status;
 			$return_data['data']['url'] = '';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -460,18 +460,18 @@ class IntersController
         $authorize_status = $user_setup_res['auto_insure_status'];//todo 查询免密授权状态
         if(!$authorize_status){//未授权(首次购买)
             $authorize_status = config('yunda.authorize_status.no');
-            $return_data['message']['details'] = '未授权';
+            $return_data['message'][]['details'] = '未授权';
             $return_data['data']['status'] = $authorize_status;
             $return_data['data']['url'] = $webapi_route;
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }else{
 //			$authorize_status = config('yunda.authorize_status.no');
-//			$return_data['message']['details'] = '未授权';
+//			$return_data['message'][]['details'] = '未授权';
 //			$return_data['data']['status'] = $authorize_status;
 //			$return_data['data']['url'] = $webapi_route;
 //			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
             $authorize_status = config('yunda.authorize_status.yes');
-            $return_data['message']['details'] = '已授权';
+            $return_data['message'][]['details'] = '已授权';
             $return_data['data']['status'] = $authorize_status;
             $return_data['data']['url'] = '';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
@@ -509,8 +509,8 @@ class IntersController
         $return_data =[];
         if(empty($input)){
             $return_data['code'] = '500';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'No Parameters';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'No Parameters';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         if(!is_array($input)){
@@ -530,8 +530,8 @@ class IntersController
         //投保要素判空 姓名，证件号，手机号
         if(!$insured_name||!$insured_code||!$insured_phone){
             $return_data['code'] = '500';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'insured_name or insure_code or insured_phone is empty';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'insured_name or insure_code or insured_phone is empty';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
@@ -541,15 +541,15 @@ class IntersController
         //判断是否开通自动投保
         if(empty($user_setup_res)){
             $return_data['code'] = '500';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] ='No Auto-insure';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] ='No Auto-insure';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         //判断当天的保单是否生效
         if(!empty($user_setup_res['warranty_id'])&&$user_setup_res['insure_start']+$user_setup_res['insure_days']*24*3600>time()){
             $return_data['code'] = '500';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] ='Insurance Protecting';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] ='Insurance Protecting';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         $wechat_bind = ChannelContract::where('channel_user_code',$insured_code)
@@ -560,8 +560,8 @@ class IntersController
         //判断是否已经绑定过微信
         if(empty($wechat_bind)){
             $return_data['code'] = '500';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'No Wechat Pay';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'No Wechat Pay';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         $insure_prepare = ChannelOperate::where('channel_user_code',$insured_code)
@@ -572,8 +572,8 @@ class IntersController
         //判断是否有预投保单号
         if(empty($insure_prepare)){
             $return_data['code'] = '500';
-            $return_data['message']['digest'] = 'default';
-            $return_data['message']['details'] = 'No Pre-insured';
+            $return_data['message'][]['digest'] = 'default';
+            $return_data['message'][]['details'] = 'No Pre-insured';
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         $params = [];
@@ -583,8 +583,8 @@ class IntersController
         $params['contract_id'] = $wechat_bind['contract_id'];
         dispatch(new YdWechatPay($params));//TODO 投保操作（异步队列）
         $return_data['code'] = '200';
-        $return_data['message']['digest'] = 'default';
-        $return_data['message']['details'] = 'insuring';
+        $return_data['message'][]['digest'] = 'default';
+        $return_data['message'][]['details'] = 'insuring';
         return json_encode($return_data,JSON_UNESCAPED_UNICODE);
     }
 }
