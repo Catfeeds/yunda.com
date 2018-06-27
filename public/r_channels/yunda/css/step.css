@@ -273,6 +273,13 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 	font-weight: bold;
 	text-align: center;
 }
+.phonestyle{
+	margin-right: 1.25rem;
+    width: 60% !important;
+}
+.phoneyansghi{
+	margin-right: 1.45rem !important;
+}
 .section{
 	background: #fff;
 	padding: .2rem;
@@ -540,7 +547,7 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 				margin-left: .6rem;
 			}
 			#process1 .list li.cause{
-				height: 3rem;
+				height: 2rem;
 			}
 			#process1 .list li.cause a{
 				text-decoration: underline;
@@ -557,8 +564,6 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			#process2 .popups-content{
 				margin: 0;
 				padding: 0;
-				height: 260px;
-				overflow-y:  auto;
 			}
 			#process2 .top {
 				padding: 0 .4rem;
@@ -680,10 +685,9 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
     font-size: .9rem;
 }
 #process8 .info-wrapper .list li {
-    /*height: 3rem;*/
-	line-height: 3rem;
-	border-bottom: 1px solid #ddd;
-	overflow: hidden;
+    height: 3rem;
+    line-height: 3rem;
+    border-bottom: 1px solid #ddd;
 }
 #process8 .info-wrapper .list li:last-child{border: none;}
 #process8 .main-content{background: #fff;}
@@ -714,12 +718,6 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
     color: #744c22;
     font-size: 1.4rem;
 }
-#process8 .head-left .iconfont {
-    color: #744c22;
-    font-size: 1.4rem;
-}
-
-
 #process8 .head-title {
     font-family: "PingFang-SC-Medium";
     font-size: 1.2rem;
@@ -750,7 +748,7 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			#process9 .policy_list_wrapper .tablist .item .icon-jiantou {
 				float: right;
 			}
-#process10 .mui-scroll-wrapper {
+			#process10 .mui-scroll-wrapper {
 				top: 1.32rem;
 				bottom: 0!important;
 			}
@@ -766,14 +764,7 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 				line-height: 1rem;
 				border-bottom: 1px solid #DDDDDD;
 				overflow: hidden;
-			}
-			#process10 .policy_list_wrapper .banknotice {
-				padding: 0 .2rem;
-				background: #fff;
-				height: 2.7rem;
-				line-height: 0.5rem;
-				border-bottom: 1px solid #DDDDDD;
-				overflow: hidden;
+				position: relative;
 			}
 			#process2 .policy_list_wrapper .tab {
 				padding: 0 .2rem;
@@ -782,22 +773,47 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 				line-height: .8rem;
 				border-bottom: 1px solid #DDDDDD;
 				overflow: hidden;
+				position: relative;
 			}
 			#process10 .policy_list_wrapper .tab input{
 				width: 80%;
 				padding: 0;
-				margin-top: .16rem;
+				margin-top: 0.2rem;
 				float: right;
 				border: none;
-				text-align: right;
+				text-align: left;
+				font-size: 0.28rem;
+			}
+			#process10 .policy_list_wrapper .tab .zbtn{
+				width: 1.6rem;
+				position: absolute;
+				top: .2rem;
+				right: .1rem;
+				color: #fff !important;
+				background: #00A2FF !important;
+				opacity: 1!important;
+				border-radius: 7px;
+				padding: .1rem;
 			}
 			#process2 .policy_list_wrapper .tab input{
-				width: 70%;
+				width: 80%;
 				padding: 0;
-				margin-top: .16rem;
-				float: right;
-				border: none;
-				text-align: right;
+				margin-top: .07rem;
+			    float: right;
+			    border: none;
+			    text-align: left;
+			    font-size: .28rem;
+			}
+			#process2 .policy_list_wrapper .tab .zbtn{
+				width: 1.6rem;
+				position: absolute;
+			    top: .1rem;
+			    right: .1rem;
+			    color: #fff !important;
+			    background: #00A2FF !important;
+			    opacity: 1!important;
+			    border-radius: 7px;
+			    padding: .1rem;
 			}
 			#process10 .policy_list_wrapper .tab .choose{
 				color: #4087fc;
@@ -825,7 +841,7 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 				color: #744c22;
 			}
 			#process11 .step3 .section-content .title {
-				width: 83%;
+				width: 20%;
 				display: inline-block;
 				font-weight: bold;
 				font-size: .34rem;

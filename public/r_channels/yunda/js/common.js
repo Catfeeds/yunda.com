@@ -41,6 +41,24 @@ $(function() {
 	
 
 });
+
+
+function timer(wait,ele) {
+	wait--;
+	ele.html(wait + 's');
+	ele.attr('disabled', 'disabled').addClass('disabled');
+	var clear = setInterval(function() {
+		if (wait > 0) {
+			wait--;
+			ele.html(wait + 's');
+		}
+		if (wait <= 0) {
+			ele.html('发送验证码').removeAttr('disabled').removeClass('disabled')
+			clearInterval(clear);
+		}
+	},
+	1000);
+}
 // 弹出层
 var Mask = function() {
 	this.btn = ["取消", "确定"],
@@ -81,12 +99,12 @@ Mask.prototype.alert = function(msg, time, callback) {
 //	var html = '<div class="test loading-wrapper"><i class="iconfont icon-fanhui"></i><i class="iconfont icon-close"></i><div class="loading">正在加载...</div></div>';
 //	_this.open(html);
 //}
-Mask.prototype.loding = function(sec=1){
+Mask.prototype.loding = function(msg){
     var _this = this;
-    var html = '<div class="toast_loading"><img src="/r_channels/yunda/imges/loadinig.png" class="aniLoad"> <p style="line-height:1;">正在加载中…</p ></div>';
+    var html = '<div class="toast_loading"><img src="./imges/loadinig.png" class="aniLoad"> <p style="line-height:1;">正在加载中…</p ></div>';
     setTimeout(function (){
     		$('.toast_loading').hide();
-    	},sec*1000);
+    	},1000);
     _this.open(html);
 }
 Mask.prototype.img = function(url){

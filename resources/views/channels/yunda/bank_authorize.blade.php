@@ -32,8 +32,13 @@
 				<input type="hidden" name="person_code" value="{{$person_code}}"/>
 			</div>
 			<div class="tab">
-				<span class="item">对应手机号</span>
-				<input type="text" name="person_phone" value="{{$cust_phone}}" placeholder="请输入"/>
+				<span class="item">手机号</span>
+				<input type="text" name="person_phone" value="{{$cust_phone}}" placeholder="请输入手机号" class="phonestyle">
+				<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>
+			</div>
+			<div class="tab">
+				<span class="item">验证码</span>
+				<input id="code" type="text" placeholder="输入验证码">
 			</div>
 		</div>
 
@@ -74,6 +79,9 @@
 <script>
     var token = "{{$_GET['token']}}";
     localStorage.setItem('token', token);
+    $("#btn-send").click(function(){
+        timer(60,$(this));
+    });
     var app = {
         init: function () {
             var _this = this;
