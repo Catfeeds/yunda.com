@@ -483,7 +483,7 @@ class BankController
 			$wechat_url = '';//签约URL
 		}
 		//签约页面上会显示签约人的相关信息
-		return view('channels.yunda.bank_authorize', compact('bank', 'cust_id', 'cust_name', 'cust_phone', 'person_code', 'authorize_status', 'wechat_status', 'wechat_url'));
+		return view('channels.yunda.bank_authorize', compact('token_data','bank', 'cust_id', 'cust_name', 'cust_phone', 'person_code', 'authorize_status', 'wechat_status', 'wechat_url'));
 	}
 
 	/**
@@ -642,7 +642,7 @@ class BankController
 			$wechat_url = '';//签约URL
 		}
 		//签约页面上会显示签约人的相关信息
-		return view('channels.yunda.insure_authorize', compact('bank', 'cust_id', 'cust_name', 'cust_phone', 'person_code', 'authorize_status', 'wechat_status', 'wechat_url'));
+		return view('channels.yunda.insure_authorize', compact('token_data','bank', 'cust_id', 'cust_name', 'cust_phone', 'person_code', 'authorize_status', 'wechat_status', 'wechat_url'));
 	}
 
 	/**
@@ -686,10 +686,20 @@ class BankController
 	public function doBankAuthorize()
 	{
 		$input = $this->request->all();
-		$person_code = $input['person_code'];
 		$person_name = $input['person_name'];
-		$person_phone = $input['person_phone'];
+		$bank_phone = $input['bank_phone'];
 		$bank_code = $input['bank_code'];
+		$verify_code = $input['verify_code'];
+		$person_data = json_decode($input['person_data'], true);
+		$person_phone = $person_data['insured_phone'];
+		$person_code = $person_data['insured_code'];
+		$verify_data = [];
+		$verify_data['phone'] = $bank_phone;
+		$verify_data['verify_code'] = $verify_code;
+		$verify_res = $this->doBankVerify($verify_data);
+		if(!$verify_res){
+			return json_encode(['status' => '500', 'msg' => '验证码校验失败']);
+		}
 		$user_res = Person::where('phone', $person_phone)
 			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')
 			->first();

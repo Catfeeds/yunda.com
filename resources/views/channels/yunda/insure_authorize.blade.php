@@ -45,15 +45,16 @@
 									<span class="item">银行卡号</span>
 									<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:''}}" placeholder="请输入"/>
 									<input type="hidden" name="person_code" value="{{$person_code}}"/>
+									<input hidden type="text" name="person_data" value="{{json_encode($token_data)}}"/>
 								</div>
 								<div class="tab">
 									<span class="item">手机号</span>
-									<input type="text" name="person_phone" value="{{$cust_phone}}" placeholder="请输入手机号" class="phonestyle">
+									<input type="text" name="bank_phone" value="{{$cust_phone}}" placeholder="请输入手机号" class="phonestyle">
 									<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>
 								</div>
 								<div class="tab">
 									<span class="item">验证码</span>
-									<input id="code" type="text" placeholder="输入验证码">
+									<input id="code" type="text" name="verify_code" placeholder="输入验证码">
 								</div>
 							</div>
 							<p><span style="color: red">*</span>银行卡开户人必须为本人，且保证卡里余额充足</p>
@@ -93,7 +94,50 @@
             var token = "{{$_GET['token']}}";
             localStorage.setItem('token', token);
             $("#btn-send").click(function(){
+                var bank_code = $("input[name='bank_code']").val();
+                var bank_phone = $("input[name='bank_phone']").val();
+                var person_data = $("input[name='person_data']").val();
+                if (bank_code.length == 0) {
+                    Mask.alert('银行卡不能为空', 3);
+                    return false;
+                }
+                if(!isRealNum(bank_code)){
+                    Mask.alert('银行卡必须是数字', 3);
+                    return false;
+                }
+                if (bank_code.length < 16) {
+                    Mask.alert('银行卡格式不正确', 3);
+                    return false;
+                }
+                if (bank_phone.length == 0) {
+                    Mask.alert('手机号不能为空', 3);
+                    return false;
+                }
+                if(!isRealNum(bank_phone)){
+                    Mask.alert('手机号必须是数字', 3);
+                    return false;
+                }
+                if (bank_phone.length < 10) {
+                    Mask.alert('银行卡格式不正确', 3);
+                    return false;
+                }
                 timer(60,$(this));
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url: "{{config('view_url.channel_yunda_target_url')}}bank_verify",
+                    type: "post",
+                    data: {'bank_code':bank_code,'person_data':person_data,'bank_phone':bank_phone},
+                    dataType: "json",
+                    success: function (data) {
+                        if(data.status==200||data.status=="200"){
+                            Mask.alert(data.content,3);
+                        }else{
+                            Mask.alert(data.content,3);
+                        }
+                    }
+                });
             });
             $('.head-right').on('tap',function(){
                 location.href = "bmapp:homepage";return false;
@@ -146,20 +190,21 @@
 
             });
             $('#confirm').on('click', function () {
-                var bank_code = $("input[name='bank_code']").val();
-                var person_phone = $("input[name='person_phone']").val();
                 var person_name = $("input[name='person_name']").val();
-                var person_code = $("input[name='person_code']").val();
-                if (bank_code.length == 0 || person_name.length == 0 || person_phone.length == 0) {
-                    Mask.alert('姓名，手机号，银行卡不能为空', 3);
+                var bank_code = $("input[name='bank_code']").val();
+                var bank_phone = $("input[name='bank_phone']").val();
+                var verify_code = $("input[name='verify_code']").val();
+                var person_data = $("input[name='person_data']").val();
+                if(person_name.length == 0){
+                    Mask.alert('姓名不能为空', 3);
                     return false;
                 }
                 if(!isChn(person_name)){
                     Mask.alert('姓名必须是汉字', 3);
                     return false;
                 }
-                if(!isRealNum(person_phone)){
-                    Mask.alert('手机号必须是数字', 3);
+                if (bank_code.length == 0) {
+                    Mask.alert('银行卡不能为空', 3);
                     return false;
                 }
                 if(!isRealNum(bank_code)){
@@ -170,17 +215,35 @@
                     Mask.alert('银行卡格式不正确', 3);
                     return false;
                 }
+                if (bank_phone.length == 0) {
+                    Mask.alert('手机号不能为空', 3);
+                    return false;
+                }
+                if(!isRealNum(bank_phone)){
+                    Mask.alert('手机号必须是数字', 3);
+                    return false;
+                }
+                if (bank_phone.length < 10) {
+                    Mask.alert('银行卡格式不正确', 3);
+                    return false;
+                }
+                if (verify_code.length == 0) {
+                    Mask.alert('验证码不能为空', 3);
+                    return false;
+                }
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     url: "{{config('view_url.channel_yunda_target_url')}}do_insure_authorize",
                     type: "post",
-                    data: {'person_name': person_name,'person_phone':person_phone, 'person_code': person_code, 'bank_code': bank_code},
+                    data: {'person_name': person_name,'bank_code': bank_code,'bank_phone':bank_phone,'verify_code':verify_code,'person_data':person_data},
                     dataType: "json",
                     success: function (data) {
                         Mask.alert(data.msg, 3);
-                        $('#confirm').attr("style", "display:none;");
+                        if(data.status==200){
+                            $('#confirm').attr("style", "display:none;");
+                        }
                     }
                 });
             });

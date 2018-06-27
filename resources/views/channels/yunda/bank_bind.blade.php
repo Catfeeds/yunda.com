@@ -53,7 +53,7 @@
 				</div>
 				<div class="tab banktab">
 					<span class="item"><b>银行卡号<span style="color: red">*</span></b></span>
-					<input type="text" name="bank_code"/>
+					<input type="text" name="bank_code" placeholder="请输入银行卡号"/>
 				</div>
 				<div class="tab">
 					<span class="item"><b>手机号<span style="color: red">*</span></b></span>
@@ -113,7 +113,6 @@
     });
 
     $("#btn-send").click(function(){
-        timer(60,$(this));
         var bank_code = $("input[name='bank_code']").val();
         var bank_phone = $("input[name='bank_phone']").val();
         var person_data = $("input[name='person_data']").val();
@@ -141,6 +140,7 @@
             Mask.alert('银行卡格式不正确', 3);
             return false;
         }
+        timer(60,$(this));
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
