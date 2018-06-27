@@ -22,6 +22,7 @@ use Ixudra\Curl\Facades\Curl;
 use App\Helper\TokenHelper;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\YunDaPayInsure;
+use \Illuminate\Support\Facades\Redis;
 
 class BankController
 {
@@ -103,6 +104,15 @@ class BankController
 		$bank_cod = $input['bank_code'];
 		$bank = $input['bank_name']??" ";
 		$bank_city = $input['bank_city']??"";
+		$bank_phone = $input['bank_phone']??"";
+		$verify_code = $input['verify_code']??"";
+		$verify_data = [];
+		$verify_data['phone'] = $bank_phone;
+		$verify_data['verify_code'] = $verify_code;
+		$verify_res = $this->doBankVerify($verify_data);
+		if(!$verify_res){
+			return json_encode(['status' => '500', 'msg' => '验证码校验失败']);
+		}
 		$cust_res = Person::where('phone', $person_data['insured_phone'])
 			->select('id')
 			->first();
@@ -156,6 +166,104 @@ class BankController
 			return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
 		}
 
+	}
+
+	/**
+	 * 获取银行卡验证码
+	 * @access public
+	 * @return json
+	 *
+	 */
+	public function getBankVerify(){
+		$input = $this->request->all();
+//		$input = [];
+//		$input['bank_code'] = '';
+//		$input['person_data'] = '{"insured_name":"\u66f9\u6865\u6865","insured_code":"342225199504065369","insured_phone":"15856218334","time":1529378970,"expiry_date":0}';
+//		$input['bank_phone'] = '15701681524';
+		$person_data = json_decode($input['person_data'], true);
+		$requset_data = [];
+		$requset_data['name'] = $person_data['insured_name'];
+		$requset_data['idCard'] = $person_data['insured_code'];
+		$requset_data['phone'] = $input['bank_phone'];
+		$requset_data['bank_code'] = $input['bank_code'];
+		//$requset_url = config('yunda.bank_verify_url');
+		$test_request_url = config('yunda.test_request_url');
+		$key = "bank_verify_code_".$requset_data['phone'];
+		if(Redis::exists($key)){
+			$return_data['status'] = '500';
+			$return_data['content'] = '您已经获取验证码成功，请稍后重试';
+			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+		}
+		$response = Curl::to($test_request_url)
+			->returnResponseObject()
+			->withData($requset_data)
+			->withTimeout(60)
+			->post();
+		$return_data = [];
+		if($response->status != 200){
+			$return_data['status'] = '500';
+			$return_data['content'] = '获取验证码失败';
+			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+		}else{
+			$content = $response->content;
+			if(!json_decode($content,true)){
+				$return_data['status'] = '500';
+				$return_data['content'] = '获取验证码失败';
+				return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+			}else{
+				$return_data['status'] = '200';
+				$return_data['content'] = '获取验证码成功';
+				$return_data['data'] = json_decode($content,true)['data'];
+				//TODO 使用缓存
+				$expiresAt = 60*5;//五分钟
+				Redis::setex($key,$expiresAt,$content);
+				return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+			}
+		}
+	}
+
+	/**
+	 * 校验银行卡绑定验证码
+	 * @param $data
+	 * @return bool|string
+	 */
+	public function doBankVerify($data){
+		$key = "bank_verify_code_".$data['phone'];
+		$content = Redis::get($key);
+		$requset_id = json_decode($content,true)??"";
+		if(empty($requset_id)){
+			return false;
+		}
+		$requset_id = isset(json_decode($content,true)['data']['requestId'])?json_decode($content,true)['data']['requestId']:"";
+		if(empty($requset_id)){
+			return false;
+		}
+		$requset_data = [];
+		$requset_data['requestId'] = $requset_id;
+		$requset_data['vdCode'] = $data['verify_code'];
+		$requset_url = config('yunda.check_bank_verify_url');
+		$response = Curl::to($requset_url)
+			->returnResponseObject()
+			->withData($requset_data)
+			->withTimeout(60)
+			->post();
+		$return_data = [];
+		if($response->status != 200){
+			$return_data['status'] = '500';
+			$return_data['content'] = '检验验证码失败';
+			return false;
+		}else{
+			$content = $response->content;
+			if(!json_decode($content,true)){
+				$return_data['status'] = '500';
+				$return_data['content'] = '检验验证码失败';
+				return false;
+			}else{
+				$return_data['status'] = '200';
+				$return_data['content'] = '检验验证码成功';
+				return true;
+			}
+		}
 	}
 
 	/**

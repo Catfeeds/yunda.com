@@ -56,13 +56,13 @@
 					<input type="text" name="bank_code"/>
 				</div>
 				<div class="tab">
-					<span class="item">手机号</span>
-					<input type="text" name="person_phone" value="" placeholder="请输入手机号" class="phonestyle phoneyansghi">
+					<span class="item"><b>手机号<span style="color: red">*</span></b></span>
+					<input type="text" name="bank_phone" value="" placeholder="请输入手机号" class="phonestyle phoneyansghi">
 					<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>
 				</div>
 				<div class="tab">
-					<span class="item">验证码</span>
-					<input id="code" type="text" placeholder="输入验证码">
+					<span class="item"><b>验证码<span style="color: red">*</span></b></span>
+					<input id="code" type="text" name="verify_code" placeholder="输入验证码">
 				</div>
 				<input hidden type="text" name="person_data" value="{{json_encode($token_data)}}"/>
 				<div class="banknotice">
@@ -101,9 +101,6 @@
 <script src="{{config('view_url.channel_views')}}js/common.js"></script>
 <script>
     var token = "{{$_GET['token']}}";
-    $("#btn-send").click(function(){
-        timer(60,$(this));
-    });
     $('.head-right').on('tap',function () {
         location.href = "bmapp:homepage";return false;
     });
@@ -114,7 +111,53 @@
     $('#insure_authorize_info').on('tap',function(){
 
     });
-    var token = localStorage.getItem('token');
+
+    $("#btn-send").click(function(){
+        timer(60,$(this));
+        var bank_code = $("input[name='bank_code']").val();
+        var bank_phone = $("input[name='bank_phone']").val();
+        var person_data = $("input[name='person_data']").val();
+        if (bank_code.length == 0) {
+            Mask.alert('银行卡不能为空', 3);
+            return false;
+        }
+        if(!isRealNum(bank_code)){
+            Mask.alert('银行卡必须是数字', 3);
+            return false;
+        }
+        if (bank_code.length < 16) {
+            Mask.alert('银行卡格式不正确', 3);
+            return false;
+        }
+        if (bank_phone.length == 0) {
+            Mask.alert('手机号不能为空', 3);
+            return false;
+        }
+        if(!isRealNum(bank_phone)){
+            Mask.alert('手机号必须是数字', 3);
+            return false;
+        }
+        if (bank_phone.length < 10) {
+            Mask.alert('银行卡格式不正确', 3);
+            return false;
+        }
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: "{{config('view_url.channel_yunda_target_url')}}bank_verify",
+            type: "post",
+            data: {'bank_code':bank_code,'person_data':person_data,'bank_phone':bank_phone},
+            dataType: "json",
+            success: function (data) {
+                if(data.status==200||data.status=="200"){
+                    Mask.alert(data.content,3);
+                }else{
+                    Mask.alert(data.content,3);
+                }
+            }
+        });
+    });
     var app = {
         init: function() {
             var _this = this;
@@ -181,6 +224,8 @@
         var bank_name = $("input[name='bank_name']").val();
         var bank_city = $("input[name='bank_city']").val();
         var bank_code = $("input[name='bank_code']").val();
+        var bank_phone = $("input[name='bank_phone']").val();
+        var verify_code = $("input[name='verify_code']").val();
         var person_data = $("input[name='person_data']").val();
         if (bank_code.length == 0) {
             Mask.alert('银行卡不能为空', 3);
@@ -194,13 +239,29 @@
             Mask.alert('银行卡格式不正确', 3);
             return false;
         }
+        if (bank_phone.length == 0) {
+            Mask.alert('手机号不能为空', 3);
+            return false;
+        }
+        if(!isRealNum(bank_phone)){
+            Mask.alert('手机号必须是数字', 3);
+            return false;
+        }
+        if (bank_phone.length < 10) {
+            Mask.alert('银行卡格式不正确', 3);
+            return false;
+        }
+        if (verify_code.length == 0) {
+            Mask.alert('验证码不能为空', 3);
+            return false;
+        }
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             url: "{{config('view_url.channel_yunda_target_url')}}do_bank_bind",
             type: "post",
-            data: {'bank_name':bank_name,'bank_city':bank_city,'bank_code':bank_code,'person_data':person_data},
+            data: {'bank_name':bank_name,'bank_city':bank_city,'bank_code':bank_code,'person_data':person_data,'bank_phone':bank_phone,'verify_code':verify_code},
             dataType: "json",
             success: function (data) {
                 Mask.alert(data.msg,3);

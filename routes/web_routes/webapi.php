@@ -24,6 +24,7 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	Route::any('bank_bind', 'BankController@bankBind');//添加银行卡页面
 	Route::any('do_bank_bind', 'BankController@doBankBind');//添加银行卡操作
 	Route::any('bank_del', 'BankController@bankDel');//删除银行卡操作
+	Route::any('bank_verify', 'BankController@getBankVerify');//获取银行卡短信验证码
 	//银行卡免密设置
 	Route::any('insure_authorize', 'BankController@insureAuthorize');//免密授权页面
 	Route::any('insure_authorize_info', 'BankController@insureAuthorizeInfo');//免密授权详情页面
