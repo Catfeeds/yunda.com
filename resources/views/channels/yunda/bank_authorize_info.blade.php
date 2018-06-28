@@ -86,7 +86,7 @@
             });
             $('.head-left').on('tap',function(){
                 //history.back(-1);
-                window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_authorize?token="+token;
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}insure_authorize?token="+token;
                 return false;
             });
 		</script>

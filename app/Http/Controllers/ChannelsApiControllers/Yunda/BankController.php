@@ -213,13 +213,20 @@ class BankController
 				$return_data['content'] = '获取验证码失败';
 				return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 			}else{
-				$return_data['status'] = '200';
-				$return_data['content'] = '获取验证码成功';
-				$return_data['data'] = json_decode($content,true)['data'];
-				//TODO 使用缓存
-				$expiresAt = 60;//
-				Redis::setex($key,$expiresAt,$content);
-				return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+				$response = json_decode($content,true);
+				if($response['code']==200||$response['code']=="200"){
+					$return_data['status'] = '200';
+					$return_data['content'] = '获取验证码成功';
+					$return_data['data'] = $response['data'];
+					//TODO 使用缓存
+					$expiresAt = 60;
+					Redis::setex($key,$expiresAt,$content);
+					return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+				}else{
+					$return_data['status'] = '500';
+					$return_data['content'] = '获取验证码失败';
+					return json_encode($return_data,JSON_UNESCAPED_UNICODE);
+				}
 			}
 		}
 	}
@@ -261,9 +268,12 @@ class BankController
 				$return_data['content'] = '检验验证码失败';
 				return false;
 			}else{
-				$return_data['status'] = '200';
-				$return_data['content'] = '检验验证码成功';
-				return true;
+				$response = json_decode($content,true);
+				if($response['code']==200||$response['code']=="200"){
+					return true;
+				}else{
+					return false;
+				}
 			}
 		}
 	}
