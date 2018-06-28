@@ -184,19 +184,20 @@ class BankController
 		$requset_data = [];
 		$requset_data['name'] = $person_data['insured_name'];
 		$requset_data['idCard'] = $person_data['insured_code'];
+//		$requset_data['name'] = '王石磊';
+//		$requset_data['idCard'] = '410881199406056514';
 		$requset_data['phone'] = $input['bank_phone'];
-		$requset_data['bank_code'] = $input['bank_code'];
-		//$requset_url = config('yunda.bank_verify_url');
-		$test_request_url = config('yunda.test_request_url');
+		$requset_data['bankCode'] = $input['bank_code'];
+		$requset_url = config('yunda.bank_verify_url');
 		$key = "bank_verify_code_".$requset_data['phone'];
 		if(Redis::exists($key)){
 			$return_data['status'] = '500';
 			$return_data['content'] = '您已经获取验证码成功，请稍后重试';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 		}
-		$response = Curl::to($test_request_url)
+		$response = Curl::to($requset_url)
 			->returnResponseObject()
-			->withData($requset_data)
+			->withData(json_encode($requset_data))
 			->withTimeout(60)
 			->post();
 		$return_data = [];
@@ -215,7 +216,7 @@ class BankController
 				$return_data['content'] = '获取验证码成功';
 				$return_data['data'] = json_decode($content,true)['data'];
 				//TODO 使用缓存
-				$expiresAt = 60*5;//五分钟
+				$expiresAt = 60;//
 				Redis::setex($key,$expiresAt,$content);
 				return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 			}
@@ -244,7 +245,7 @@ class BankController
 		$requset_url = config('yunda.check_bank_verify_url');
 		$response = Curl::to($requset_url)
 			->returnResponseObject()
-			->withData($requset_data)
+			->withData(json_encode($requset_data))
 			->withTimeout(60)
 			->post();
 		$return_data = [];
