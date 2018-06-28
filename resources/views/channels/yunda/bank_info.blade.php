@@ -61,18 +61,20 @@
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                history.back(-1);return false;
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index?token=" + token;
+                return false;
             });
             $('#del').click(function(){
                 var bank_code = $("input[name='bank_code']").val();
                 var cust_id ="{{$cust_id}}";
+                var bank_id = "{{$bank_res['id']}}";
                 $.ajax({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     url: "{{config('view_url.channel_yunda_target_url')}}bank_del",
                     type: "post",
-                    data: {'cust_id':cust_id,'bank_code':bank_code},
+                    data: {'cust_id':cust_id,'bank_code':bank_code,'bank_id':bank_id},
                     dataType: "json",
                     success: function (data) {
                         Mask.alert(data.msg,3);

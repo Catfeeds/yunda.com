@@ -106,8 +106,8 @@
 					
 					<div class="section section-notice">
 						<div class="section section-more">
-							<p><b>承保公司为"泰康在线财产保险"和"英大泰和财产保险"，了解更多保险详情请查看</b></p >
-							<p>泰康在线财险相关资料：</p >
+							<p><b>承保公司为"英大泰和财产保险"和"泰康在线财产保险"，了解更多保险详情请查看</b></p >
+							<p>英大泰和财产保险：</p >
 							<p>
 								<a href="{{config('view_url.channel_yunda_target_url')}}insure_yd_clause" class="ins_clause">《保险条款》</a>
 								<a href="{{config('view_url.channel_yunda_target_url')}}insure_yd_notice" class="ins_clause">《投保须知》</a>
@@ -134,7 +134,7 @@
 			$('#do_insured').on('click',function () {
 			    var person_code = "{{$person_code}}";
 
-				window.location.href = "{{config('view_url.channel_yunda_target_url')}}do_insured?token="+token;
+				window.location.href = "{{config('view_url.channel_yunda_target_url')}}do_new_insured?token="+token;
             });
             $('.head-right').on('tap',function () {
                 location.href = "bmapp:homepage";return false;

@@ -286,7 +286,7 @@
             });
             $('#insure_clause').on('tap',function(){
 
-                location.href="/channelsapi/clause_info";
+                location.href="/webapi/clause_info";
             });
 		</script>
 	</body>

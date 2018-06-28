@@ -45,9 +45,15 @@
 					<div class="date">
 						<div class="text"><i class="iconfont icon-chenggong"></i>保障已生效</div>
 						<ul class="list">
-							<li>保单号<span class="fr">41785452123654</span></li>
-							<li>保障开始时间<span class="fr">2018-02-22 19:45</span></li>
-							<li>保障结束时间<span class="fr">2018-02-22 23:59</span></li>
+							@if(!empty($warranty_res))
+								@if(isset($warranty_res['warranty_code'])&&strpos($warranty_res['warranty_code'],','))
+									@foreach(explode(',',$warranty_res['warranty_code']) as $key=>$value)
+							<li>@if($key==0)保单号@endif<span class="fr">{{$value}}</span></li>
+									@endforeach
+							<li>保障开始时间<span class="fr">{{date('Y-m-d',substr($warranty_res['start_time'],0,strlen($warranty_res['start_time'])-3)).' '.'上工时间'}}</span></li>
+							<li>保障结束时间<span class="fr">{{date('Y-m-d',substr($warranty_res['end_time'],0,strlen($warranty_res['end_time'])-3)).' '.'23:59:59'}}</span></li>
+								@endif
+							@endif
 						</ul>
 					</div>
 					<div class="btn-wrapper">
@@ -61,7 +67,7 @@
 						<ul class="list">
 							<li class="cause">
 								<div>失败原因：<span class="fr" style="color: #606060;">{{$ins_msg}}</span></div>
-								<div style="text-align: center;"><a href="{{$target_url.'?token='.$_GET['token']}}">前往操作</a></div>
+								<div style="text-align: center;"><a href="{{$target_url}}">前往操作</a></div>
 							</li>
 						</ul>
 					</div>
@@ -72,11 +78,11 @@
 					@elseif($ins_status == '100')
 					{{--TODO  投保中--}}
 						<div class="date">
-							<div class="text color-wraning"><i class="iconfont icon-chenggong"></i>投保中...</div>
+							<div class="text color-wraning"><i class="iconfont icon-chenggong"></i>支付中...</div>
 							<ul class="list">
 								<li class="cause">
 									<div>原因说明：<span class="fr" style="color: #606060;">{{$ins_msg}}</span></div>
-									<div style="text-align: center;"><a href="{{$target_url.'?token='.$_GET['token']}}">前往操作</a></div>
+									<div style="text-align: center;"><a href="{{$target_url}}">前往操作</a></div>
 								</li>
 							</ul>
 						</div>
@@ -93,24 +99,20 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
-            var token = localStorage.getItem('token');
             var get_token = "{{$_GET['token']}}";
-            if(token==null||token==''){
-                token = get_token;
-			}
             var person_code = "{{$person_code}}";
             var warranty_code = "{{$warranty_res['warranty_code']??""}}";
             $('#warranty_info').on('click',function () {
 
-                window.location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_info/'+warranty_code+'?token='+token;
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}warranty_info/'+warranty_code+'?token='+get_token;
             });
             $('#insure_seting').on('click',function () {
 
-                window.location.href = '{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token='+token;
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}insure_setup_list?token='+get_token;
             });
             $('#do_insure').on('click',function () {
 
-                window.location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+token;
+                window.location.href = '{{config('view_url.channel_yunda_target_url')}}ins_center?token='+get_token;
             });
             $('.head-right').on('tap',function () {
                 location.href = "bmapp:homepage";return false;

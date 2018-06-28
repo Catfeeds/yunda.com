@@ -21,6 +21,7 @@ return [
     'request_url'=>'http://127.0.0.1:8080/proposal/warranty/insure',
     'test_person_code'=>'620103199012171917',
 	'server_host'=>'https://api-yunda.inschos.com',
+//	'server_host'=>'http://yunda.com',
 //	'server_host'=>'',
     'webapi_route'=>'/webapi/',
     'prepare_route'=>'/channelsapi/',
@@ -34,7 +35,8 @@ return [
     ],
     //邮件路径
     'email_url'=>'/webapi',
-    'file_url'=>'http://122.14.202.233:9100/api_file/',
+//    'file_url'=>'http://122.14.202.233:9100/api_file/',
+    'file_url'=>'/api_file/',
     //产品ID对应邮箱地址
     'product_id_email'=>[
         '1'=>'ydgfkfb@163.com',

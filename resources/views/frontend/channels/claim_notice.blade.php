@@ -38,7 +38,7 @@
 	        <p class="t-6 ulev1 tx-l paddinglR line-height16 margin-t" style="padding-bottom: 0.6rem; letter-spacing: 0.1rem;">1、请确认出险属实，故意伪造证明材料属于违法行为，需承担法律责任。</p>
 	        <p class="t-6 ulev1 tx-l paddinglR  line-height16 margin-t" style="padding-bottom: 0.6rem;  letter-spacing: 0.1rem;">2、我们将以收到您“<span class="t-red">齐全</span>”的索赔资料作为理赔受理时间；资料不全的我们会以短信等方式及时通知您,请您妥善保存好理赔资料原件。</p>
 	        <!-- <p class="t-6 ulev1 tx-l paddinglR  line-height16 margin-t" style="padding-bottom: 0.6rem;  letter-spacing: 0.1rem;">3、申请人为出险人时，请选择本人申请，否则，请选择他人申请。</p> -->
-		    <a href="/channelsapi/claim_step1/{{$warranty_code}}"><div class="service-btn">确定</div></a>
+		    <a href="/webapi/claim_step1/{{$warranty_code}}"><div class="service-btn">确定</div></a>
 		</div>
 		@include('frontend.channels.insure_alert')
 		<script type="text/javascript" src="{{config('view_url.channel_url')}}js/jquery-1.10.2.min.js"></script>

@@ -6,9 +6,8 @@
  * Time: 12:03
  * 韵达已签约业务员预投保定时任务-从凌晨开始
  */
-namespace App\Console\Commands;
+namespace App\Http\Controllers\ChannelsApiControllers;
 
-use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 use App\Helper\RsaSignHelp;
 use App\Helper\AesEncrypt;
@@ -27,39 +26,24 @@ use App\Models\CustWarrantyPerson;
 
 
 
-class YdWechatPre extends Command
+class YdWechatPreController
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'yunda_wechat_prepare';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'yunda_wechat_prepare Command description';
-
 	/**
 	 * 初始化
 	 */
-	public function __construct(Request $request)
-	{
-		parent::__construct();
-		set_time_limit(0);//永不超时
+    public function __construct(Request $request)
+    {
+        set_time_limit(0);//永不超时
 		$this->request = $request;
 		$this->log_helper = new LogHelper();
 		$this->sign_help = new RsaSignHelp();
 		$this->add_order_helper = new AddOrderHelper();
-	}
+    }
 
 	/**
 	 * 全员预投保
 	 */
-	public function handle(){
+	public function doAllPersonPre(){
 		$key = 'prepare_params';
 		if(!Redis::exists($key)){//redis是否存在这个键
 			$person_res = Person::select('id','name','papers_code','phone','papers_type','email','address','address_detail')
@@ -71,15 +55,15 @@ class YdWechatPre extends Command
 		}
 		$count = Redis::Llen($key);//队列的长度
 		if($count>0){
-			for($i=1;$i<=80;$i++){
+			for($i=1;$i<=50;$i++){
 				$prepare_params = Redis::rpop($key); //右侧出队列
 				$prepare_params = json_decode($prepare_params,true);
 				$cust_warranty_res = CustWarranty::where('user_id',$prepare_params['id'])
-					->where('warranty_status','<>','6')//失效的订单
-					->where('created_at','>',strtotime(date('Y-m-d')).'000')//今天凌晨的时间戳
-					->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
-					->orderBy('created_at','desc')
-					->first();
+						->where('warranty_status','<>','6')//失效的订单
+						->where('created_at','>',strtotime(date('Y-m-d')).'000')//今天凌晨的时间戳
+						->select('warranty_uuid','warranty_code','created_at','check_status','pay_status','warranty_status')
+						->orderBy('created_at','desc')
+						->first();
 				if(empty($cust_warranty_res)) {
 					$card_info = IdentityCardHelp::getIDCardInfo($prepare_params['papers_code']);
 					if ($card_info['status'] = 2) {

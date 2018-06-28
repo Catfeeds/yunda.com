@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Helper\LogHelper;
 use App\Helper\RsaSignHelp;
 use App\Models\ChannelInsureSeting;
+use App\Models\Bank;
 use App\Helper\TokenHelper;
 
 class SetingController
@@ -74,7 +75,24 @@ class SetingController
 		$token_data = TokenHelper::getData($this->input['token']);
 		$person_code = $token_data['insured_code'];
 		$person_phone = $token_data['insured_phone'];
-        $auto_res = ChannelInsureSeting::where('cust_cod',$person_code)
+		$user_res = Person::where('papers_code',$person_code)
+			->select('id','phone','name')
+			->first();
+		if(empty($user_res)){
+			Person::insert([
+				'name'=>$token_data['insured_name'],
+				'papers_type'=>'1',
+				'papers_code'=>$token_data['insured_code'],
+				'phone'=>$token_data['insured_phone'],
+				'cust_type'=>'1',
+				'authentication'=>'1',
+				'del'=>'0',
+				'status'=>'1',
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
+		}
+        $auto_res = ChannelInsureSeting::where('cust_id',$user_res['id'])
             ->select('auto_insure_status','auto_insure_type','auto_insure_time')
             ->first();
         return view('channels.yunda.insure_auto',compact('auto_res','person_code','person_phone'));
@@ -91,22 +109,32 @@ class SetingController
         $auto_insure_status = $input['auto_insure_status'];
         $auto_insure_type = $input['auto_insure_type'];
         $auto_insure_price = config('insure_price.yunda')[$auto_insure_type];
-        $cust_res['papers_code'] = $input['person_code'];
-        $repeat_res = ChannelInsureSeting::where('cust_cod',$input['person_code'])
+        $papers_code = $input['person_code'];
+		$user_res = Person::where('papers_code',$papers_code)
+			->select('id','phone','name')
+			->first();
+		if(empty($user_res)){
+			return json_encode(['status'=>'200','msg'=>'自动投保设置失败']);
+		}
+        $insure_seting_res = ChannelInsureSeting::where('cust_id',$user_res['id'])
             ->select('id')
             ->first();
-        $user_res = Person::where('papers_code',$input['person_code'])->select('id')->first();
-        if(empty($repeat_res)){
+        $bank_res = Bank::where('cust_id',$user_res['id'])
+			->select('bank_code')
+			->get();
+        if(empty($insure_seting_res)){
             ChannelInsureSeting::insert([
                 'cust_id'=>$user_res['id']??"0",
                 'cust_cod'=>$cust_res['papers_code']??"0",
                 'cust_type'=>'user',
+                'authorize_bank'=>empty($bank_res)?$bank_res[0]['bank_code']??"":"",
                 'authorize_status'=>'',
                 'authorize_start'=>'',
                 'auto_insure_status'=>$auto_insure_status,
                 'auto_insure_type'=>$auto_insure_type,
                 'auto_insure_price'=>$auto_insure_price,
                 'auto_insure_time'=>time(),
+				'updated_at'=>date('Y-m-d H:i:s',time()),
             ]);
             return json_encode(['status'=>'200','msg'=>'自动投保设置成功']);
         }

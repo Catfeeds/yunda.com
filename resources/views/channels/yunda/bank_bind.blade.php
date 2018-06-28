@@ -56,8 +56,15 @@
 					<input type="text" name="bank_code"/>
 				</div>
 				<input hidden type="text" name="person_data" value="{{json_encode($token_data)}}"/>
+				<div class="banknotice">
+					<p><span style="color: red">*</span>银行卡开户人必须为本人，且保证卡里余额充足</p>
+					<p><span style="color: red">*</span>请填写办理该银行卡时预留的手机号码</p>
+					<p><span style="color: red">*</span>支持的银行：<br/>
+						<span style="font-size:12px">建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</span>
+					</p>
+				</div>
 				<div class="agree-wrapper">
-					<label>我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}bank_authorize_info?token={{$_GET['token']}}" id="insure_authorize_info"> 《转账授权书》 </a><i class="icon-check"></i><input hidden type="checkbox" value=""/></label>
+					<label>我已阅读并同意<a href="{{config('view_url.channel_yunda_target_url')}}bank_authorize_info?token={{$_GET['token']}}" id="insure_authorize_info"> 《转账授权书》 </a><i class="icon-check active"></i><input hidden type="checkbox" value=""/></label>
 				</div>
 				<button id="save" class="btn">保存</button>
 			</div>
@@ -84,11 +91,13 @@
 <script src="{{config('view_url.channel_views')}}js/lib/area.js"></script>
 <script src="{{config('view_url.channel_views')}}js/common.js"></script>
 <script>
+    var token = "{{$_GET['token']}}";
     $('.head-right').on('tap',function () {
         location.href = "bmapp:homepage";return false;
     });
     $('.head-left').on('tap',function(){
-        history.back(-1);return false;
+        window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index?token=" + token;
+        return false;
     });
     $('#insure_authorize_info').on('tap',function(){
 
@@ -169,6 +178,10 @@
             Mask.alert('银行卡必须是数字', 3);
             return false;
         }
+        if (bank_code.length < 16) {
+            Mask.alert('银行卡格式不正确', 3);
+            return false;
+        }
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -178,11 +191,13 @@
             data: {'bank_name':bank_name,'bank_city':bank_city,'bank_code':bank_code,'person_data':person_data},
             dataType: "json",
             success: function (data) {
-                $('#save').attr('style',"display:none");
                 Mask.alert(data.msg,3);
-                setTimeout(function(){//两秒后跳转
-                    window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index?token="+token;
-                },2000);
+                if(data.status==200){
+                    $('#save').attr('style',"display:none");
+                    setTimeout(function(){//两秒后跳转
+                        window.location.href = "{{config('view_url.channel_yunda_target_url')}}bank_index?token="+token;
+                    },2000);
+				}
             }
         });
     });

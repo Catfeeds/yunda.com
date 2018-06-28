@@ -38,7 +38,8 @@
 				<ul class="list">
 					<li>被保人<span class="fr">{{$result->name}}</span></li>
 					<li>保障期限<span class="fr">{{date('Y-m-d', $result->start_time/1000)}}  ~  {{date('Y-m-d',$result->end_time/1000)}}</span></li>
-					<li>保单号<span class="fr">{{$result->warranty_code}}</span></li>
+					{{--<li>保单号<span class="fr">{{$result->warranty_code}}</span></li>--}}
+					<li>保单号<div class="fr" style="width:80%;word-wrap:break-word;line-height:2rem;">{{$result->warranty_code}}</div></li>
 					<li>保费<span class="fr">{{$result->premium}}元</span></li>
 				</ul>
 			</div>
@@ -160,11 +161,12 @@
 	</form>
 	@endif
 </div>
-<script type="text/javascript" src="{{config('view_url.channel_views')}}js/jquery-1.10.2.min.js"></script>
+<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
+<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 <script type="text/javascript">
     $('body').on('click','.formW2 img',function(){
         $(this).parent().find('input').eq(0).click();
-    })
+    });
     // 上传照片
     var upLoadImg = function(e){
         var _this = $(e).parent();

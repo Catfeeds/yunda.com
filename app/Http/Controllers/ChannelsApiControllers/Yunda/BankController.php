@@ -21,6 +21,7 @@ use App\Models\Person;
 use Ixudra\Curl\Facades\Curl;
 use App\Helper\TokenHelper;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\YunDaPayInsure;
 
 class BankController
 {
@@ -54,13 +55,12 @@ class BankController
 	public function bankIndex()
 	{
 		$token_data = TokenHelper::getData($this->input['token']);
-		$person_code = $token_data['insured_code'];
 		$person_phone = $token_data['insured_phone'];
 		$user_res = Person::where('phone', $person_phone)
 			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')
 			->first();
 		$cust_id = $user_res['id'];
-		$bank_authorize = ChannelInsureSeting::where('cust_cod',$person_code)
+		$bank_authorize = ChannelInsureSeting::where('cust_id',$cust_id)
 			->with(['bank'=>function ($a){
 				$a->where('state','1');
 			}])
@@ -100,55 +100,129 @@ class BankController
 	{
 		$input = $this->request->all();
 		$person_data = json_decode($input['person_data'], true);
-		$bank = $input['bank_name']??" ";
 		$bank_cod = $input['bank_code'];
-		$bank_city = $input['bank_city']??" ";
-		$cust_res = Person::where('papers_code', $person_data['insured_code'])->select()->first();
-		DB::beginTransaction();
-		try{
-		if (empty($cust_res)) {
-			Person::insert([
-				'name' => $person_data['insured_name'],
-				'papers_type' => '1',
-				'papers_code' => $person_data['insured_code'],
-				'phone' => $person_data['insured_phone'],
-				'cust_type' => '1',
-				'authentication' => '1',
-				'del' => '0',
-				'status' => '1',
-				'created_at' => time(),
-				'updated_at' => time(),
-			]);
-		}
-		$cust_res = Person::where('papers_code', $person_data['insured_code'])->select()->first();
-		$bank_repeat = Bank::where('cust_id', $cust_res['id'])
-			->where('bank', $bank)
-			->where('bank_code', $bank_cod)
+		$bank = $input['bank_name']??" ";
+		$bank_city = $input['bank_city']??"";
+		$cust_res = Person::where('phone', $person_data['insured_phone'])
 			->select('id')
 			->first();
-		if (!empty($bank_repeat)) {
-			return json_encode(['status' => '500', 'msg' => '银行卡已存在，请更换银行卡！']);
-		}
-		$insert_res = Bank::insert([
-			'cust_id' => $cust_res['id'],
-			'cust_type' => '1',
-			'bank' => $bank,
-			'bank_code' => $bank_cod,
-			'bank_city' => $bank_city,
-			'phone' => '',
-			'created_at'=>time(),
-			'updated_at'=>time(),
-		]);
-			DB::commit();
+		DB::beginTransaction();
+		try{
+			if (empty($cust_res)) {
+				Person::insert([
+					'name' => $person_data['insured_name'],
+					'papers_type' => '1',
+					'papers_code' => $person_data['insured_code'],
+					'phone' => $person_data['insured_phone'],
+					'cust_type' => '1',
+					'authentication' => '1',
+					'del' => '0',
+					'status' => '1',
+					'created_at' => time(),
+					'updated_at' => time(),
+				]);
+			}
+			$bank_repeat = Bank::where('bank_code', $bank_cod)
+				->select('id')
+				->first();
+			if (!empty($bank_repeat)) {
+				return json_encode(['status' => '500', 'msg' => '银行卡已存在，请更换银行卡！']);
+			}
+			$insert_res = Bank::insert([
+				'cust_id' => $cust_res['id'],
+				'cust_type' => '1',
+				'bank' => $bank,
+				'bank_code' => $bank_cod,
+				'bank_city' => $bank_city,
+				'phone' => '',
+				'created_at'=>time(),
+				'updated_at'=>time(),
+			]);
+			if ($insert_res) {
+				$bank_insure_res = $this->doBankInsured($person_data['insured_phone']);
+				if($bank_insure_res['status']=='200'){
+					DB::commit();
+					return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
+				}else{
+					DB::rollBack();
+					return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
+				}
+			} else {
+				DB::rollBack();
+				return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
+			}
 		}catch (\Exception $e){
 			DB::rollBack();
 			return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
 		}
-		if ($insert_res) {
-			return json_encode(['status' => '200', 'msg' => '银行卡添加成功']);
-		} else {
-			return json_encode(['status' => '500', 'msg' => '银行卡添加失败']);
+
+	}
+
+	/**
+	 * 绑定银行卡触发投保操作
+	 * @access public
+	 * @return json
+	 *
+	 */
+	public function doBankInsured($person_phone){
+		$user_res = Person::where('phone', $person_phone)
+			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'email', 'address', 'address_detail')
+			->first();
+		$return_data = [];
+		//姓名，身份证信息，手机号判空
+		if (!$user_res['name'] || !$user_res['papers_code'] || !$user_res['phone']) {
+			$return_data['status'] = '500';
+			$return_data['msg'] = '个人信息不完善';
+			return $return_data;
 		}
+		$person_code = $user_res['papers_code'];
+		$user_setup_res = ChannelInsureSeting::where('cust_cod', $person_code)
+			->select('authorize_status', 'authorize_start', 'authorize_bank', 'auto_insure_status', 'auto_insure_type', 'auto_insure_price', 'auto_insure_time')
+			->first();
+		if (!$user_setup_res || !$user_setup_res['authorize_bank']) {
+			$return_data['status'] = '500';
+			$return_data['msg'] = '没有开启快递保免密支付';
+			return $return_data;
+		}
+		$bank_res = Bank::where('cust_id', $user_res['id'])
+			->where('bank_code', $user_setup_res['authorize_bank'])
+			->select('bank', 'bank_code', 'bank_city', 'phone')
+			->first();
+		$biz_content['channel_code'] = 'YD';
+		$biz_content['courier_state'] = '';
+		$biz_content['courier_start_time'] = '';
+		$biz_content['p_code'] = '';
+		$biz_content['is_insure'] = '';
+		$biz_content['insured_name'] = $user_res['name'];
+		$biz_content['insured_code'] = $user_res['papers_code'];
+		$biz_content['insured_phone'] = $user_res['phone'];
+		$biz_content['insured_email'] = $user_res['email'];
+		$biz_content['insured_province'] = $user_res['address_detail'];
+		$biz_content['insured_city'] = $user_res['address_detail'];
+		$biz_content['insured_county'] = $user_res['address_detail'];
+		$biz_content['insured_address'] = $user_res['address_detail'];
+		$biz_content['bank_code'] = $user_setup_res['authorize_bank'];
+		$biz_content['bank_name'] = $bank_res['bank'];
+		$biz_content['bank_address'] = $bank_res['bank_city'];
+		$biz_content['bank_phone'] = $user_res['phone'];
+		$biz_content['channel_order_code'] = "";
+		$biz_content['insured_days'] = $user_setup_res['auto_insure_type'] ?? "1";
+		$biz_content['price'] = '2';
+		switch ($biz_content['insured_days']) {
+			case '1':
+				$biz_content['price'] = $user_setup_res['auto_insure_price'];
+				break;
+			case '3':
+				$biz_content['price'] = $user_setup_res['auto_insure_price'];
+				break;
+			case '10':
+				$biz_content['price'] = $user_setup_res['auto_insure_price'];
+				break;
+		}
+		dispatch(new YunDaPayInsure($biz_content));//TODO 投保操作（异步队列）
+		$return_data['status'] = '200';
+		$return_data['msg'] = '支付中，请稍等~';
+		return $return_data;
 	}
 
 	/**
@@ -165,7 +239,7 @@ class BankController
 	public function bankInfo($bank_id)
 	{
 		$bank_res = Bank::where('id', $bank_id)
-			->select('cust_id', 'bank', 'bank_code', 'bank_city', 'bank_deal_type', 'phone')
+			->select('id','cust_id', 'bank', 'bank_code', 'bank_city', 'bank_deal_type', 'phone')
 			->first();
 		$cust_id = $bank_res['cust_id'];
 		$bank_num = Bank::where('cust_id', $cust_id)
@@ -196,6 +270,7 @@ class BankController
 		$input = $this->request->all();
 		$cust_id = $input['cust_id'];
 		$bank_cod = $input['bank_code'];
+		$bank_id = $input['bank_id'];
 		$bank_num = Bank::where('cust_id', $cust_id)
 			->where('state','<>','1')
 			->select('bank_code')
@@ -212,23 +287,29 @@ class BankController
 //		}
 		DB::beginTransaction();
 		try{
-			Bank::where('cust_id', $cust_id)
-				->where('bank_code', $bank_cod)
+			$update_res = Bank::where('id', $bank_id)
 				->update([
-					'state'=>'1'
+					'state'=>1
 				]);
-			$bank_res = Bank::where('cust_id', $cust_id)
-				->where('state','<>','1')
-				->select('bank_code')
-				->get();
-		if(!empty($bank_authorize)){
-			ChannelInsureSeting::where('id',$bank_authorize['id'])
-				->update([
-					'authorize_bank'=>$bank_res[0]['bank_code']
-				]);
-		}
-			DB::commit();
-			return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
+			if(!empty($bank_authorize)){
+				$bank_res = Bank::where('cust_id', $cust_id)
+					->where('state','<>','1')
+					->select('bank_code')
+					->get();
+				$insure_seting = ChannelInsureSeting::where('id',$bank_authorize['id'])
+					->update([
+						'authorize_bank'=>$bank_res[0]['bank_code']
+					]);
+			}else{
+				$insure_seting = '1';
+			}
+			if($update_res&&$insure_seting){
+				DB::commit();
+				return json_encode(['status' => '200', 'msg' => '银行卡删除成功']);
+			}else{
+				DB::rollBack();
+				return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
+			}
 		}catch (\Exception $e){
 			DB::rollBack();
 			return json_encode(['status' => '500', 'msg' => '银行卡删除失败']);
@@ -499,8 +580,11 @@ class BankController
 		$input = $this->request->all();
 		$person_code = $input['person_code'];
 		$person_name = $input['person_name'];
+		$person_phone = $input['person_phone'];
 		$bank_code = $input['bank_code'];
-		$user_res = Person::where('papers_code', $person_code)->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')->first();
+		$user_res = Person::where('phone', $person_phone)
+			->select('id', 'name', 'papers_type', 'papers_code', 'phone', 'address')
+			->first();
 		DB::beginTransaction();
 		try{
 		if (empty($user_res)) {
@@ -508,7 +592,7 @@ class BankController
 				'name' => $person_name,
 				'papers_type' => '1',
 				'papers_code' => $person_code,
-				'phone' => '',
+				'phone' => $person_phone,
 				'cust_type' => '1',
 				'authentication' => '1',
 				'del' => '0',
@@ -518,27 +602,32 @@ class BankController
 			]);
 		}
 		$cust_id = $user_res['id'];
-		$seting_res = ChannelInsureSeting::where('cust_cod', $person_code)
-			->select('id')->first();
-		$bank_res = Bank::where('bank_code', $bank_code)->select('id')->first();
-		if (empty($bank_res)) {
-			Bank::insert([
-				'cust_type' => '1',
-				'cust_id' => $cust_id,
-				'bank' => '',
-				'bank_code' => $bank_code,
-				'bank_city' => '',
-				'bank_deal_type' => '1',
-				'phone' => '',
-				'created_at'=>time(),
-				'updated_at'=>time(),
-			]);
-		}
+		$seting_res = ChannelInsureSeting::where('cust_id', $cust_id)
+			->select('id')
+			->first();
 		if (empty($seting_res)) {
+			$bank_res = Bank::where('bank_code', $bank_code)
+				->select('id')
+				->first();
+			if (empty($bank_res)) {
+				Bank::insert([
+					'cust_type' => '1',
+					'cust_id' => $cust_id,
+					'bank' => '',
+					'bank_code' => $bank_code,
+					'bank_city' => '',
+					'bank_deal_type' => '1',
+					'phone' => '',
+					'created_at'=>time(),
+					'updated_at'=>time(),
+				]);
+			}else{
+				return json_encode(['status' => '500', 'msg' => '此银行卡已开通免密授权']);
+			}
 			ChannelInsureSeting::insert([
 				'cust_id' => $cust_id,
 				'cust_cod' => $person_code ?? "0",
-				'cust_type' => '',
+				'cust_type' => 'user',
 				'authorize_bank' => $bank_code,
 				'authorize_status' => '1',
 				'authorize_start' => time(),
@@ -546,6 +635,7 @@ class BankController
 				'auto_insure_type' => '1',
 				'auto_insure_price' => '2',
 				'auto_insure_time' => time(),
+				'updated_at'=>date('Y-m-d H:i:s',time()),
 			]);
 		} else {
 			ChannelInsureSeting::where('cust_cod', $person_code)->update([
@@ -555,11 +645,17 @@ class BankController
 				'auto_insure_status'=>'1',
 			]);
 		}
-			DB::commit();
-			return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
+			$bank_insure_res = $this->doBankInsured($person_phone);
+			if($bank_insure_res['status']=='200'){
+				DB::commit();
+				return json_encode(['status' => '200', 'msg' => '开通免密支付成功']);
+			}else{
+				DB::rollBack();
+				return json_encode(['status' => '500', 'msg' => '开通免密支付失败']);
+			}
 		}catch (\Exception $e){
 			DB::rollBack();
-			return json_encode(['status' => '500', 'msg' => '开通免密支付成功']);
+			return json_encode(['status' => '500', 'msg' => '开通免密支付失败']);
 		}
 	}
 }

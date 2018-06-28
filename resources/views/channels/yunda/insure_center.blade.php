@@ -33,12 +33,18 @@
 							<img src="{{config('view_url.channel_views')}}imges/banner_text.png" alt="" />
 						</div>
 					</a>
-					@if(!$auto_insure_status)
-					<!--自动购保功能关闭时渲染-->
-						<a href="{{config('view_url.channel_yunda_target_url')}}insure_seting?token={{$_GET['token']}}" id="insure_set_target" class="status-wrapper">自动购保功能关闭中，去开启   >></a>
+					@if(!$auto_insure_status||!$authorize_status)
+						<!--自动购保功能关闭时渲染-->
+						@if(!$auto_insure_status&&!$authorize_status)
+								<a href="{{config('view_url.channel_yunda_target_url')}}insure_authorize?token={{$_GET['token']}}" id="insure_set_target" class="status-wrapper">开启快递保免密支付,每日出行有保障>></a>
+						@elseif($auto_insure_status&&!$authorize_status)
+								<a href="{{config('view_url.channel_yunda_target_url')}}insure_authorize?token={{$_GET['token']}}" id="insure_set_target" class="status-wrapper">开启快递保免密支付,每日出行有保障>></a>
+						@elseif(!$auto_insure_status&&$authorize_status)
+								<a href="{{config('view_url.channel_yunda_target_url')}}insure_seting?token={{$_GET['token']}}" id="insure_set_target" class="status-wrapper">开启快递保免密支付,每日出行有保障>></a>
+						@endif
 					@else
 							@if(!$insured_status)
-								<a href="{{config('view_url.channel_yunda_target_url')}}ins_info?token={{$_GET['token']}}" id="insure_no_target" class="status-wrapper">保障未生效，点击查看详情  >></a>
+								<a href="{{config('view_url.channel_yunda_target_url')}}ins_info?token={{$_GET['token']}}" id="insure_no_target" class="status-wrapper">今日快递保未生效,点击前往购买>></a>
 							@endif
 					@endif
 					<ul class="list-wrapper">
@@ -105,7 +111,7 @@
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
             var token = "{{$_GET['token']}}";
-            var authorize_status = "{{$auto_insure_status?true:false}}";
+            var authorize_status = "{{$authorize_status?true:false}}";
             localStorage.setItem('token', token);
 
             window.onload = function(){

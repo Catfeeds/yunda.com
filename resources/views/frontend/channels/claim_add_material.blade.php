@@ -16,7 +16,7 @@
 		<img src="{{config('view_url.channel_url')}}imges/arrow-left.png" class="arrow-left2" onclick="back();">
 		<img src="{{config('view_url.channel_url')}}imges/home.png" class="home" onclick="close_windows();">
 	</div>
-	<form action="{{ url('/channelsapi/do_claim_add_material')}}"  method="post" id="do_claim_add_material" enctype="multipart/form-data">
+	<form action="{{ url('/webapi/do_claim_add_material')}}"  method="post" id="do_claim_add_material" enctype="multipart/form-data">
 		{{ csrf_field() }}
 		<input type="hidden" name="warranty_code" value="{{$warranty_code}}">
 	<div class="main">

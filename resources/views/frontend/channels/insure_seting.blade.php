@@ -88,7 +88,7 @@
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
-                                url: "/channelsapi/do_insure_seting",
+                                url: "/webapi/do_insure_seting",
                                 type: "post",
                                 data: {'person_code':person_code,'insure_status':'0'},
                                 dataType: "json",
@@ -104,7 +104,7 @@
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                                 },
-                                url: "/channelsapi/do_insure_seting",
+                                url: "/webapi/do_insure_seting",
                                 type: "post",
                                 data: {'person_code':person_code,'insure_status':'1'},
                                 dataType: "json",

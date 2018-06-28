@@ -18,7 +18,7 @@
                         {{--<span class="circle"></span>邮件--}}
                     {{--</p>--}}
                     {{--<div class="form" style="margin:0.4rem auto;">--}}
-                        {{--<form action="/channelsapi/email_send" method="post" id="email_form">--}}
+                        {{--<form action="/webapi/email_send" method="post" id="email_form">--}}
                             {{--{{ csrf_field() }}--}}
                         {{--<div class="inputW w99">--}}
                             {{--<input type="text" name="email"  placeholder="请输入您的电子邮箱地址" class="w95" id="email">--}}
@@ -67,7 +67,7 @@
             }else{
                 $.ajax( {
                     type : "post",
-                    url : "/channelsapi/email_send",
+                    url : "/webapi/email_send",
                     dataType : 'json',
                     data : {email:email},
                     headers: {

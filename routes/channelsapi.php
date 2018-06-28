@@ -10,7 +10,7 @@ Route::group(['prefix' => 'channelsapi','namespace'=>'ChannelsApiControllers'],f
     //欢迎页面
     Route::any('/','IndexController@index');
     //企业获取授权
-    Route::any('et_account','IndexController@getAccount');
+    Route::any('get_account','IndexController@getAccount');
     //预投保信息变形存库
     Route::any('insert_prepare','ChannelInfosController@insertPrepare');
     //预投保操作
@@ -26,8 +26,12 @@ Route::group(['prefix' => 'channelsapi','namespace'=>'ChannelsApiControllers'],f
     Route::any('test_tk_issue','IssueTkController@issueTkTest');
     Route::any('test_insert_issue','IssueTkController@insertissue');
 	Route::any('issue_test/{union_order_code}', 'IndexController@doInsureIssue');
+	Route::any('wechat_pre', 'WechatPreController@wechatPre');
+	Route::any('all_pre', 'YdWechatPreController@doAllPersonPre');
+	Route::any('wechat_pay', 'WechatPayController@wechatPay');
 
-    //签约回调
+
+	//签约回调
     Route::any('contract_call_back', 'IndexController@contractCallBack');
     //信息回传
     Route::any('insure_out', 'ChannelInfosController@insureOut');

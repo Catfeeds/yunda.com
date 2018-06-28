@@ -21,7 +21,7 @@
 			<img src="{{config('view_url.channel_url')}}imges/bank.png" alt="" />
 			<p class="text">通过储蓄卡转账领取理赔款</p>
 		</div>
-		<form action="{{ url('/channelsapi/claim_step3')}}"  method="post" id="do_claim_step2" enctype="multipart/form-data">
+		<form action="{{ url('/webapi/claim_step3')}}"  method="post" id="do_claim_step2" enctype="multipart/form-data">
 			{{ csrf_field() }}
 			<input type="hidden" name="warranty_code" value="{{$warranty_code}}">
 		<div class="formW formW2">
@@ -83,7 +83,7 @@
         }
     };
     $('#next').click(function(){
-        location.href = '/channelsapi/claim_step3/'+"{{$warranty_code}}";
+        location.href = '/webapi/claim_step3/'+"{{$warranty_code}}";
     })
 </script>
 </body>

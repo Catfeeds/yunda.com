@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css" />
 		<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css" />
 	</head>
-	<body id="process2">
+	<body id="process2" style="background: #fff;">
 		<header class="mui-bar mui-bar-nav">
 			<div class="head-left">
 				<div class="head-img">
@@ -31,26 +31,31 @@
 						<div class="popups-content">
 							<div class="top">
 								<p style="margin-bottom: .16rem;">上工才投保,每天2元钱</p>
-								<h2 class="title">开通免密支付协议</h2>
+								<h2 class="title">开通银行卡转账授权</h2>
 							</div>
 							<div class="policy_list_wrapper">
-								<div class="tab" style="color: #adadad">
-									<span class="item">银行卡</span>
-								</div>
+								{{--<div class="tab" style="color: #adadad">--}}
+									{{--<span class="item">银行卡</span>--}}
+								{{--</div>--}}
 								<div class="tab">
 									<span class="item">姓名</span>
-									<input type="text" name="person_name" value="{{$cust_name??''}}" />
+									<input type="text" name="person_name" value="{{$cust_name??''}}" placeholder="请输入"/>
 								</div>
 								<div class="tab">
-									<span class="item">手机号</span>
-									<input type="text" name="person_phone" value="{{$cust_phone}}" />
-								</div>
-								<div class="tab">
-									<span class="item">卡号</span>
-									<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:''}}"/>
+									<span class="item">银行卡号</span>
+									<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:''}}" placeholder="请输入"/>
 									<input type="hidden" name="person_code" value="{{$person_code}}"/>
 								</div>
+								<div class="tab">
+									<span class="item">对应手机号</span>
+									<input type="text" name="person_phone" value="{{$cust_phone}}" placeholder="请输入"/>
+								</div>
 							</div>
+							<p><span style="color: red">*</span>银行卡开户人必须为本人，且保证卡里余额充足</p>
+							<p><span style="color: red">*</span>请填写办理该银行卡时预留的手机号码</p>
+							<p><span style="color: red">*</span>支持的银行：<br/>
+								<span style="font-size:12px">建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</span>
+							</p>
 						</div>
 						<div class="popups-footer">
 							<div class="label-wrapper">
@@ -80,14 +85,16 @@
 		<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
 		<script src="{{config('view_url.channel_views')}}js/common.js"></script>
 		<script>
-            $('.head-right').on('tap',function () {
+            var token = "{{$_GET['token']}}";
+            localStorage.setItem('token', token);
+            $('.head-right').on('tap',function(){
                 location.href = "bmapp:homepage";return false;
             });
             $('.head-left').on('tap',function(){
-                history.back(-1);return false;
+                //history.back(-1);
+                window.location.href = "{{config('view_url.channel_yunda_target_url')}}ins_center?token=" + token;
+                return false;
             });
-            var token = "{{$_GET['token']}}";
-            localStorage.setItem('token', token);
             var app = {
                 init: function () {
                     var _this = this;
@@ -149,6 +156,10 @@
                 }
                 if(!isRealNum(bank_code)){
                     Mask.alert('银行卡必须是数字', 3);
+                    return false;
+                }
+                if (bank_code.length < 16) {
+                    Mask.alert('银行卡格式不正确', 3);
                     return false;
                 }
                 $.ajax({

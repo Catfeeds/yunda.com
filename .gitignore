@@ -21,3 +21,4 @@ npm-debug.log
 /database/migrations/single
 composer.lock
 *.swp
+config/yunda.php

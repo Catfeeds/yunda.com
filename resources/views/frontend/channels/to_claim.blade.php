@@ -123,7 +123,7 @@
 		});
 		$('#insureWin').click(function(){
 			var warranty_code = $('#date').val();
-			location.href = '/channelsapi/claim_notice/'+warranty_code;
+			location.href = '/webapi/claim_notice/'+warranty_code;
 		});
         $('#insureBack').click(function(){
             $('#claim-alertwin').hide();
@@ -148,7 +148,7 @@
 		//跳转页面
 		function claimType(num){
 			if(num == 2) {
-				location.href="/channelsapi/claim_records/"+person_code;
+				location.href="/webapi/claim_records/"+person_code;
 			} else if(num == 3) {
 
 			}
@@ -165,7 +165,7 @@
 		}
 		
 		function jumpGuide() {
-			location.href = "/channelsapi/claim_apply_guide";
+			location.href = "/webapi/claim_apply_guide";
 		}
 	</script>
 </body>
