@@ -133,6 +133,7 @@ class BankController
 				]);
 			}
 			$bank_repeat = Bank::where('bank_code', $bank_cod)
+				->where('state','0')
 				->select('id')
 				->first();
 			if (!empty($bank_repeat)) {
