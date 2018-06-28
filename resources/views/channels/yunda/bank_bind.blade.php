@@ -57,7 +57,10 @@
 				</div>
 				<div class="tab">
 					<span class="item"><b>手机号<span style="color: red">*</span></b></span>
-					<input type="text" name="bank_phone" value="" placeholder="请输入手机号" class="phonestyle phoneyansghi">
+					<input type="text" name="bank_phone" value="" placeholder="请输入手机号">
+				</div>
+				<div class="tab">
+					<div class="phonestyle phoneyansghi"></div>
 					<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>
 				</div>
 				<div class="tab">

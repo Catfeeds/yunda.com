@@ -34,7 +34,10 @@
 			</div>
 			<div class="tab">
 				<span class="item">手机号</span>
-				<input type="text" name="bank_phone" value="{{$cust_phone}}" placeholder="请输入手机号" class="phonestyle">
+				<input type="text" name="bank_phone" value="{{$cust_phone}}" placeholder="请输入手机号">
+			</div>
+			<div class="tab">
+				<div  class="phonestyle"></div>
 				<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>
 			</div>
 			<div class="tab">

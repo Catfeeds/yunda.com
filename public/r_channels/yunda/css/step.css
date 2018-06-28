@@ -802,10 +802,10 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 				font-size: 0.28rem;
 			}
 			#process10 .policy_list_wrapper .tab .zbtn{
-				width: 1.6rem;
+				width: 1.8rem;
 				position: absolute;
 				top: .2rem;
-				right: .1rem;
+				right: .3rem;
 				color: #fff !important;
 				background: #00A2FF !important;
 				opacity: 1!important;
@@ -822,10 +822,10 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			    font-size: .28rem;
 			}
 			#process2 .policy_list_wrapper .tab .zbtn{
-				width: 1.6rem;
+				width: 1.8rem;
 				position: absolute;
 			    top: .1rem;
-			    right: .1rem;
+			    right: .3rem;
 			    color: #fff !important;
 			    background: #00A2FF !important;
 			    opacity: 1!important;
