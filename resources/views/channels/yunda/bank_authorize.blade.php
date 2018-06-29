@@ -13,7 +13,7 @@
 </head>
 <body id="process2" style="background: #fff;">
 <div class="popups">
-	<div class="popups-content">
+	<div class="popups-content overstyle">
 		<div class="top">
 			<p style="margin-bottom: .16rem;">上工才投保,每天2元钱</p>
 			<h2 class="title">开通银行卡转账授权</h2>

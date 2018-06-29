@@ -564,8 +564,10 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			#process2 .popups-content{
 				margin: 0;
 				padding: 0;
-				height: 260px;
-				overflow-y:  auto;
+			}
+			.overstyle{
+				height: 260px; !important;
+				overflow-y:  auto;!important;
 			}
 			#process2 .top {
 				padding: 0 .4rem;
