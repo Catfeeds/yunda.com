@@ -38,7 +38,8 @@
 			</div>
 			<div class="tab">
 				<div  class="phonestyle"></div>
-				<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>
+				<a href="javascript:void();" onclick="sendCode()" class="zbtn zbtn-positive">获取验证码</a>
+				{{--<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>--}}
 			</div>
 			<div class="tab">
 				<span class="item">验证码</span>
@@ -59,7 +60,8 @@
 						href="{{config('view_url.channel_yunda_target_url')}}insure_authorize_info?token={{$_GET['token']}}"
 						style="color: #00A2FF;" id="insure_authorize_info">《转账授权书》</a></label>
 		</div>
-		<button id="confirm" type="button" class="btn">已阅读并开通</button>
+		{{--<button id="confirm" type="button" class="btn">已阅读并开通</button>--}}
+		<a href="javascript:void();" onclick="confirm()" class="btn">已阅读并开通</a>
 		@if(isset($wechat_status)&&$wechat_status)
 			<form action="{{$wechat_url}}" method="post" id="do_insure_sign">
 			</form>
@@ -83,7 +85,7 @@
 <script>
     var token = "{{$_GET['token']}}";
     localStorage.setItem('token', token);
-    $("#btn-send").click(function(){
+    function sendCode(){
         var bank_code = $("input[name='bank_code']").val();
         var bank_phone = $("input[name='bank_phone']").val();
         var person_data = $("input[name='person_data']").val();
@@ -128,7 +130,7 @@
                 }
             }
         });
-    });
+    }
     var app = {
         init: function () {
             var _this = this;
@@ -201,7 +203,7 @@
     $('#insure_authorize_info').on('tap', function () {
 
     });
-    $('#confirm').on('click', function () {
+    function confirm(){
         var person_name = $("input[name='person_name']").val();
         var bank_code = $("input[name='bank_code']").val();
         var bank_phone = $("input[name='bank_phone']").val();
@@ -258,7 +260,7 @@
 				}
             }
         });
-    });
+    }
     $('#wechat_pay').on('tap', function () {
         $('#do_insure_sign').submit();
     });
