@@ -38,7 +38,7 @@
 			</div>
 			<div class="tab">
 				<div  class="phonestyle"></div>
-				<a href="javascript:void();" onclick="sendCode()" class="zbtn zbtn-positive">获取验证码</a>
+				<a href="javascript:;" onclick="sendCode(this)" class="zbtn zbtn-positive">获取验证码</a>
 				{{--<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>--}}
 			</div>
 			<div class="tab">
@@ -60,7 +60,7 @@
 						style="color: #00A2FF;" id="insure_authorize_info">《转账授权书》</a></label>
 		</div>
 		{{--<button id="confirm" type="button" class="btn">已阅读并开通</button>--}}
-		<a href="javascript:void();" onclick="confirm()" class="btn">已阅读并开通</a>
+		<a href="javascript:;" onclick="confirm()" class="btn">已阅读并开通</a>
 		@if(isset($wechat_status)&&$wechat_status)
 			<form action="{{$wechat_url}}" method="post" id="do_insure_sign">
 			</form>
@@ -84,7 +84,7 @@
 <script>
     var token = "{{$_GET['token']}}";
     localStorage.setItem('token', token);
-    function sendCode(){
+    function sendCode(a){
         var bank_code = $("input[name='bank_code']").val();
         var bank_phone = $("input[name='bank_phone']").val();
         var person_data = $("input[name='person_data']").val();
@@ -112,7 +112,7 @@
             Mask.alert('银行卡格式不正确', 3);
             return false;
         }
-        timer(60,$(this));
+        timer(60,$(a));
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
