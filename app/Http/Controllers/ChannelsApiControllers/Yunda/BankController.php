@@ -223,8 +223,8 @@ class BankController
 					Redis::setex($key,$expiresAt,$content);
 					return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 				}else{
-					$return_data['status'] = '500';
-					$return_data['content'] = '获取验证码失败';
+					$return_data['status'] = $response['code']??'500';
+					$return_data['content'] = $response['message']??'获取验证码失败';
 					$return_data['data'] = $content;
 					return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 				}
