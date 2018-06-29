@@ -826,13 +826,15 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 			#process2 .policy_list_wrapper .tab .zbtn{
 				width: 1.8rem;
 				position: absolute;
-			    top: .1rem;
-			    right: .3rem;
-			    color: #fff !important;
-			    background: #00A2FF !important;
-			    opacity: 1!important;
-			    border-radius: 7px;
-			    padding: .1rem;
+				top: .1rem;
+				right: .3rem;
+				color: #fff !important;
+				background: #00A2FF !important;
+				opacity: 1!important;
+				border-radius: 7px;
+				height: .6rem;
+				line-height: .6rem;
+				text-align: center;
 			}
 			#process10 .policy_list_wrapper .tab .choose{
 				color: #4087fc;

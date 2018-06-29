@@ -13,57 +13,68 @@
 </head>
 <body id="process2" style="background: #fff;">
 <div class="popups">
-    <div class="popups-content overstyle">
-        <div class="top">
-            <p style="margin-bottom: .16rem;">上工才投保,每天2元钱</p>
-            <h2 class="title">开通银行卡转账授权</h2>
-        </div>
-        <div class="policy_list_wrapper">
-            
-                
-            
-            <div class="tab">
-                <span class="item">姓名</span>
-                <input type="text" name="person_name" value="" placeholder="请输入"/>
-            </div>
-            <div class="tab">
-                <span class="item">银行卡号</span>
-                <input type="text" name="bank_code" value="" placeholder="请输入"/>
-                <input type="hidden" name="person_code" value=""/>
-                <input hidden type="text" name="person_data" value="null"/>
-            </div>
-            <div class="tab">
-                <span class="item">手机号</span>
-                <input type="text" name="bank_phone" value="" placeholder="请输入手机号">
-            </div>
-            <div class="tab">
-                <div  class="phonestyle"></div>
-                <button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>
-            </div>
-            <div class="tab">
-                <span class="item">验证码</span>
-                <input id="code" type="text" name="verify_code" placeholder="输入验证码">
-            </div>
-        </div>
+	<div class="popups-content overstyle">
+		<div class="top">
+			<p style="margin-bottom: .16rem;">上工才投保,每天2元钱</p>
+			<h2 class="title">开通银行卡转账授权</h2>
+		</div>
+		<div class="policy_list_wrapper">
+			{{--<div class="tab" style="color: #adadad">--}}
+				{{--<span class="item">银行卡</span>--}}
+			{{--</div>--}}
+			<div class="tab">
+				<span class="item">姓名</span>
+				<input type="text" name="person_name" value="{{$cust_name??''}}" placeholder="请输入"/>
+			</div>
+			<div class="tab">
+				<span class="item">银行卡号</span>
+				<input type="text" name="bank_code" value="{{isset($bank['code'])?$bank['code']:''}}" placeholder="请输入"/>
+				<input type="hidden" name="person_code" value="{{$person_code}}"/>
+				<input hidden type="text" name="person_data" value="{{json_encode($token_data)}}"/>
+			</div>
+			<div class="tab">
+				<span class="item">手机号</span>
+				<input type="text" name="bank_phone" value="{{$cust_phone}}" placeholder="请输入手机号">
+			</div>
+			<div class="tab">
+				<div  class="phonestyle"></div>
+				<a href="javascript:void();" onclick="sendCode()" class="zbtn zbtn-positive">获取验证码</a>
+				{{--<button id="btn-send" class="zbtn zbtn-positive">获取验证码</button>--}}
+			</div>
+			<div class="tab">
+				<span class="item">验证码</span>
+				<input id="code" type="text" name="verify_code" placeholder="输入验证码">
+			</div>
+		</div>
 
         <p><span style="color: red">*</span>银行卡开户人必须为本人，且保证卡里余额充足</p>
         <p><span style="color: red">*</span>请填写办理该银行卡时预留的手机号码</p>
         <p><span style="color: red">*</span>支持的银行：<br/>
             <span style="font-size:12px">建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</span>
         </p>
-
-    </div>
-    <div class="popups-footer">
-        <div class="label-wrapper">
-            <label><input id="agree" checked type="checkbox"/>我已阅读并同意<a
-                        href="/webapi/insure_authorize_info?token="
-                        style="color: #00A2FF;" id="insure_authorize_info">《转账授权书》</a></label>
-        </div>
-        <button id="confirm" type="button" class="btn">已阅读并开通</button>
-                
-            
-        
-    </div>
+	</div>
+	<div class="popups-footer">
+		<div class="label-wrapper">
+			<label><input id="agree" checked type="checkbox"/>我已阅读并同意<a
+						href="{{config('view_url.channel_yunda_target_url')}}insure_authorize_info?token={{$_GET['token']}}"
+						style="color: #00A2FF;" id="insure_authorize_info">《转账授权书》</a></label>
+		</div>
+		{{--<button id="confirm" type="button" class="btn">已阅读并开通</button>--}}
+		<a href="javascript:void();" onclick="confirm()" class="btn">已阅读并开通</a>
+		@if(isset($wechat_status)&&$wechat_status)
+			<form action="{{$wechat_url}}" method="post" id="do_insure_sign">
+			</form>
+			<div class="label-wrapper">
+				<div class="or">or</div>
+				<div class="wechat">微信</div>
+				<label><input id="agree" checked type="checkbox" />我已阅读并同意<a style="color: #00A2FF;">《免密授权书》</a></label>
+			</div>
+			<button type="button" id="wechat_pay" class="btn " style="background: #1aad19;">开通微信免密授权</button>
+		@endif
+		{{--<div class="label-wrapper">--}}
+			{{--<label><a style="color: #00A2FF;">开通微信免密授权>></a></label>--}}
+		{{--</div>--}}
+	</div>
 </div>
 <script src="/r_channels/yunda/js/lib/jquery-1.11.3.min.js"></script>
 <script src="/r_channels/yunda/js/lib/mui.min.js"></script>
@@ -73,8 +84,8 @@
 <script>
     var token = "{{$_GET['token']}}";
     localStorage.setItem('token', token);
-    $("#btn-send").click(function(){
-         var bank_code = $("input[name='bank_code']").val();
+    function sendCode(){
+        var bank_code = $("input[name='bank_code']").val();
         var bank_phone = $("input[name='bank_phone']").val();
         var person_data = $("input[name='person_data']").val();
         if (bank_code.length == 0) {
@@ -118,8 +129,7 @@
                 }
             }
         });
-    });
-  
+    }
     var app = {
         init: function () {
             var _this = this;
@@ -192,7 +202,7 @@
     $('#insure_authorize_info').on('tap', function () {
 
     });
-    $('#confirm').on('click', function () {
+    function confirm(){
         var person_name = $("input[name='person_name']").val();
         var bank_code = $("input[name='bank_code']").val();
         var bank_phone = $("input[name='bank_phone']").val();
@@ -249,7 +259,7 @@
                 }
             }
         });
-    });
+    }
     $('#wechat_pay').on('tap', function () {
         $('#do_insure_sign').submit();
     });
