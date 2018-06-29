@@ -203,13 +203,13 @@ class BankController
 			->post();
 		$return_data = [];
 		if($response->status != 200){
-			$return_data['status'] = '500';
+			$return_data['status'] = '501';
 			$return_data['content'] = '获取验证码失败';
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 		}else{
 			$content = $response->content;
 			if(!json_decode($content,true)){
-				$return_data['status'] = '500';
+				$return_data['status'] = '502';
 				$return_data['content'] = '获取验证码失败';
 				return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 			}else{
@@ -225,6 +225,7 @@ class BankController
 				}else{
 					$return_data['status'] = '500';
 					$return_data['content'] = '获取验证码失败';
+					$return_data['data'] = $content;
 					return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 				}
 			}
