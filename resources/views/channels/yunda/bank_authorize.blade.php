@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<title>开通免密支付</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/mui.min.css">
-	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/mui.picker.all.css">
-	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/lib/iconfont.css">
-	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/common.css"/>
-	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/index.css"/>
-	<link rel="stylesheet" href="{{config('view_url.channel_views')}}css/step.css"/>
+    <meta charset="utf-8">
+    <title>开通免密支付</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link rel="stylesheet" href="/r_channels/yunda/css/lib/mui.min.css">
+    <link rel="stylesheet" href="/r_channels/yunda/css/lib/mui.picker.all.css">
+    <link rel="stylesheet" href="/r_channels/yunda/css/lib/iconfont.css">
+    <link rel="stylesheet" href="/r_channels/yunda/css/common.css"/>
+    <link rel="stylesheet" href="/r_channels/yunda/css/index.css"/>
+    <link rel="stylesheet" href="/r_channels/yunda/css/step.css"/>
 </head>
 <body id="process2" style="background: #fff;">
 <div class="popups">
@@ -47,12 +47,11 @@
 			</div>
 		</div>
 
-		<p><span style="color: red">*</span>银行卡开户人必须为本人，且保证卡里余额充足</p>
-		<p><span style="color: red">*</span>请填写办理该银行卡时预留的手机号码</p>
-		<p><span style="color: red">*</span>支持的银行：<br/>
-			<span style="font-size:12px">建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</span>
-		</p>
-
+        <p><span style="color: red">*</span>银行卡开户人必须为本人，且保证卡里余额充足</p>
+        <p><span style="color: red">*</span>请填写办理该银行卡时预留的手机号码</p>
+        <p><span style="color: red">*</span>支持的银行：<br/>
+            <span style="font-size:12px">建设银行 平安银行 广发银行 中国银行 光大银行 华夏银行 农业银行 中信银行 工商银行 北京农商银行</span>
+        </p>
 	</div>
 	<div class="popups-footer">
 		<div class="label-wrapper">
@@ -77,11 +76,11 @@
 		{{--</div>--}}
 	</div>
 </div>
-<script src="{{config('view_url.channel_views')}}js/lib/jquery-1.11.3.min.js"></script>
-<script src="{{config('view_url.channel_views')}}js/lib/mui.min.js"></script>
-<script src="{{config('view_url.channel_views')}}js/lib/mui.picker.all.js"></script>
-<script src="{{config('view_url.channel_views')}}js/lib/area.js"></script>
-<script src="{{config('view_url.channel_views')}}js/common.js"></script>
+<script src="/r_channels/yunda/js/lib/jquery-1.11.3.min.js"></script>
+<script src="/r_channels/yunda/js/lib/mui.min.js"></script>
+<script src="/r_channels/yunda/js/lib/mui.picker.all.js"></script>
+<script src="/r_channels/yunda/js/lib/area.js"></script>
+<script src="/r_channels/yunda/js/common.js"></script>
 <script>
     var token = "{{$_GET['token']}}";
     localStorage.setItem('token', token);
@@ -118,7 +117,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "{{config('view_url.channel_yunda_target_url')}}bank_verify",
+            url: "/webapi/bank_verify",
             type: "post",
             data: {'bank_code':bank_code,'person_data':person_data,'bank_phone':bank_phone},
             dataType: "json",
@@ -212,7 +211,7 @@
          if(person_name.length == 0){
             Mask.alert('姓名不能为空', 3);
             return false;
-		}
+        }
         if(!isChn(person_name)){
             Mask.alert('姓名必须是汉字', 3);
             return false;
@@ -249,7 +248,7 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "{{config('view_url.channel_yunda_target_url')}}do_insure_authorize",
+            url: "/webapi/do_insure_authorize",
             type: "post",
             data: {'person_name': person_name,'bank_code': bank_code,'bank_phone':bank_phone,'verify_code':verify_code,'person_data':person_data},
             dataType: "json",
@@ -257,7 +256,7 @@
                 Mask.alert(data.msg, 3);
                 if(data.status==200){
                     $('#confirm').attr("style", "display:none;");
-				}
+                }
             }
         });
     }
@@ -275,7 +274,7 @@
             return false;
         }
     }
-	function isChn(str) {
+    function isChn(str) {
         if (!str.match( /^[\u4E00-\u9FA5]{1,}$/)) {
             return false;
         } else {
