@@ -30,6 +30,14 @@ class LogHelper{
         $file_path = storage_path('logs/channel_success_'. $date .'.log');
         file_put_contents($file_path, $log, FILE_APPEND);
     }
+	//渠道成功投保日志
+	static public function logChannelInsureSuccess($data, $from=null, $type=null)
+	{
+		$log = "[ SUCCESS ] [" . $from . '] [' .$type . "] [" . Carbon::now() . "] \n" . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n";
+		$date = date('Y_m_d');
+		$file_path = storage_path('logs/channel_insure_success_'. $date .'.log');
+		file_put_contents($file_path, $log, FILE_APPEND);
+	}
     //渠道失败访问日志
     static public function logChannelError($data, $from=null, $type=null)
     {

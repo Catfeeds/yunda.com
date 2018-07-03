@@ -27,6 +27,7 @@ use DateTime;
 use App\Helper\WechatPayHelper;
 use App\Helper\WechatSignHelper;
 use App\Helper\IPHelper;
+use App\Helper\TimeStamp;
 
 class IntersController
 {
@@ -71,8 +72,8 @@ class IntersController
      */
     public function jointLogin(){
         $input = $this->request->all();
-        $time = time();
-        //LogHelper::logChannelSuccess($input,$time, 'YD_joint_login_params');
+        $time = TimeStamp::getMillisecond();
+        LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, 'joint_login_start');
         $return_data =[];
         $webapi_route = config('yunda.server_host').config('yunda.webapi_route');
         if(empty($input)){
@@ -81,6 +82,7 @@ class IntersController
             $return_data['message'][0]['details'] = 'empty';
             $return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
             $return_data['data']['content'] = 'empty';
+			LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, '联合登录参数为空');
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         if(!is_array($input)){
@@ -97,6 +99,7 @@ class IntersController
 			$return_data['message'][0]['details'] = 'empty';
 			$return_data['data']['status'] = config('yunda.joint_status.no');//（01显示/02不显示）
 			$return_data['data']['content'] = 'insured_name or insured_code or insured_phone  is empty';
+			LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, '投保人信息为空');
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         //TODO  联合登录记录信息值
@@ -146,6 +149,7 @@ class IntersController
             $return_data['data']['content'] = '绑定银行卡,开启快递保免密支付,每日出行有保障>>';
             $return_data['data']['target_url'] = $webapi_route.'ins_error/no_bank?token='.$token;
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
+			LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, '没有绑定银行卡');
             return json_encode($return_data,JSON_UNESCAPED_UNICODE);
         }
         //银行卡入库
@@ -163,7 +167,6 @@ class IntersController
 			]);
 		}
 		//todo 查询泰康投保
-		//LogHelper::logChannelSuccess($input,time()-$time, 'YD_joint_login_params_end1');
 		$tk_res = $this->getTkInsure($person_result);
 		if(!empty($tk_res)&&$tk_res['status']=='201'){//可以签约
 			$return_data['code'] = '204';
@@ -173,6 +176,7 @@ class IntersController
 			$return_data['data']['content'] = '开启快递保免密支付,每日出行有保障>>';
 			$return_data['data']['target_url'] = $webapi_route.'ins_error/no_authorize?token='.$token;
 			$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
+			LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, '没有授权-1');
 			return json_encode($return_data,JSON_UNESCAPED_UNICODE);
 		}else if(!empty($tk_res)&&$tk_res['status']=='202'){
 			$return_data['code'] = '200';
@@ -189,7 +193,7 @@ class IntersController
         $user_setup_res = ChannelInsureSeting::where('cust_cod',$insured_code)
             ->select('authorize_status','authorize_start','authorize_bank','auto_insure_status','auto_insure_type','auto_insure_price','auto_insure_time','warranty_id','insure_days','insure_start')
             ->first();
-        //LogHelper::logChannelSuccess($input,time()-$time, 'YD_joint_login_params_end2');
+		LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, '没有授权-2');
         if(empty($user_setup_res)){//未授权(首次购买)
             $return_data['code'] = '203';
             $return_data['message'][0]['digest'] = 'default';
@@ -268,7 +272,7 @@ class IntersController
                 $return_data['data']['content'] = '今日快递保未生效,点击查看原因>>';
                 $return_data['data']['target_url'] = $webapi_route.'do_insured?token='.$token;
 				$return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
-				//LogHelper::logChannelSuccess($input,time()-$time, 'YD_joint_login_params_end3');
+				LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, '进行投保中');
                 return json_encode($return_data,JSON_UNESCAPED_UNICODE);
             }else{
                 //查询投保状态
@@ -276,7 +280,7 @@ class IntersController
                 $pay_status = $cust_warranty_res['pay_status'];//支付状态 （默认0，1支付中,2支付失败,3支付成功）
                 $warranty_status = $cust_warranty_res['warranty_status'];//保单状态 1待处理, 2待支付,3待生效, 4保障中,5可续保，6已失效，7已退保  8已过保
                 //TODO  匹配状态,组合查状态
-                //LogHelper::logChannelSuccess($input,time()-$time, 'YD_joint_login_params_end4');
+				LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, '查询投保状态');
                 if($warranty_status=='3'||$warranty_status=='4'){
                     $return_data['code'] = '200';
                     $return_data['message'][0]['digest'] = 'default';
@@ -325,7 +329,7 @@ class IntersController
         $return_data['data']['content'] = '今日快递保生效中>>';
         $return_data['data']['target_url'] = $webapi_route.'ins_center?token='.$token;
         $return_data['data']['local_url'] = $webapi_route.'ins_center?token='.$token;
-        //LogHelper::logChannelSuccess($input,time()-$time, 'YD_joint_login_params_end4');
+		LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, '查询投保状态-保单生效');
         return json_encode($return_data,JSON_UNESCAPED_UNICODE);
     }
 
