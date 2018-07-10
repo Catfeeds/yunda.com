@@ -72,6 +72,7 @@ class IntersController
      */
     public function jointLogin(){
         $input = $this->request->all();
+        $input = json_decode('{"bank_code":"6212260200152753105","bank_address":"11","channel_code":"YD","insured_province":"320000","insured_county":"320982","insured_code":"50023519920615927X","insured_phone":"15101691357","insured_city":"320900","insured_name":"\u6885\u660e","insured_address":"11","bank_phone":"111","bank_name":"11","insured_email":"111","channel_order_code":"1111"}',true);
         $time = TimeStamp::getMillisecond();
         LogHelper::logChannelSuccess(TimeStamp::getMillisecond()-$time, 'joint_login_start');
         $return_data =[];

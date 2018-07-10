@@ -72,7 +72,6 @@ class CustWarrantyController extends BaseController{
      */
     public function WarrantyList()
     {
-        $warranty_status = config('status_setup.warranty');//保单状态
         $status_id = isset($_GET['status_id'])?$_GET['status_id']:'-1';//不传保单状态,默认查询所有
         $date = isset($_GET['date'])?$_GET['date']:'0';//不传，默认查询今天
         $date_start = isset($_GET['date_start'])?$_GET['date_start']:'';
@@ -137,7 +136,10 @@ class CustWarrantyController extends BaseController{
         }
         $list = $warranty_res;
         $count = $warranty_res->total();
-        return view('backend_v2.warranty.warranty_list',compact('warranty_status','list','count','status_id','date','date_start','date_end'));
+		$warranty_status = config('status_setup.warranty_status');//保单状态
+		$pay_status = config('status_setup.pay_status');//支付状态
+		$check_status = config('status_setup.check_status');//核保状态
+        return view('backend_v2.warranty.warranty_list',compact('pay_status','check_status','warranty_status','list','count','status_id','date','date_start','date_end'));
 
     }
 
