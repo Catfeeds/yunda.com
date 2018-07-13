@@ -14,6 +14,13 @@
 //        Route::post('order_status', 'InsController@orderStatus');
 //    });
 //});
+
+Route::get('/addPerson', 'YundaSqlControllers\PersonController@index');
+Route::get('/addWarranty', 'YundaSqlControllers\WarrantyController@warrantyIndex');
+Route::get('/addWarrantyPerson', 'YundaSqlControllers\WarrantyController@warrantyPersonIndex');
+Route::get('/addBank', 'YundaSqlControllers\BankController@bankIndex');
+Route::get('/addBankAuthorize', 'YundaSqlControllers\BankController@bankAuthorizeIndex');
+
 //todo test all insurance
 Route::group(['prefix'=>'ins','namespace'=>'\ApiControllers'], function(){
     Route::get('ins_info/{id}', 'InsApiController@insInfo');
