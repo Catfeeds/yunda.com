@@ -60,15 +60,15 @@
 		<div class="row">
 			<div class="ui-table table-single-line">
 				<div class="ui-table-header radius">
-					<span class="col-md-2">保单号</span>
+					<span class="col-md-3">保单号</span>
 					<span class="col-md-1">保单状态</span>
 					<span class="col-md-2">保单产品</span>
-					<span class="col-md-1">客户姓名</span>
-					<span class="col-md-1">身份证号</span>
+					<!-- <span class="col-md-1">客户姓名</span> -->
+					<!-- <span class="col-md-1">身份证号</span> -->
 					<span class="col-md-1">联系方式</span>
 					<span class="col-md-1">保费</span>
 					<span class="col-md-1">佣金</span>
-					<span class="col-md-1">保单更新时间</span>
+					<span class="col-md-2">保单更新时间</span>
 					<span class="col-md-1 col-one">操作</span>
 				</div>
 				<div class="ui-table-body">
@@ -76,7 +76,7 @@
 						@if(isset($list)&&!empty($list))
 							@foreach($list as $value)
 								<li class="ui-table-tr">
-									<div class="col-md-2">{{empty($value['warranty_code'])?$value['warranty_uuid']:$value['warranty_code']}}</div>
+									<div class="col-md-3">{{empty($value['warranty_code'])?$value['warranty_uuid']:$value['warranty_code']}}</div>
 									<div class="col-md-1">
 										@if(isset($warranty_status) &&!empty($warranty_status))
 											@foreach($warranty_status as $key=>$v)
@@ -97,13 +97,13 @@
 										{{--@endforeach--}}
 
 									@if(isset($value['person'])&&!empty($value['person']))
-										<div class="col-md-1">{{$value['person']['name']}}</div>
-										<div class="col-md-1">{{$value['person']['papers_code']}}</div>
+										<!-- <div class="col-md-1">{{$value['person']['name']}}</div> -->
+										<!-- <div class="col-md-1">{{$value['person']['papers_code']}}</div> -->
 										<div class="col-md-1">{{$value['person']['phone']}}</div>
 									@endif
 									<div class="col-md-1">2</div>
 									<div class="col-md-1">1</div>
-									<div class="col-md-1"></div>
+									<div class="col-md-2"></div>
 									{{--{{date('Y-m-d H:i:s',$value['updated_at'])}}--}}
 									<div class="col-md-1 text-right">
 										<a class="btn btn-primary" href="{{url('backend/warranty/info/'.$value['warranty_uuid'])}}">查看详情</a>
@@ -117,7 +117,7 @@
 		</div>
 		{{--分页--}}
 		<div class="row text-center">
-			@if(isset($_GET['status_id'])&&!isset($_GET['type']))
+			<!-- @if(isset($_GET['status_id'])&&!isset($_GET['type']))
 				{{ $list->appends(['status_id' => $_GET['status_id']])->links() }}
 			@elseif(isset($_GET['status_id'])&&isset($_GET['type']))
 				{{ $list->appends(['status_id' => $_GET['status_id'],'type'=>$_GET['type']])->links() }}
@@ -129,7 +129,29 @@
 				{{ $list->appends(['date_start' => $_GET['date_start'],'date_end'=>$_GET['date_end']])->links() }}
 			@else
 				{{ $list->links() }}
-			@endif
+			@endif -->
+			<?php
+			if(isset($_GET['status_id'])&&!isset($_GET['type'])){
+				$a  = str_replace("http","https",$list->appends(['status_id' => $_GET['status_id']])->links());
+				echo $a;
+			}else if(isset($_GET['status_id'])&&isset($_GET['type'])){
+				$a  = str_replace("http","https",$list->appends(['status_id' => $_GET['status_id'],'type'=>$_GET['type']])->links());
+				echo $a;
+			}else if(isset($_GET['type'])&&!isset($_GET['status_id'])){
+				$a  = str_replace("http","https",$list->appends(['type'=>$_GET['type']])->links());
+				echo $a;
+			}else if(isset($_GET['date'])){
+				$a  = str_replace("http","https",$list->appends(['date' =>$_GET['date']])->links());
+				echo $a;
+			}else if(isset($_GET['date_start'])&&isset($_GET['date_end'])){
+				$a  = str_replace("http","https",$list->appends(['date_start' => $_GET['date_start'],'date_end'=>$_GET['date_end']])->links());
+				echo $a;
+			}else{
+				$a = str_replace("http","https",$list->links());
+				echo $a;
+			}
+			?>
+
 		</div>
 	</div>
 @stop

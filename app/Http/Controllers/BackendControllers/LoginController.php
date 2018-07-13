@@ -14,7 +14,7 @@ class LoginController extends BaseController
     public function index()
     {
         if(Auth::guard('admin')->check()){
-            return redirect('/backend');
+           header("Location:https://api-yunda.inschos.com/backend/"); 
         }
         return view('backend_v2.login.login');
     }
@@ -24,14 +24,13 @@ class LoginController extends BaseController
     public function login(Request $request)
     {
         if(Auth::guard('admin')->check()){
-            return redirect('/backend');
+           header("Location:https://api-yunda.inschos.com/backend/"); 
         }
         $email = $this->request->email;
         $password = $this->request->password;
         //验证登陆
         if (Auth::guard('admin')->attempt(['email' => $email, 'password' => $password])) {
-
-            return redirect('/backend');
+           header("Location:https://api-yunda.inschos.com/backend/"); 
         } else {
             return back()->withErrors('账户或密码错误！');
         }
@@ -43,7 +42,7 @@ class LoginController extends BaseController
         if(Auth::guard('admin')->user())
             \Cache::forget('user_roles_array' . Auth::guard('admin')->user()->email);
         Auth::guard('admin')->logout();
-        return redirect('backend/login');
+        header("Location:https://api-yunda.inschos.com/backend/login"); 
     }
 
 
