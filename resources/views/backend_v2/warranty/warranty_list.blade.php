@@ -63,8 +63,6 @@
 					<span class="col-md-3">保单号</span>
 					<span class="col-md-1">保单状态</span>
 					<span class="col-md-2">保单产品</span>
-					{{--<span class="col-md-1">客户姓名</span>--}}
-					{{--<span class="col-md-1">身份证号</span>--}}
 					<span class="col-md-1">联系方式</span>
 					<span class="col-md-1">保费</span>
 					<span class="col-md-1">佣金</span>
@@ -120,7 +118,7 @@
 		</div>
 		{{--分页--}}
 		<div class="row text-center">
-			@if(isset($_GET['status_id'])&&!isset($_GET['type']))
+			<!-- @if(isset($_GET['status_id'])&&!isset($_GET['type']))
 				{{ $list->appends(['status_id' => $_GET['status_id']])->links() }}
 			@elseif(isset($_GET['status_id'])&&isset($_GET['type']))
 				{{ $list->appends(['status_id' => $_GET['status_id'],'type'=>$_GET['type']])->links() }}
@@ -132,7 +130,29 @@
 				{{ $list->appends(['date_start' => $_GET['date_start'],'date_end'=>$_GET['date_end']])->links() }}
 			@else
 				{{ $list->links() }}
-			@endif
+			@endif -->
+			<?php
+			if(isset($_GET['status_id'])&&!isset($_GET['type'])){
+				$a  = str_replace("http","https",$list->appends(['status_id' => $_GET['status_id']])->links());
+				echo $a;
+			}else if(isset($_GET['status_id'])&&isset($_GET['type'])){
+				$a  = str_replace("http","https",$list->appends(['status_id' => $_GET['status_id'],'type'=>$_GET['type']])->links());
+				echo $a;
+			}else if(isset($_GET['type'])&&!isset($_GET['status_id'])){
+				$a  = str_replace("http","https",$list->appends(['type'=>$_GET['type']])->links());
+				echo $a;
+			}else if(isset($_GET['date'])){
+				$a  = str_replace("http","https",$list->appends(['date' =>$_GET['date']])->links());
+				echo $a;
+			}else if(isset($_GET['date_start'])&&isset($_GET['date_end'])){
+				$a  = str_replace("http","https",$list->appends(['date_start' => $_GET['date_start'],'date_end'=>$_GET['date_end']])->links());
+				echo $a;
+			}else{
+				$a = str_replace("http","https",$list->links());
+				echo $a;
+			}
+			?>
+
 		</div>
 	</div>
 @stop

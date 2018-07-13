@@ -25,12 +25,12 @@ $nothing_active = !($setting || $work_order || $msg||$finance || $agent_active |
 {{--        <li {{$agent_active}}><a href="{{url('backend/agent/list?work_status=1')}}"><i class="iconfont icon-dailiren"></i>代理人</a></li>--}}
         {{--<li><a href="{{url('/backend/sales/show')}}"><i class="iconfont icon-gongwenbao"></i>业务统计</a></li>--}}
         <li {{$product_active}}><a href="{{url('/backend/product/product_rank_list')}}"><i class="iconfont icon-chanpin"></i>产品管理</a></li>
-        <li {{$task_active}}><a href="{{ route('backend.task.index') }}"><i class="iconfont icon-xing"></i>任务管理</a></li>
+        <!-- <li {{$task_active}}><a href="{{ route('backend.task.index') }}"><i class="iconfont icon-xing"></i>任务管理</a></li> -->
         {{--<li><a href="{{url('/backend/sell/ditch_agent/ditches')}}"><i class="iconfont icon-qudao"></i>渠道管理</a></li>--}}
         <li {{$channel}}><a href="{{url('/backend/sell/ditch_agent/channel')}}"><i class="iconfont icon-qudao"></i>渠道管理</a></li>
         {{--<li><a href=""><i class="iconfont icon-yunying"></i>运营管理</a></li>--}}
         <li {{$brokerage_active}}><a href="{{url('/backend/set_brokerage/list')}}"><i class="iconfont icon-yongjin"></i>佣金管理</a></li>
-        <li {{$customer_active}}><a href="{{ route('backend.customer.individual.index') }}"><i class="iconfont icon-kehu"></i>客户管理</a></li>
+        <!-- <li {{$customer_active}}><a href="{{ route('backend.customer.individual.index') }}"><i class="iconfont icon-kehu"></i>客户管理</a></li> -->
         <li {{$label_active}}><a href="{{url('/backend/label/user_label')}}"><i class="iconfont icon-biaoqian"></i>标签管理</a></li>
         {{--<li {{$order}}><a href="{{url('/backend/order')}}"><i class="iconfont icon-dingdan-copy"></i>订单管理</a></li>--}}
         {{--<li {{$policy}}><a href="{{url('/backend/policy')}}"><i class="iconfont icon-comiis_dunpai"></i>保单管理</a></li>--}}

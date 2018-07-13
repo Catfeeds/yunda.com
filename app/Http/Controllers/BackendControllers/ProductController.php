@@ -654,6 +654,7 @@ class ProductController extends Controller
         $three  = [];
         $four  = [];
         $five  = [];
+        if(!empty($categorys)){
         foreach($categorys as $v){
             $name = str_repeat('-' , $v['sort']) . $v['name'];
             if(preg_match('/-/', $name)){
@@ -724,6 +725,7 @@ class ProductController extends Controller
                     }
                 }
             }
+        }
         }
         $return_data = array(
             'company' => isset($company_category)? $company_category : [],
