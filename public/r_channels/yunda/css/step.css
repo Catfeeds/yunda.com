@@ -141,6 +141,12 @@ button.disabled{color: #fff!important;background-color: #fe6c30!important;}
 	font-size: .28rem;
 	background: #fff;
 }
+.form-wrapper-notice li{
+	padding: 0.1rem;
+	height: 0.5rem;
+	line-height: 0.5rem;
+	/*border-bottom: 1px solid #ddd;*/
+}
 .form-wrapper li{
 	padding: 0 .2rem;
 	height: 1rem;

@@ -50,7 +50,12 @@
 							<button id="next" disabled class="btn btn-next">下一步</button>
 						</div>
 					</form>
-
+					<ul class="form-wrapper-notice">
+						<li style="font-weight: bold;">温馨提示：</li>
+						<li>1.本产品被保险人年龄为18周岁至60周岁,不符合此年龄的保单自始无效.</li>
+						<li></li>
+						<li>2.请在意外事故发生后48小时内向保险公司进行报案,报案电话:<span style="font-weight: bold;">4000188688</span>（7×24小时）</li>
+					</ul>
 				</div>
 			</div>
 		</div>
