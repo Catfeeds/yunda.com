@@ -24,9 +24,10 @@ class CallBackYdController
 		$params['date'] = strtotime(date('Ymd'));//当日时间
 		$params['papers_code'] = '320826199007030556';//用户信息-身份证号
 		$params['phone'] = '15195564007';//用户信息-手机号
-		//dispatch(new YunDaCallBack($params));
-		$res = $this->handle($params);
-		dd($res);
+		dispatch(new YunDaCallBack($params));
+		return '推送成功';
+//		$res = $this->handle($params);
+//		return $res;
 	}
 
 	//从数据库里查出用户信息,然后返回(只返回当前用户当天投保成功的保单) TODO 韵达已经做了去重操作
@@ -45,25 +46,25 @@ class CallBackYdController
 		LogHelper::logCallBackYDSuccess($input, 'YD_CallBack_Request_Params');
 		$params = [];
 		$params['ordersId'] = $warranty_res['warranty_code'];//保单号
-		$params['payTime'] = $warranty_res['warranty_code'];//保单支付时间
-		$params['effectiveTime'] = $warranty_res['warranty_code'];//保单生效时间
+		$params['payTime'] = date('Y-m-d H:i:s',time());//保单支付时间
+		$params['effectiveTime'] = date('Y-m-d H:i:s',$warranty_res['start_time']/1000).'-'.date('Y-m-d H:i:s',$warranty_res['end_time']/1000);//保单生效时间
 		//订单类型,1天/3天/10天
 		switch ($warranty_res['premium']){
 			case '2':
-				$params['type'] = '当日保单';
+				$params['type'] = '0';
 				break;
 			case '5':
-				$params['type'] = '三日保单';
+				$params['type'] = '1';
 				break;
 			case '13':
-				$params['type'] = '十日保单';
+				$params['type'] = '2';
 				break;
 		}
-		$params['status'] = '已支付';//订单状态
+		$params['status'] = '1';//订单状态
 		$params['ordersName'] = '人身意外综合保险';
 		$params['companyName'] = '英大泰和财产保险有限公司';
 		LogHelper::logCallBackYDSuccess($params, 'YD_CallBack_Params');
-		$params = json_encode($params, JSON_UNESCAPED_UNICODE);
+		$params = json_encode($params,JSON_UNESCAPED_UNICODE);
 		$requset_url = config('yunda.callbank_request_url');
 		LogHelper::logCallBackYDSuccess($requset_url, 'YD_CallBack_url');
 		$response = Curl::to($requset_url)
@@ -73,15 +74,10 @@ class CallBackYdController
 			->post();
 		LogHelper::logCallBackYDSuccess($response, 'YD_CallBack_Result');
 		if($response->status!=200){
-			LogHelper::logCallBackYDSuccess($response->content, 'YD_CallBack_Result');
+			LogHelper::logCallBackYDError($response->content, 'YD_CallBack_Result');
+			//TODO 失败后用定时任务做轮询
 		}
-
-//		{
-//			"code": "",
-//    "remark": "推送成功！",
-//    "data": "",
-//    "result": true
-//}
+		return $response->content;
 	}
 
 }
