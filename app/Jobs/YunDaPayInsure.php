@@ -92,6 +92,7 @@ class YunDaPayInsure implements ShouldQueue
             ->withTimeout(60)
             ->post();
         LogHelper::logChannelInsureSuccess($response, 'YD_insure_result');
+        $input = json_decode($input,true);
 		$params = [];
 		$params['date'] = strtotime(date('Ymd'));//当日时间
 		$params['papers_code'] = $input['insured_code'];//用户信息-身份证号
