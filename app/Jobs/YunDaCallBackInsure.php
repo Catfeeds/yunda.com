@@ -9,9 +9,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Ixudra\Curl\Facades\Curl;
 use App\Helper\LogHelper;
-use App\Models\Person;
-use App\Models\CustWarranty;
-
 
 class YunDaCallBackInsure implements ShouldQueue
 {
@@ -35,7 +32,7 @@ class YunDaCallBackInsure implements ShouldQueue
 	{
 		$input = $this->param;
 		LogHelper::logCallBackYDSuccess($input, 'YD_CallBack_Request_Params');
-		if(empty($input)){
+		if (empty($input)) {
 			return false;
 		}
 		$params = [];

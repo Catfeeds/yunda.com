@@ -83,17 +83,57 @@ class CallBackYdController
 
 	public function time(){
 		$warranty_res = CustWarranty::where('warranty_status','4')
-			->where('created_at','>=',strtotime(date('Y-m-d')).'000')//当天开始时间
-			->where('created_at','<',strtotime(date('Y-m-d',strtotime('+1 day'))).'000')//当天结束时间
+//			->where('created_at','>=',strtotime(date('Y-m-d')).'000')//当天开始时间
+//			->where('created_at','<',strtotime(date('Y-m-d',strtotime('+1 day'))).'000')//当天结束时间
 			->select('warranty_code','start_time','end_time','pay_time','premium')
 			->get();
 		if(empty($warranty_res)){
 			return false;
 		}
 		foreach ($warranty_res as $value){
-			dispatch(new YunDaCallBackInsure($value));
+			//$this->handles($value);
+			//dispatch(new YunDaCallBackInsure($value));
 		}
 		return count($warranty_res).'条数据推送成功';
+	}
+
+	public function handles($input)
+	{
+		LogHelper::logCallBackYDSuccess($input, 'YD_CallBack_Request_Params');
+		$params = [];
+		$params['ordersId'] = $input['warranty_code'];//保单号
+		$params['payTime'] = date('Y-m-d H:i:s',time());//保单支付时间
+		$params['effectiveTime'] = date('Y-m-d H:i:s',$input['start_time']/1000).'-'.date('Y-m-d H:i:s',$input['end_time']/1000);//保单生效时间
+		//订单类型,1天/3天/10天
+		switch ($input['premium']){
+			case '2':
+				$params['type'] = '0';
+				break;
+			case '5':
+				$params['type'] = '1';
+				break;
+			case '13':
+				$params['type'] = '2';
+				break;
+		}
+		$params['status'] = '1';//订单状态
+		$params['ordersName'] = '人身意外综合保险';
+		$params['companyName'] = '英大泰和财产保险有限公司';
+		LogHelper::logCallBackYDSuccess($params, 'YD_CallBack_Params');
+		$params = json_encode($params,JSON_UNESCAPED_UNICODE);
+		$requset_url = config('yunda.callbank_request_url');
+		LogHelper::logCallBackYDSuccess($requset_url, 'YD_CallBack_url');
+		$response = Curl::to($requset_url)
+			->returnResponseObject()
+			->withData($params)
+			->withTimeout(60)
+			->post();
+		LogHelper::logCallBackYDSuccess($response, 'YD_CallBack_Result');
+		if($response->status!=200){
+			LogHelper::logCallBackYDError($response->content, 'YD_CallBack_Result');
+			//TODO 失败后用定时任务做轮询
+		}
+		return $response->content;
 	}
 
 }
