@@ -38,12 +38,18 @@ class YunDaCallBack implements ShouldQueue
 			->where('papers_code',$input['papers_code'])
 			->select('id')
 			->first();
+		if(empty($person_res)){
+			return false;
+		}
 		$warranty_res = CustWarranty::where('user_id',$person_res['id'])
 			->where('created_at','>=',strtotime(date('Y-m-d')).'000')//当天开始时间
 			->where('created_at','<',strtotime(date('Y-m-d',strtotime('+1 day'))).'000')//当天结束时间
 			->where('warranty_status','4')
 			->select('warranty_code','start_time','end_time','pay_time','premium')
 			->first();
+		if(empty($warranty_res)){
+			return false;
+		}
 		LogHelper::logCallBackYDSuccess($input, 'YD_CallBack_Request_Params');
 		$params = [];
 		$params['ordersId'] = $warranty_res['warranty_code'];//保单号
