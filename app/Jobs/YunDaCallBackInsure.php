@@ -34,9 +34,6 @@ class YunDaCallBackInsure implements ShouldQueue
 	public function handle()
 	{
 		$input = $this->param;
-		if(is_array($input)){
-			$input = json_encode($input,JSON_UNESCAPED_UNICODE);
-		}
 		LogHelper::logCallBackYDSuccess($input, 'YD_CallBack_Request_Params');
 		if(empty($input)){
 			return false;

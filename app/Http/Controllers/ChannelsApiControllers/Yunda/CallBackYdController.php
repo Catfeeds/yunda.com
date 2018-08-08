@@ -93,6 +93,7 @@ class CallBackYdController
 		foreach ($warranty_res as $value){
 			dispatch(new YunDaCallBackInsure($value));
 		}
+		return count($warranty_res).'条数据推送成功';
 	}
 
 }
