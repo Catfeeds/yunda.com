@@ -48,6 +48,7 @@ use App\Models\ChannelContract;
 use Illuminate\Console\Command;
 use App\Jobs\DemoTest;
 use App\Jobs\YunDaIssue;
+use App\Jobs\YunDaCallBack;
 
 
 class YunDaPayInsure implements ShouldQueue
@@ -91,5 +92,10 @@ class YunDaPayInsure implements ShouldQueue
             ->withTimeout(60)
             ->post();
         LogHelper::logChannelInsureSuccess($response, 'YD_insure_result');
+		$params = [];
+		$params['date'] = strtotime(date('Ymd'));//当日时间
+		$params['papers_code'] = $input['insured_code'];//用户信息-身份证号
+		$params['phone'] = $input['insured_phone'];//用户信息-手机号
+		dispatch(new YunDaCallBack($params));
     }
 }

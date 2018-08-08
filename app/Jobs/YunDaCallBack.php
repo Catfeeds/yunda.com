@@ -33,6 +33,7 @@ class YunDaCallBack implements ShouldQueue
 
 	public function handle()
 	{
+		$input = $this->param;
 		$person_res = Person::where('phone',$input['phone'])
 			->where('papers_code',$input['papers_code'])
 			->select('id')
