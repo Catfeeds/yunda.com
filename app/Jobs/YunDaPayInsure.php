@@ -97,6 +97,7 @@ class YunDaPayInsure implements ShouldQueue
 		$params['date'] = strtotime(date('Ymd'));//当日时间
 		$params['papers_code'] = $input['insured_code'];//用户信息-身份证号
 		$params['phone'] = $input['insured_phone'];//用户信息-手机号
+		sleep(60);
 		dispatch(new YunDaCallBack($params));
     }
 }
