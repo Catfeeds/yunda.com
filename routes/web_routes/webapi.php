@@ -84,6 +84,9 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 	//理赔三方接口
 	Route::any('email_send','TkClaimController@getEmailSend');//理赔邮件
 	Route::any('sms_send','TkClaimController@getSmsCode');//理赔短信
+
+	//todo===============================================测试韵达推送投保信息========================================================
+	Route::any('callback_yd','CallBackYdController@index');
 });
 
 

@@ -20,6 +20,7 @@ return [
     ],
 
 		'request_url'=>'http://10.10.10.18:8080/proposal/warranty/insure',
+		'callbank_request_url'=>'https://apptest.yundasys.com/ywy-insurance/interface/ywy/insurance/pushinsuranceinfo.do',
 		'bank_verify_url'=>'http://10.10.10.18:8080/proposal/auth/apply',
 		'check_bank_verify_url'=>'http://10.10.10.18:8080/proposal/auth/confirm',
 //		'bank_verify_url'=>'http://122.14.202.163:8080//proposal/auth/apply',

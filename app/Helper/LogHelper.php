@@ -98,6 +98,22 @@ class LogHelper{
         $res = DB::select($sql);
         return $res;
     }
+	//推送成功日志
+	static public function logCallBackYDSuccess($data, $from=null, $type=null)
+	{
+		$log = "[ SUCCESS ] [" . $from . '] [' .$type . "] [" . Carbon::now() . "] \n" . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n";
+		$date = date('Y_m_d');
+		$file_path = storage_path('logs/Yd_callback_success_'. $date .'.log');
+		file_put_contents($file_path, $log, FILE_APPEND);
+	}
+	//推送失败日志
+	static public function logCallBackYDError($data, $from=null, $type=null)
+	{
+		$log = "[ SUCCESS ] [" . $from . '] [' .$type . "] [" . Carbon::now() . "] \n" . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n";
+		$date = date('Y_m_d');
+		$file_path = storage_path('logs/Yd_callback_error_'. $date .'.log');
+		file_put_contents($file_path, $log, FILE_APPEND);
+	}
 }
 
 
