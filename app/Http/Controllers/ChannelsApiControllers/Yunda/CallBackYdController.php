@@ -10,6 +10,7 @@
 namespace App\Http\Controllers\ChannelsApiControllers\Yunda;
 
 use App\Jobs\YunDaCallBack;
+use App\Jobs\YunDaCallBackInsure;
 use App\Models\Person;
 use App\Models\CustWarranty;
 use App\Helper\LogHelper;
@@ -78,6 +79,20 @@ class CallBackYdController
 			//TODO 失败后用定时任务做轮询
 		}
 		return $response->content;
+	}
+
+	public function time(){
+		$warranty_res = CustWarranty::where('warranty_status','4')
+			->where('created_at','>=',strtotime(date('Y-m-d')).'000')//当天开始时间
+			->where('created_at','<',strtotime(date('Y-m-d',strtotime('+1 day'))).'000')//当天结束时间
+			->select('warranty_code','start_time','end_time','pay_time','premium')
+			->get();
+		if(empty($warranty_res)){
+			return false;
+		}
+		foreach ($warranty_res as $value){
+			dispatch(new YunDaCallBackInsure($value));
+		}
 	}
 
 }

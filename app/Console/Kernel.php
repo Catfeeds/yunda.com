@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\YdWechatPre::class,
+        Commands\YundaCallback::class,
         Commands\AddWarrrantyPerson::class,
         Commands\AddWarrranty::class,
         Commands\AddBankAuthorize::class,
@@ -42,11 +43,14 @@ class Kernel extends ConsoleKernel
         //$schedule->command('reminders:send')->hourly()->unlessBetween('23:00', '4:00');//在指定时间外每小时执行一次
         //$schedule->command('emails:send')->withoutOverlapping();//避免任务重叠
 		//$schedule->command('yunda_wechat_prepare')->everyMinute()->runInBackground();;
-        $schedule->command('addWarrrantyPerson')->everyMinute()->between('00:00', '23:59')->runInBackground();
-        $schedule->command('addWarrranty')->everyMinute()->between('00:00', '23:59')->runInBackground();
-        $schedule->command('addBankAuthorize')->everyMinute()->between('00:00', '23:59')->runInBackground();
-        $schedule->command('addBank')->everyMinute()->between('00:00', '23:59')->runInBackground();
-        $schedule->command('addPerson')->everyMinute()->between('00:00', '23:59')->runInBackground();
+//        $schedule->command('addWarrrantyPerson')->everyMinute()->between('00:00', '23:59')->runInBackground();
+//        $schedule->command('addWarrranty')->everyMinute()->between('00:00', '23:59')->runInBackground();
+//        $schedule->command('addBankAuthorize')->everyMinute()->between('00:00', '23:59')->runInBackground();
+//        $schedule->command('addBank')->everyMinute()->between('00:00', '23:59')->runInBackground();
+//        $schedule->command('addPerson')->everyMinute()->between('00:00', '23:59')->runInBackground();
+        $schedule->command('yundacallback')->everyMinute();
+
+
     }
 
     /**

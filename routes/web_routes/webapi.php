@@ -87,6 +87,7 @@ Route::group(['prefix' => 'webapi', 'namespace'=>'ChannelsApiControllers\Yunda']
 
 	//todo===============================================测试韵达推送投保信息========================================================
 	Route::any('callback_yd','CallBackYdController@index');
+	Route::any('callback_yd_time','CallBackYdController@time');
 });
 
 
