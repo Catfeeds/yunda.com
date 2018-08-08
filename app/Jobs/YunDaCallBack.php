@@ -34,6 +34,7 @@ class YunDaCallBack implements ShouldQueue
 	public function handle()
 	{
 		$input = $this->param;
+		LogHelper::logCallBackYDSuccess($input, 'YD_CallBack_Request_Params');
 		$person_res = Person::where('phone',$input['phone'])
 			->where('papers_code',$input['papers_code'])
 			->select('id')
@@ -50,7 +51,6 @@ class YunDaCallBack implements ShouldQueue
 		if(empty($warranty_res)){
 			return false;
 		}
-		LogHelper::logCallBackYDSuccess($input, 'YD_CallBack_Request_Params');
 		$params = [];
 		$params['ordersId'] = $warranty_res['warranty_code'];//保单号
 		$params['payTime'] = date('Y-m-d H:i:s',time());//保单支付时间
