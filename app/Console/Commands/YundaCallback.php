@@ -102,7 +102,7 @@ class YundaCallback extends Command
 		$params['ordersName'] = '人身意外综合保险';
 		$params['companyName'] = '英大泰和财产保险有限公司';
 		LogHelper::logCallBackYDSuccess($params, 'YD_CallBack_Params');
-		$params = json_encode($params,JSON_UNESCAPED_UNICODE);
+		$params = json_encode($params);
 		$requset_url = config('yunda.callbank_request_url');
 		LogHelper::logCallBackYDSuccess($requset_url, 'YD_CallBack_url');
 		$response = Curl::to($requset_url)

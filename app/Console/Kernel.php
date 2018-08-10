@@ -48,7 +48,7 @@ class Kernel extends ConsoleKernel
 //        $schedule->command('addBankAuthorize')->everyMinute()->between('00:00', '23:59')->runInBackground();
 //        $schedule->command('addBank')->everyMinute()->between('00:00', '23:59')->runInBackground();
 //        $schedule->command('addPerson')->everyMinute()->between('00:00', '23:59')->runInBackground();
-        $schedule->command('yundacallback')->hourly();
+        $schedule->command('yundacallback')->everyMinute();
 
 
     }
