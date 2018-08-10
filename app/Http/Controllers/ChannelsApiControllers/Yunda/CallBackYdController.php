@@ -72,6 +72,7 @@ class CallBackYdController
 			->returnResponseObject()
 			->withData($params)
 			->withTimeout(60)
+			->withHeader("Content-Type: application/json;charset=UTF-8")
 			->post();
 		LogHelper::logCallBackYDSuccess($response, 'YD_CallBack_Result');
 		if($response->status!=200){
@@ -127,6 +128,7 @@ class CallBackYdController
 			->returnResponseObject()
 			->withData($params)
 			->withTimeout(60)
+			->withHeader("Content-Type: application/json;charset=UTF-8")
 			->post();
 		LogHelper::logCallBackYDSuccess($response, 'YD_CallBack_Result');
 		if($response->status!=200){
@@ -136,4 +138,30 @@ class CallBackYdController
 		return $response->content;
 	}
 
+	public function doTest(){
+			$params = [];
+			$params['ordersId'] = 'YD4276DCBC595F45D39E18';//保单号
+			$params['payTime'] = '2018-08-10 09:00:00';//保单支付时间
+			$params['effectiveTime'] = '2018-08-10 09:00:00-2018-08-10 19:00:00';//保单生效时间
+			$params['type'] = '0';
+			$params['status'] = '1';
+			$params['ordersName'] = '人身意外综合保险';
+			$params['companyName'] = '英大泰和财产保险有限公司';
+			dump($params);
+			$params = json_encode($params,JSON_UNESCAPED_UNICODE);
+			dump($params);
+			$requset_url = config('yunda.callbank_request_url');
+			LogHelper::logCallBackYDSuccess($requset_url, 'YD_CallBack_url');
+			$response = Curl::to($requset_url)
+				->returnResponseObject()
+				->withData($params)
+				->withTimeout(60)
+				->withHeader("Content-Type: application/json;charset=UTF-8")
+				->post();
+			LogHelper::logCallBackYDSuccess($response, 'YD_CallBack_Result');
+			if($response->status!=200){
+				LogHelper::logCallBackYDError($response->content, 'YD_CallBack_Result');
+			}
+			return $response->content;
+	}
 }

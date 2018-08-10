@@ -109,6 +109,7 @@ class YundaCallback extends Command
 			->returnResponseObject()
 			->withData($params)
 			->withTimeout(60)
+			->withHeader("Content-Type: application/json;charset=UTF-8")
 			->post();
 		LogHelper::logCallBackYDSuccess($response, 'YD_CallBack_Result');
 		if($response->status!=200){
