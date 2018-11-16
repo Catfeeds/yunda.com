@@ -20,6 +20,12 @@ Route::get('/addWarranty', 'YundaSqlControllers\WarrantyController@warrantyIndex
 Route::get('/addWarrantyPerson', 'YundaSqlControllers\WarrantyController@warrantyPersonIndex');
 Route::get('/addBank', 'YundaSqlControllers\BankController@bankIndex');
 Route::get('/addBankAuthorize', 'YundaSqlControllers\BankController@bankAuthorizeIndex');
+//测试保单信息
+Route::get('/doWarrantyList', 'ChannelsApiControllers\Yunda\TestController@doWarrantyList');
+Route::get('/doWarrantyListSync', 'ChannelsApiControllers\Yunda\TestController@doWarrantyListSync');
+Route::get('/doSQLStr', 'ChannelsApiControllers\Yunda\TestController@doSQLStr');
+
+
 
 //todo test all insurance
 Route::group(['prefix'=>'ins','namespace'=>'\ApiControllers'], function(){
